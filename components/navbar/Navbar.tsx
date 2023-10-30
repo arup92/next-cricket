@@ -1,0 +1,56 @@
+import Image from "next/image"
+import Link from "next/link"
+import NavlinkUi from "./NavlinkUi"
+import { SafeUser } from "@/types/SafeUser"
+
+interface NavbarProps {
+   currentUser: SafeUser | null
+}
+
+const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
+   return (
+      <header>
+         <div className="relative z-20 bg-white border-b">
+            <div className="px-6 md:px-12 lg:container lg:mx-auto lg:px-6 lg:py-4">
+               <div className="flex items-center justify-between">
+                  <div className="relative z-20">
+                     <Link href={'/'}>
+                        <Image
+                           src="https://tailus.io/sources/blocks/navigation-layout/preview/images/logo.svg" alt="logo-tailus" className="w-32" width={32} height={62}
+                        />
+                     </Link>
+                  </div>
+
+                  <div className="flex items-center justify-end border-l lg:border-l-0">
+                     <input type="checkbox" name="hamburger" id="hamburger" className="peer" hidden />
+                     <label htmlFor="hamburger" className="relative z-20 block p-6 -mr-6 cursor-pointer peer-checked:hamburger lg:hidden">
+                        <div className="m-auto h-0.5 w-6 mt-0 rounded bg-custom-alpha transition duration-300"></div>
+                        <div className="m-auto h-0.5 w-6 mt-2 rounded bg-custom-alpha transition duration-300"></div>
+                     </label>
+
+                     <div className="peer-checked:translate-x-0 fixed inset-0 w-[calc(100%-4.5rem)] translate-x-[-100%] bg-white border-r shadow-xl transition duration-300 lg:border-r-0 lg:w-auto lg:static lg:shadow-none lg:translate-x-0">
+                        <div className="flex flex-col justify-between h-full lg:items-center lg:flex-row">
+                           <ul className="px-6 pt-32 space-y-8 text-custom-alpha md:px-12 lg:space-y-0 lg:flex lg:space-x-12 lg:pt-0">
+                              <NavlinkUi linkto="/">Home</NavlinkUi>
+                              {(currentUser) ?
+                                 (
+                                    <NavlinkUi type="signout" linkto="#">Logout</NavlinkUi>
+                                 ) : (
+                                    <>
+                                       <NavlinkUi linkto="/login">Login</NavlinkUi>
+                                       <NavlinkUi type='navBtn' linkto="/register">Register</NavlinkUi>
+                                    </>
+                                 )
+                              }
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </header>
+   )
+}
+
+export default Navbar
