@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
+  id             String   @id @default(cuid())
   name           String?
   email          String   @unique
   isActive       Boolean  @default(false)
@@ -38,8 +38,8 @@ model Team {
   matchesB Match[] @relation("teamB")
   results  Match[] @relation("result")
 
-  User   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
 }
 
 model Venue {
@@ -52,8 +52,8 @@ model Venue {
   batting Batting[]
   bowling Bowling[]
 
-  User   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
 }
 
 model Match {
@@ -70,10 +70,10 @@ model Match {
 
   batFirstWin Boolean
 
-  venue   Venue? @relation(fields: [venueId], references: [id])
+  venue   Venue?  @relation(fields: [venueId], references: [id])
   venueId Int?
-  User    User?  @relation(fields: [userId], references: [id])
-  userId  Int?
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
 }
 
 model Batting {
@@ -88,10 +88,10 @@ model Batting {
   six        Int
   strikeRate Float
 
-  venue   Venue? @relation(fields: [venueId], references: [id])
+  venue   Venue?  @relation(fields: [venueId], references: [id])
   venueId Int?
-  User    User?  @relation(fields: [userId], references: [id])
-  userId  Int?
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
 }
 
 model Bowling {
@@ -105,8 +105,8 @@ model Bowling {
   wicket Int
   eco    Float
 
-  venue   Venue? @relation(fields: [venueId], references: [id])
+  venue   Venue?  @relation(fields: [venueId], references: [id])
   venueId Int?
-  User    User?  @relation(fields: [userId], references: [id])
-  userId  Int?
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
 }

@@ -6,7 +6,7 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
@@ -17,6 +17,13 @@ module.exports = {
     },
     extend: {
       colors: {
+        'custom': {
+          'alpha': '#000000',
+          'beta': '#2b2b2b',
+          'light': '#e7e7e7',
+          'lighter': '#f6f6f6',
+          'extra': '#0ea5e9'
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -1,7 +1,7 @@
-import Image from "next/image"
-import Link from "next/link"
-import NavlinkUi from "./NavlinkUi"
 import { SafeUser } from "@/types/SafeUser"
+import Link from "next/link"
+import { RiGalleryFill } from 'react-icons/ri'
+import NavlinkUi from "./NavlinkUi"
 
 interface NavbarProps {
    currentUser: SafeUser | null
@@ -14,10 +14,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
             <div className="px-6 md:px-12 lg:container lg:mx-auto lg:px-6 lg:py-4">
                <div className="flex items-center justify-between">
                   <div className="relative z-20">
-                     <Link href={'/'}>
-                        <Image
-                           src="https://tailus.io/sources/blocks/navigation-layout/preview/images/logo.svg" alt="logo-tailus" className="w-32" width={32} height={62}
-                        />
+                     <Link href={'/'} className="flex items-center text-3xl font-bold">
+                        <RiGalleryFill />
+                        <span className="ml-1">Studio</span>
                      </Link>
                   </div>
 
@@ -30,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
 
                      <div className="peer-checked:translate-x-0 fixed inset-0 w-[calc(100%-4.5rem)] translate-x-[-100%] bg-white border-r shadow-xl transition duration-300 lg:border-r-0 lg:w-auto lg:static lg:shadow-none lg:translate-x-0">
                         <div className="flex flex-col justify-between h-full lg:items-center lg:flex-row">
-                           <ul className="px-6 pt-32 space-y-8 text-custom-alpha md:px-12 lg:space-y-0 lg:flex lg:space-x-12 lg:pt-0">
+                           <ul className="px-6 pt-32 space-y-8 text-custom-alpha md:px-12 lg:space-y-0 lg:flex lg:items-center lg:space-x-12 lg:pt-0">
                               <NavlinkUi linkto="/">Home</NavlinkUi>
                               {(currentUser) ?
                                  (

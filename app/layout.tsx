@@ -1,9 +1,10 @@
+import getCurrentUser from '@/actions/getCurrentUser'
 import Navbar from '@/components/navbar/Navbar'
-import './globals.css'
+import { SafeUser } from '@/types/SafeUser'
 import type { Metadata } from 'next'
 import { Nunito } from 'next/font/google'
-import getCurrentUser from '@/actions/getCurrentUser'
 import { Toaster } from 'react-hot-toast'
+import './globals.css'
 
 const nunito = Nunito({ subsets: ['latin'] })
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 
-  const currentUser = await getCurrentUser()
+  const currentUser: SafeUser | null = await getCurrentUser()
 
   return (
     <html lang="en">

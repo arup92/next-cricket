@@ -1,6 +1,6 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from 'next-auth/next'
 import client from '../libs/prismadb'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 export async function getSession() {
     return await getServerSession(authOptions)
@@ -20,7 +20,7 @@ export default async function getCurrentUser() {
 
         if (!currentUser) return null
 
-        const { hashedPassword, updatedAt, ...returnData } = currentUser
+        const { hashedPassword, updatedAt, verifyToken, loginId, ...returnData } = currentUser
 
         return returnData
     } catch (error) {

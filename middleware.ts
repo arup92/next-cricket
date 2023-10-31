@@ -9,9 +9,6 @@ async function isAuthenticated(request: NextRequest, loginUrl?: string): Promise
         secret: process.env.NEXTAUTH_SECRET,
     })
 
-    console.log(token);
-
-
     // If not logged in, redirect to the login page
     if (!token || token?.sub === "" || token.loginId === "") {
         if (loginUrl) {
