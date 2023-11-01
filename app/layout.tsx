@@ -21,7 +21,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en">
       <body className={nunito.className}>
         <Toaster />
-        {/* <Navbar currentUser={currentUser} /> */}
+        <Navbar currentUser={currentUser} />
         <div className="px-6 py-8 md:px-12 lg:container lg:mx-auto lg:px-6">
           {children}
         </div>
