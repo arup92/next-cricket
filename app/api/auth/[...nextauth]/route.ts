@@ -63,11 +63,11 @@ export const authOptions: AuthOptions = {
     debug: process.env.NODE_ENV === 'development',
     session: {
         strategy: 'jwt',
-        maxAge: 135 // 1 day = 24 hours * 60 minutes * 60 seconds
+        maxAge: 7 * 24 * 60 * 60 // 1 day = 24 hours * 60 minutes * 60 seconds
     },
     jwt: {
         secret: process.env.NEXTAUTH_SECRET,
-        maxAge: 135 // 1 day = 24 hours * 60 minutes * 60 seconds
+        maxAge: 7 * 24 * 60 * 60 // 1 day = 24 hours * 60 minutes * 60 seconds
     },
     events: {
         async signOut({ token }) {
