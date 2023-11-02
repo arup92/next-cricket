@@ -7,7 +7,7 @@ import { cn } from "@/utils/shadcnUtils"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
-import React, { useState } from "react"
+import { useState } from "react"
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import CenteredArea from '../customUi/CenteredArea'
@@ -17,12 +17,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "../ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
+import axios from "axios"
 
 const formSchema = z.object({
     teamA: z.enum(Teams),
     teamB: z.enum(Teams),
     batFirst: z.enum(Teams),
-    location: z.string().trim().min(3, 'Minimum 3 chars'),
+    venue: z.string().trim().min(3, 'Minimum 3 chars'),
+    venueCountry: z.enum(Teams),
     matchDate: z.date().refine((date) => new Date(date).toString() !== 'Invalid Date', {
         message: 'Date is not valid'
     }).transform((date) => new Date(date)),
@@ -46,7 +48,8 @@ const AddMatchForm = () => {
             teamA: '',
             teamB: '',
             batFirst: '',
-            location: '',
+            venue: '',
+            venueCountry: '',
             matchDate: new Date(),
             sessionAbat: '',
             sessionAbowl: '',
@@ -64,6 +67,16 @@ const AddMatchForm = () => {
         setTabIndex(newTabIndex)
     }
 
+    const onSubmit = (values: any) => {
+        axios.post('/api/add-match', values)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
     return (
         <CenteredArea maxWidthClass="max-w-xl">
             <Tabs value={tabIndex}>
@@ -73,9 +86,7 @@ const AddMatchForm = () => {
                     <TabsTrigger onClick={() => handleChangeTab("2")} value={"2"}>Add Session B</TabsTrigger>
                 </TabsList>
 
-                <form onSubmit={handleSubmit(values => {
-                    alert(JSON.stringify(values, null, 2))
-                })} >
+                <form onSubmit={handleSubmit(onSubmit)} >
                     <TabsContent value={"0"}>
                         <Card>
                             <CardHeader>
@@ -151,13 +162,30 @@ const AddMatchForm = () => {
                                             type='text'
                                             className='min-w-full'
                                             placeholder='Venue'
-                                            {...register('location')}
+                                            {...register('venue')}
                                         />
-                                        {errors.location && (
+                                        {errors.venue && (
                                             <p className='text-red-500 inline-flex'>
-                                                {errors.location.message}
+                                                {errors.venue.message}
                                             </p>
                                         )}
+                                    </div>
+
+                                    <div>
+                                        <Select
+                                            onValueChange={(selectedValue: string) => setValue('venueCountry', selectedValue)}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Venue Country" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {Teams.map((team) => (
+                                                    <SelectItem key={team} value={team}>
+                                                        {team}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </div>
 
                                     <div>

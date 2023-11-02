@@ -5,7 +5,9 @@ export enum ErrorMessage {
     EMAIL_NOT_ACTIVE = 'Email not verified! Please check your email verify.',
     EMAIL_EXISTS = 'Email already exists',
     ALREADY_VERIFIED = 'Email Already Verified.',
-    BAD_REQUEST = 'Authentication required!'
+    UNAUTHENTICATED = 'Authentication required!',
+    BAD_REQUEST = 'Bad Request',
+    INV_VENUE = 'Invalid Venue'
 }
 
 export enum Message {

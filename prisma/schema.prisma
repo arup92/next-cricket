@@ -47,13 +47,14 @@ model Venue {
   venueId        String @unique
   venueName      String
   venueCountryId String
+  totalMatches   Int
 
   matches Match[]
   batting Batting[]
   bowling Bowling[]
 
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
 }
 
 model Match {

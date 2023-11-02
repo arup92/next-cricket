@@ -30,7 +30,7 @@ const LoginForm = () => {
                 toast.error(callback.error)
             } else if (callback?.ok) {
                 router.refresh()
-                router.push("/dashboard/userpost")
+                router.push("/dashboard/add-match")
             }
         })
     }
