@@ -69,6 +69,7 @@ model Match {
   result      String
 
   batFirstWin Boolean
+  matchDate   DateTime
 
   venue   Venue?  @relation(fields: [venueId], references: [id])
   venueId Int?
