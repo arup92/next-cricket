@@ -1,7 +1,8 @@
 import { ErrorMessage, Message } from '@/responses/messages';
 import getCurrentUser from "@/actions/getCurrentUser";
-import { NextResponse } from "next/server";
 import prismaClient from '@/libs/prismadb';
+import { NextResponse } from 'next/server';
+import { sortStringsAlphabetically } from '@/utils/utils';
 
 interface RequestBody {
     teamA: string
@@ -10,8 +11,7 @@ interface RequestBody {
     venue: string
     venueCountry: string
     matchDate: string
-    matchResult: string
-    batFirstWin: boolean
+    result: string
     sessionAbat: string
     sessionAbowl: string
     sessionBbat: string
@@ -35,15 +35,22 @@ export async function POST(request: Request) {
     }
 
     try {
-        //     // Create Team
-        //     await prismaClient.team.findUnique({
+        // // Create Team
+        // await prismaClient.team.create({
+        //     data: {
+        //         teamName: 'West Indies',
+        //         teamId: 'WI',
+        //         userId: userSession.id
+        //     }
+        // })
+        // await prismaClient.team.findUnique({
         //     where: {
         //         teamId: body.teamA
         //     }
         // })
 
         // Create venue
-        await prismaClient.venue.create({
+        const venue = await prismaClient.venue.create({
             data: {
                 venueId: body.venue.replaceAll(' ', '-').toLowerCase(),
                 venueName: body.venue,
@@ -54,18 +61,23 @@ export async function POST(request: Request) {
         })
 
         // Create Match
+        const teams: string[] = sortStringsAlphabetically(body.teamA, body.teamB)
+
         await prismaClient.match.create({
             data: {
-                teamAId: body.teamA,
-                teamBId: body.teamB,
-                result: body.matchResult,
+                teamAId: teams[0],
+                teamBId: teams[1],
+                result: body.result,
                 matchDate: new Date(body.matchDate),
-                batFirstWin: body.batFirstWin,
-                venueId: body.venue,
+                batFirst: body.batFirst,
+                venueId: venue.id,
                 userId: userSession.id
             }
         })
+
+        // Add Batting
     } catch (error) {
+        console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     }
 

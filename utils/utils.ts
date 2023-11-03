@@ -20,3 +20,13 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
 
     return finalArray
 }
+
+export const sortStringsAlphabetically = (str1: string, str2: string): string[] => {
+    // Create an array with the two input strings
+    const strings: string[] = [str1, str2]
+
+    // Sort the array alphabetically
+    strings.sort()
+
+    return strings
+}

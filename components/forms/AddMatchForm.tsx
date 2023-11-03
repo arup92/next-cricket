@@ -23,6 +23,7 @@ const formSchema = z.object({
     teamA: z.enum(Teams),
     teamB: z.enum(Teams),
     batFirst: z.enum(Teams),
+    result: z.enum(Teams),
     venue: z.string().trim().min(3, 'Minimum 3 chars'),
     venueCountry: z.enum(Teams),
     matchDate: z.date().refine((date) => new Date(date).toString() !== 'Invalid Date', {
@@ -48,6 +49,7 @@ const AddMatchForm = () => {
             teamA: '',
             teamB: '',
             batFirst: '',
+            result: '',
             venue: '',
             venueCountry: '',
             matchDate: new Date(),
@@ -144,6 +146,25 @@ const AddMatchForm = () => {
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Bat First" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {batFirstValues.teamA && <SelectItem key={batFirstValues.teamA} value={batFirstValues.teamA}>
+                                                    {batFirstValues.teamA}
+                                                </SelectItem>}
+
+                                                {batFirstValues.teamB && <SelectItem key={batFirstValues.teamB} value={batFirstValues.teamB}>
+                                                    {batFirstValues.teamB}
+                                                </SelectItem>}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div>
+                                        <Select
+                                            onValueChange={(selectedValue: string) => setValue('result', selectedValue)}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Result" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {batFirstValues.teamA && <SelectItem key={batFirstValues.teamA} value={batFirstValues.teamA}>
