@@ -27,7 +27,7 @@ const formSchema = z.object({
     venueCountry: z.enum(Teams),
     matchDate: z.date().refine((date) => new Date(date).toString() !== 'Invalid Date', {
         message: 'Date is not valid'
-    }).transform((date) => new Date(date)),
+    }).transform((date) => format(date as Date, 'yyyy-MM-dd')),
 
     sessionAbat: z.string().trim().min(1, 'Enter valid details'),
     sessionAbowl: z.string().trim().min(1, 'Enter valid details'),

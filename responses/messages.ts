@@ -13,5 +13,6 @@ export enum ErrorMessage {
 export enum Message {
     SUCESS_EMAIL_VERIFIED = 'Your email address is verified successfully! Please log in to your account.',
     SUCESS_EMAIL_SENT = 'Email verification link has been sent. Please check your email inbox and follow the instructions to verify your email address.',
-    SUCCESS_REGISTERED = 'Registered successfully! Please verify your email address.'
+    SUCCESS_REGISTERED = 'Registered successfully! Please verify your email address.',
+    MATCH_ADDED = "Match Added"
 }

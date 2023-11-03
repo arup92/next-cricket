@@ -1,4 +1,4 @@
-import { ErrorMessage } from '@/responses/messages';
+import { ErrorMessage, Message } from '@/responses/messages';
 import getCurrentUser from "@/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 import prismaClient from '@/libs/prismadb';
@@ -9,7 +9,9 @@ interface RequestBody {
     batFirst: string
     venue: string
     venueCountry: string
-    matchDate: Date
+    matchDate: string
+    matchResult: string
+    batFirstWin: boolean
     sessionAbat: string
     sessionAbowl: string
     sessionBbat: string
@@ -32,31 +34,40 @@ export async function POST(request: Request) {
         return NextResponse.json(ErrorMessage.INV_VENUE, { status: 401 })
     }
 
-    const venue = await prismaClient.venue.findUnique({
-        where: {
-            venueId: body.venue.replaceAll(' ', '-').toLowerCase()
-        }
-    })
+    try {
+        //     // Create Team
+        //     await prismaClient.team.findUnique({
+        //     where: {
+        //         teamId: body.teamA
+        //     }
+        // })
 
-    if (venue === null) {
+        // Create venue
         await prismaClient.venue.create({
             data: {
                 venueId: body.venue.replaceAll(' ', '-').toLowerCase(),
                 venueName: body.venue,
                 venueCountryId: body.venueCountry,
+                userId: userSession.id,
+                matchDate: new Date(body.matchDate)
+            }
+        })
+
+        // Create Match
+        await prismaClient.match.create({
+            data: {
+                teamAId: body.teamA,
+                teamBId: body.teamB,
+                result: body.matchResult,
+                matchDate: new Date(body.matchDate),
+                batFirstWin: body.batFirstWin,
+                venueId: body.venue,
                 userId: userSession.id
             }
         })
-    } else {
-        await prismaClient.venue.update({
-            where: {
-                venueId: body.venue.replaceAll(' ', '-').toLowerCase(),
-            },
-            data: {
-
-            }
-        })
+    } catch (error) {
+        return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     }
 
-    return new NextResponse('OK', { status: 200 })
+    return new NextResponse(Message.MATCH_ADDED, { status: 200 })
 }
