@@ -7,7 +7,8 @@ export enum ErrorMessage {
     ALREADY_VERIFIED = 'Email Already Verified.',
     UNAUTHENTICATED = 'Authentication required!',
     BAD_REQUEST = 'Bad Request',
-    INV_VENUE = 'Invalid Venue'
+    INV_VENUE = 'Invalid Venue',
+    SOMETHING_WRONG = 'Something wrong occured! Please try again later.'
 }
 
 export enum Message {

@@ -18,6 +18,8 @@ import { Input } from "../ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
 import axios from "axios"
+import toast from "react-hot-toast"
+import { ErrorMessage } from "@/responses/messages"
 
 const formSchema = z.object({
     teamA: z.enum(Teams),
@@ -72,10 +74,16 @@ const AddMatchForm = () => {
     const onSubmit = (values: any) => {
         axios.post('/api/add-match', values)
             .then(response => {
-                console.log(response)
+                if (response.status === 200) {
+                    toast.success(response.data)
+                } else {
+                    console.log(response);
+                    toast.error(ErrorMessage.SOMETHING_WRONG)
+                }
             })
             .catch(error => {
                 console.log(error)
+                toast.error(ErrorMessage.SOMETHING_WRONG)
             })
     }
 
@@ -239,8 +247,7 @@ const AddMatchForm = () => {
                             </CardContent>
 
 
-                            <CardFooter>
-                                <Button>Submit</Button>
+                            <CardFooter className="flex justify-end">
                                 <Button onClick={() => handleChangeTab("1")}>Next</Button>
                             </CardFooter>
                         </Card>
@@ -274,8 +281,9 @@ const AddMatchForm = () => {
                                 </div>
                             </CardContent>
 
-                            <CardFooter>
-                                <Button>Submit</Button>
+                            <CardFooter className="flex justify-between">
+                                <Button onClick={() => handleChangeTab("0")}>Back</Button>
+                                <Button onClick={() => handleChangeTab("2")}>Next</Button>
                             </CardFooter>
                         </Card>
                     </TabsContent>
@@ -307,7 +315,8 @@ const AddMatchForm = () => {
                                 </div>
                             </CardContent>
 
-                            <CardFooter>
+                            <CardFooter className="flex justify-between">
+                                <Button onClick={() => handleChangeTab("1")}>Back</Button>
                                 <Button>Submit</Button>
                             </CardFooter>
                         </Card>

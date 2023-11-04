@@ -11,7 +11,16 @@ export const generateRandomHash = (length: number) => {
 }
 
 export const summaryData = (stringWNwLine: string, chunkSize: number): string[][] => {
-    let rawArray = stringWNwLine.split('\n').filter(item => item !== '')
+    let rawArray = stringWNwLine.split('\n').filter(item => (
+        item !== ''
+        && !item.toLowerCase().startsWith("c ")
+        && !item.toLowerCase().startsWith("b ")
+        && !item.toLowerCase().startsWith("run")
+        && !item.toLowerCase().startsWith("lbw")
+        && !item.toLowerCase().startsWith("not")
+        && !item.toLowerCase().startsWith("st ")
+        && !item.toLowerCase().startsWith("(")
+    ))
     const finalArray: string[][] = []
     for (let i = 0; i < rawArray.length; i += chunkSize) {
         const chunk: string[] = rawArray.slice(i, i + chunkSize)
@@ -22,10 +31,7 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
 }
 
 export const sortStringsAlphabetically = (str1: string, str2: string): string[] => {
-    // Create an array with the two input strings
     const strings: string[] = [str1, str2]
-
-    // Sort the array alphabetically
     strings.sort()
 
     return strings

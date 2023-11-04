@@ -35,17 +35,12 @@ export async function POST(request: Request) {
     }
 
     try {
-        // // Create Team
+        // Create Team
         // await prismaClient.team.create({
         //     data: {
-        //         teamName: 'West Indies',
-        //         teamId: 'WI',
+        //         teamName: 'India',
+        //         teamId: 'IND',
         //         userId: userSession.id
-        //     }
-        // })
-        // await prismaClient.team.findUnique({
-        //     where: {
-        //         teamId: body.teamA
         //     }
         // })
 
