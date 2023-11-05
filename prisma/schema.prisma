@@ -76,6 +76,9 @@ model Match {
 
   User   User   @relation(fields: [userId], references: [id])
   userId String
+
+  batting Batting[]
+  bowling Bowling[]
 }
 
 enum PlayerType {
@@ -103,6 +106,7 @@ model Batting {
   four         Int
   six          Int
   strikeRate   Float
+  matchDate    DateTime @db.Date
 
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String
@@ -112,6 +116,9 @@ model Batting {
 
   Player   Player @relation(fields: [playerId], references: [playerId])
   playerId String
+
+  Match   Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  matchId Int
 }
 
 model Bowling {
@@ -121,6 +128,7 @@ model Bowling {
   maiden       Int
   wicket       Int
   eco          Float
+  matchDate    DateTime @db.Date
 
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String
@@ -130,4 +138,7 @@ model Bowling {
 
   Player   Player @relation(fields: [playerId], references: [playerId])
   playerId String
+
+  Match   Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  matchId Int
 }

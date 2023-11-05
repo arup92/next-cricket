@@ -1,8 +1,7 @@
-import { ErrorMessage, Message } from '@/responses/messages';
 import getCurrentUser from "@/actions/getCurrentUser";
 import prismaClient from '@/libs/prismadb';
+import { ErrorMessage, Message } from '@/responses/messages';
 import { battingData, bowlingData, sortStringsAlphabetically, summaryData } from '@/utils/utils';
-import { BattingDataType } from '@/types/BattingDataType';
 import { NextResponse } from 'next/server';
 
 interface RequestBody {
@@ -77,7 +76,7 @@ export async function POST(request: Request) {
         // Create Match
         const teams: string[] = sortStringsAlphabetically(body.teamA, body.teamB)
 
-        const match = await prismaClient.match.findFirst({
+        let match = await prismaClient.match.findFirst({
             where: {
                 matchDate: new Date(body.matchDate),
                 teamAId: teams[0]
@@ -85,7 +84,7 @@ export async function POST(request: Request) {
         })
 
         if (!match) {
-            await prismaClient.match.create({
+            match = await prismaClient.match.create({
                 data: {
                     teamAId: teams[0],
                     teamBId: teams[1],
@@ -161,7 +160,9 @@ export async function POST(request: Request) {
         const constantBattingAData = {
             userId: userSession.id,
             venueId: venue.venueId,
-            oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
+            oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
+            matchDate: new Date(body.matchDate),
+            matchId: match.id
         }
 
         const battingADataUpdated = battingData(sessionABat).map(battingData => ({
@@ -179,7 +180,9 @@ export async function POST(request: Request) {
         const constantBattingBData = {
             userId: userSession.id,
             venueId: venue.venueId,
-            oppCountryId: body.batFirst
+            oppCountryId: body.batFirst,
+            matchDate: new Date(body.matchDate),
+            matchId: match.id
         }
 
         const battingBDataUpdated = battingData(sessionBBat).map(battingData => ({
@@ -197,7 +200,9 @@ export async function POST(request: Request) {
         const constantBowlingAData = {
             userId: userSession.id,
             venueId: venue.venueId,
-            oppCountryId: body.batFirst
+            oppCountryId: body.batFirst,
+            matchDate: new Date(body.matchDate),
+            matchId: match.id
         }
 
         const bowlingADataUpdated = bowlingData(sessionABowl).map(bowlingData => ({
@@ -215,7 +220,9 @@ export async function POST(request: Request) {
         const constantBowlingBData = {
             userId: userSession.id,
             venueId: venue.venueId,
-            oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
+            oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
+            matchDate: new Date(body.matchDate),
+            matchId: match.id
         }
 
         const bowlingBDataUpdated = bowlingData(sessionBBowl).map(bowlingData => ({
