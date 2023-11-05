@@ -8,7 +8,9 @@ export enum ErrorMessage {
     UNAUTHENTICATED = 'Authentication required!',
     BAD_REQUEST = 'Bad Request',
     INV_VENUE = 'Invalid Venue',
-    SOMETHING_WRONG = 'Something wrong occured! Please try again later.'
+    SOMETHING_WRONG = 'Something wrong occured! Please try again later.',
+    MATCH_EXISTS = 'Match already exists',
+    INV_SESSION_ENTRY = 'Invalid Session Entry'
 }
 
 export enum Message {

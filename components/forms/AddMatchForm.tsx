@@ -77,13 +77,17 @@ const AddMatchForm = () => {
                 if (response.status === 200) {
                     toast.success(response.data)
                 } else {
-                    console.log(response);
+                    // console.log(response);
                     toast.error(ErrorMessage.SOMETHING_WRONG)
                 }
             })
             .catch(error => {
-                console.log(error)
-                toast.error(ErrorMessage.SOMETHING_WRONG)
+                if (error.response.status === 401) {
+                    toast.error(error.response.data)
+                } else {
+                    console.log(error)
+                    toast.error(ErrorMessage.SOMETHING_WRONG)
+                }
             })
     }
 

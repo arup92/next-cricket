@@ -43,11 +43,10 @@ model Team {
 }
 
 model Venue {
-  id             Int      @id @default(autoincrement())
-  venueId        String
+  id             Int    @id @default(autoincrement())
+  venueId        String @unique
   venueName      String
   venueCountryId String
-  matchDate      DateTime
 
   matches Match[]
   batting Batting[]
@@ -70,46 +69,65 @@ model Match {
   result      String
 
   batFirst  String
-  matchDate DateTime
+  matchDate DateTime @db.Date
 
-  venue   Venue @relation(fields: [venueId], references: [id])
-  venueId Int
+  venue   Venue  @relation(fields: [venueId], references: [venueId])
+  venueId String
 
   User   User   @relation(fields: [userId], references: [id])
   userId String
 }
 
+enum PlayerType {
+  Batsman
+  Bowler
+  AllRounder
+}
+
+model Player {
+  playerId        String      @id @unique
+  playerName      String
+  playerCountryId String
+  playerType      PlayerType?
+  weakness        String?
+
+  batting Batting[]
+  bowling Bowling[]
+}
+
 model Batting {
   id Int @id @default(autoincrement())
 
-  playerName      String
-  playerCountryId String
-  oppCountryId    String
+  oppCountryId String
+  run          Int
+  four         Int
+  six          Int
+  strikeRate   Float
 
-  run        Int
-  four       Int
-  six        Int
-  strikeRate Float
+  venue   Venue  @relation(fields: [venueId], references: [venueId])
+  venueId String
 
-  venue   Venue?  @relation(fields: [venueId], references: [id])
-  venueId Int?
-  User    User?   @relation(fields: [userId], references: [id])
-  userId  String?
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  Player   Player @relation(fields: [playerId], references: [playerId])
+  playerId String
 }
 
 model Bowling {
   id Int @id @default(autoincrement())
 
-  playerName      String
-  playerCountryId String
-  oppCountryId    String
+  oppCountryId String
+  maiden       Int
+  wicket       Int
+  eco          Float
 
-  maiden Int
-  wicket Int
-  eco    Float
+  venue   Venue  @relation(fields: [venueId], references: [venueId])
+  venueId String
 
-  venue   Venue?  @relation(fields: [venueId], references: [id])
-  venueId Int?
-  User    User?   @relation(fields: [userId], references: [id])
-  userId  String?
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  Player   Player @relation(fields: [playerId], references: [playerId])
+  playerId String
 }
