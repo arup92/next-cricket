@@ -27,7 +27,7 @@ const formSchema = z.object({
     batFirst: z.enum(Teams),
     result: z.enum(Teams),
     venue: z.string().trim().min(3, 'Minimum 3 chars'),
-    venueCountry: z.enum(Teams),
+    venueCountry: z.enum(Teams).optional(),
     matchDate: z.date().refine((date) => new Date(date).toString() !== 'Invalid Date', {
         message: 'Date is not valid'
     }).transform((date) => format(date as Date, 'yyyy-MM-dd')),

@@ -43,10 +43,10 @@ model Team {
 }
 
 model Venue {
-  id             Int    @id @default(autoincrement())
-  venueId        String @unique
+  id             Int     @id @default(autoincrement())
+  venueId        String  @unique
   venueName      String
-  venueCountryId String
+  venueCountryId String?
 
   matches Match[]
   batting Batting[]
