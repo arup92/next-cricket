@@ -24,8 +24,9 @@ const formSchema = z.object({
 
 const MatchesView = () => {
     const [matches, setMatches] = useState<Matches[]>([])
+    const [teams, setTeams] = useState('')
 
-    // React Query
+    // React Query Functions
     const getMatches = async (): Promise<Matches[]> => {
         return await axios.get(`/api/view/matches-get`)
             .then(response => {
@@ -38,10 +39,35 @@ const MatchesView = () => {
             })
     }
 
+    const getCustomMatches = async (): Promise<Matches[]> => {
+        return await axios.get(`/api/view/matches-get?${teams}`)
+            .then(response => {
+                setMatches(response.data)
+                return response.data
+            })
+            .catch(err => {
+                console.log(err)
+                return []
+            })
+    }
+
+    // React Query
     useQuery({
         queryKey: ['matches'],
         queryFn: getMatches
     })
+
+    // useQuery on form submit
+    const { data, refetch, isError, isRefetching } = useQuery({
+        queryKey: ['matches', teams],
+        queryFn: getCustomMatches,
+        enabled: false,
+        refetchOnWindowFocus: false,
+    })
+
+    useEffect(() => {
+        refetch()
+    }, [refetch, teams]);
 
     // Hook Form
     const {
@@ -55,7 +81,7 @@ const MatchesView = () => {
     })
 
     const onSubmit = (values: any) => {
-        let queryParams = ``
+        let queryParams = ''
         if (Teams.includes(values.teamA) && Teams.includes(values.teamB)) {
             queryParams = `teamA=${values.teamA}&teamB=${values.teamB}`
 
@@ -66,13 +92,8 @@ const MatchesView = () => {
             queryParams = `teamA=${values.teamA}`
         }
 
-        // The url
-        let getUrl = `/api/view/matches-get?${queryParams}`
-
-        // Axios
-        axios.get(getUrl)
-            .then(response => setMatches(response.data))
-            .catch(err => console.log(err))
+        // Set team for useQuery
+        setTeams(queryParams)
     }
 
     return (
