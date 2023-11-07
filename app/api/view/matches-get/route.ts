@@ -20,12 +20,15 @@ export async function GET(request: Request) {
             }
         } else if (teamA) {
             where = {
-                teamAId: teamA
+                OR: [
+                    { teamAId: teamA },
+                    { teamBId: teamA }
+                ]
             }
         }
 
         // Find matches
-        let matches = await prismaClient.match.findMany({
+        const matches = await prismaClient.match.findMany({
             select: {
                 id: true,
                 teamAId: true,
@@ -45,6 +48,7 @@ export async function GET(request: Request) {
                 matchDate: 'desc'
             },
             where: where,
+            take: 100
         })
 
         return NextResponse.json(matches, { status: 200 })

@@ -1,4 +1,5 @@
 import getCurrentUser from '@/actions/getCurrentUser'
+import ProvidersTanstack from '@/components/ProviderTanstack'
 import Navbar from '@/components/navbar/Navbar'
 import { SafeUser } from '@/types/SafeUser'
 import type { Metadata } from 'next'
@@ -23,7 +24,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Toaster />
         <Navbar currentUser={currentUser} />
         <div className="px-6 py-8 md:px-12 lg:container lg:mx-auto lg:px-6">
-          {children}
+          <ProvidersTanstack>
+            {children}
+          </ProvidersTanstack>
         </div>
       </body>
     </html>

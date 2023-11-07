@@ -1,7 +1,7 @@
-import Image from 'next/image'
+import Matches from "./view/matches/page";
 
 export default function Home() {
   return (
-    <div className="">Hello World</div>
+    <Matches />
   )
 }

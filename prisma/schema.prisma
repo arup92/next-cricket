@@ -40,6 +40,9 @@ model Team {
 
   User   User?   @relation(fields: [userId], references: [id])
   userId String?
+
+  batting Batting[]
+  bowling Bowling[]
 }
 
 model Venue {
@@ -119,6 +122,9 @@ model Batting {
 
   Match   Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
   matchId Int
+
+  Team   Team   @relation(fields: [teamId], references: [teamId])
+  teamId String
 }
 
 model Bowling {
@@ -141,4 +147,7 @@ model Bowling {
 
   Match   Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
   matchId Int
+
+  Team   Team   @relation(fields: [teamId], references: [teamId])
+  teamId String
 }

@@ -160,6 +160,7 @@ export async function POST(request: Request) {
         const constantBattingAData = {
             userId: userSession.id,
             venueId: venue.venueId,
+            teamId: body.batFirst,
             oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
             matchDate: new Date(body.matchDate),
             matchId: match.id
@@ -180,6 +181,7 @@ export async function POST(request: Request) {
         const constantBattingBData = {
             userId: userSession.id,
             venueId: venue.venueId,
+            teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
             oppCountryId: body.batFirst,
             matchDate: new Date(body.matchDate),
             matchId: match.id
@@ -200,6 +202,7 @@ export async function POST(request: Request) {
         const constantBowlingAData = {
             userId: userSession.id,
             venueId: venue.venueId,
+            teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
             oppCountryId: body.batFirst,
             matchDate: new Date(body.matchDate),
             matchId: match.id
@@ -220,6 +223,7 @@ export async function POST(request: Request) {
         const constantBowlingBData = {
             userId: userSession.id,
             venueId: venue.venueId,
+            teamId: body.batFirst,
             oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
             matchDate: new Date(body.matchDate),
             matchId: match.id

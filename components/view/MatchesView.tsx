@@ -1,6 +1,5 @@
 'use client'
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Teams } from "@/utils/Teams";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -9,8 +8,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import CenteredArea from "../customUi/CenteredArea";
 import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
+
+import { useQuery } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import MatchesTable from "./MatchesTable";
 
 const formSchema = z.object({
     teamA: z.enum(Teams, {
@@ -23,9 +24,28 @@ const formSchema = z.object({
 
 const MatchesView = () => {
     const [matches, setMatches] = useState<Matches[]>([])
+
+    // React Query
+    const getMatches = async (): Promise<Matches[]> => {
+        return await axios.get(`/api/view/matches-get`)
+            .then(response => {
+                setMatches(response.data)
+                return response.data
+            })
+            .catch(err => {
+                console.log(err)
+                return []
+            })
+    }
+
+    useQuery({
+        queryKey: ['matches'],
+        queryFn: getMatches
+    })
+
+    // Hook Form
     const {
         formState: { errors },
-        register,
         handleSubmit,
         getValues,
         setValue,
@@ -33,20 +53,6 @@ const MatchesView = () => {
         mode: 'onBlur',
         resolver: zodResolver(formSchema)
     })
-
-    useEffect(() => {
-        axios.get(`/api/view/matches-get`)
-            .then(response => {
-                setMatches(response.data)
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }, [])
-
-    useEffect(() => {
-
-    }, [matches])
 
     const onSubmit = (values: any) => {
         let queryParams = ``
@@ -113,40 +119,7 @@ const MatchesView = () => {
                 <p className="mb-8">{errors.teamA.message as any}</p>
             )}
 
-            <Card>
-                <CardContent className="py-3">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[30%]">Match</TableHead>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Result</TableHead>
-                                <TableHead>Bat First</TableHead>
-                                <TableHead>View Details</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {matches.map((match) => {
-                                const date = new Date(match.matchDate)
-                                const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
-
-                                return <TableRow key={match.id}>
-                                    <TableCell className="font-medium">
-                                        <p className="font-semibold">{match.teamAId} vs {match.teamBId}</p>
-                                        <p className="text-sm text-muted-foreground">{match.venue.venueName}, {match.venue?.venueCountryId}</p>
-                                    </TableCell>
-                                    <TableCell>{date.toLocaleString('en-IN', options)}</TableCell>
-                                    <TableCell>{match.batFirst}</TableCell>
-                                    <TableCell>{match.result}</TableCell>
-                                    <TableCell>
-                                        <Button variant="outline">Details</Button>
-                                    </TableCell>
-                                </TableRow>
-                            })}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+            <MatchesTable matches={matches} />
 
         </CenteredArea>
     )
