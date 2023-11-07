@@ -5,8 +5,6 @@ import { NextResponse } from "next/server"
 export async function GET(request: Request) {
     const url = new URL(request.url)
     const matchId = url.searchParams.get('matchId')?.toString()
-    console.log(matchId);
-
 
     if (!matchId) {
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
@@ -24,7 +22,10 @@ export async function GET(request: Request) {
         const batting = await prismaClient.batting.findMany({
             where: {
                 matchId: parseInt(matchId as string)
-            }
+            },
+            orderBy: [
+                { run: 'desc' }
+            ]
         })
 
         const battingA = batting.filter(item => item.teamId === match?.teamAId)
@@ -34,7 +35,10 @@ export async function GET(request: Request) {
         const bowling = await prismaClient.bowling.findMany({
             where: {
                 matchId: parseInt(matchId as string)
-            }
+            },
+            orderBy: [
+                { wicket: 'desc' }
+            ]
         })
 
         const bowlingA = bowling.filter(item => item.teamId === match?.teamAId)

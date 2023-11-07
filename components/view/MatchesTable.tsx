@@ -9,8 +9,8 @@ interface MatchesTableProps {
 
 const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
     const router = useRouter()
-    const handleUpdateURL = (teamAId: string, teamBId: string) => {
-        router.push(`./view/match?teamA=${teamAId}&teamB=${teamBId}`)
+    const handleUpdateURL = (matchId: string) => {
+        router.push(`./view/match?matchId=${matchId}`)
     }
 
     return (
@@ -40,7 +40,7 @@ const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
                                 <TableCell>{match.batFirst}</TableCell>
                                 <TableCell>{match.result}</TableCell>
                                 <TableCell>
-                                    <Button onClick={() => handleUpdateURL(match.teamAId, match.teamBId)} variant="outline">Details</Button>
+                                    <Button onClick={() => handleUpdateURL(match.id.toString())} variant="outline">Details</Button>
                                 </TableCell>
                             </TableRow>
                         })}

@@ -33,7 +33,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
                               <NavlinkUi linkto="/">Home</NavlinkUi>
                               {(currentUser) ?
                                  (
-                                    <NavlinkUi type="signout" linkto="#">Logout</NavlinkUi>
+                                    <>
+                                       <NavlinkUi linkto="/dashboard/add-match">Add Match</NavlinkUi>
+                                       <NavlinkUi type="signout" linkto="#">Logout</NavlinkUi>
+                                    </>
                                  ) : (
                                     <>
                                        <NavlinkUi linkto="/login">Login</NavlinkUi>

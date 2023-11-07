@@ -1,44 +1,43 @@
-import CenteredArea from "../customUi/CenteredArea"
-import { Card, CardContent } from "../ui/card"
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "../ui/table"
+'use client'
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
+import CenteredArea from "../customUi/CenteredArea";
+import BattingData from "./match/BattingData";
+import MatchData from "./match/MatchData";
+import BowlingData from "./match/BowlingData";
 
 const MatchTable = () => {
+    const searchParams = useSearchParams()
+    const matchId = searchParams.get('matchId')
+
+    const getMatch = async (): Promise<any> => {
+        return await axios.get(`/api/view/match-get?matchId=${matchId}`)
+            .then(response => response.data)
+            .catch(error => {
+                console.log(error)
+                return {}
+            })
+    }
+
+    const { data } = useQuery({
+        queryKey: ['match', matchId],
+        queryFn: getMatch
+    })
+
     return (
         <CenteredArea maxWidthClass="max-w-5xl">
-            <Card>
-                <CardContent className="py-3">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[30%]">Match</TableHead>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Result</TableHead>
-                                <TableHead>Bat First</TableHead>
-                                <TableHead>View Details</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {/* {matches && matches.map((match) => {
-                            const date = new Date(match.matchDate)
-                            const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
-
-                            return <TableRow key={match.id}>
-                                <TableCell className="font-medium">
-                                    <p className="font-semibold">{match.teamAId} vs {match.teamBId}</p>
-                                    <p className="text-sm text-muted-foreground">{match.venue.venueName}, {match.venue?.venueCountryId}</p>
-                                </TableCell>
-                                <TableCell>{date.toLocaleString('en-IN', options)}</TableCell>
-                                <TableCell>{match.batFirst}</TableCell>
-                                <TableCell>{match.result}</TableCell>
-                                <TableCell>
-                                    <Button onClick={() => handleUpdateURL(match.teamAId, match.teamBId)} variant="outline">Details</Button>
-                                </TableCell>
-                            </TableRow>
-                        })} */}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+            {data && <div>
+                <MatchData data={data.match} />
+                <h1 className="mb-3 text-center font-bold">{data.match.teamAId} Batting</h1>
+                <BattingData data={data.batting.battingA} />
+                <h1 className="my-3 text-center font-bold">{data.match.teamBId} Batting</h1>
+                <BattingData data={data.batting.battingB} />
+                <h1 className="my-3 text-center font-bold">{data.match.teamAId} Bowling</h1>
+                <BowlingData data={data.bowling.bowlingA} />
+                <h1 className="my-3 text-center font-bold">{data.match.teamBId} Bowling</h1>
+                <BowlingData data={data.bowling.bowlingB} />
+            </div>}
         </CenteredArea>
     )
 }

@@ -24,6 +24,7 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
         && !item.toLowerCase().startsWith("st ")
         && !item.toLowerCase().startsWith("(")
         && !item.toLowerCase().startsWith("*")
+        && !item.toLowerCase().startsWith("timed out")
     ))
     const finalArray: string[][] = []
     for (let i = 0; i < rawArray.length; i += chunkSize) {
