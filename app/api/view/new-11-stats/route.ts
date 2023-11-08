@@ -5,6 +5,11 @@ import { NextResponse } from "next/server"
 export async function GET(request: Request) {
     const url = new URL(request.url)
     const teamA = url.searchParams.get('teamA')?.toString()
+    const teamB = url.searchParams.get('teamB')?.toString()
+
+    if (!teamA) {
+        return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 401 })
+    }
 
     try {
         const oneYearAgo = new Date();
