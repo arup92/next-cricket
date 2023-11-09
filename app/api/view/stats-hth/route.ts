@@ -1,0 +1,37 @@
+import prismaClient from "@/libs/prismadb";
+import { ErrorMessage } from "@/responses/messages";
+import { sortStringsAlphabetically } from "@/utils/utils";
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+    const url = new URL(request.url)
+    const teamA = url.searchParams.get('teamA')?.toString().toUpperCase()
+    const teamB = url.searchParams.get('teamB')?.toString().toUpperCase()
+
+    if (!teamA || !teamB) {
+        return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 401 })
+    }
+
+    try {
+        const teams: string[] = sortStringsAlphabetically(teamA, teamB) // Sort teams
+
+        // Prisma call: match
+        const teamStat = await prismaClient.match.findMany({
+            where: {
+                teamAId: teams[0],
+                teamBId: teams[1],
+            },
+            select: {
+                teamAId: true,
+                teamBId: true,
+                result: true,
+                venueId: true
+            }
+        })
+
+        return NextResponse.json(teamStat, { status: 200 })
+    } catch (error) {
+        console.log(error)
+        return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
+    }
+}

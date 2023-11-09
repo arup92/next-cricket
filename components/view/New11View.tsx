@@ -5,7 +5,7 @@ import axios from "axios"
 
 const New11View = () => {
     const getNew11Stats = () => {
-        return axios.get(`/api/view/new-11-stats?teamA=AUS`)
+        return axios.get(`/api/view/stats-hth?teamA=AUS&teamB=afg`)
             .then(response => response.data)
             .catch(error => {
                 console.log(error);

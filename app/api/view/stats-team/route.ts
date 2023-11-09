@@ -39,7 +39,7 @@ export async function GET(request: Request) {
             statsByVenue = getWL(filterByVenue, teamA)
         }
 
-        return NextResponse.json({ stats, statsByVenue }, { status: 200 })
+        return NextResponse.json({ team: teamA, stats, statsByVenue }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
