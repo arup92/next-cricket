@@ -29,7 +29,7 @@ export async function GET(request: Request) {
             }
         })
 
-        return NextResponse.json(teamStat, { status: 200 })
+        return NextResponse.json(teamStat.slice(0, 4), { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
