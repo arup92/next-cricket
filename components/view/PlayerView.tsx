@@ -52,10 +52,14 @@ const PlayerView = () => {
                                         <TableHead>Strike Rate</TableHead>
                                         <TableHead>Venue</TableHead>
                                         <TableHead>Opponent</TableHead>
+                                        <TableHead>Date</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {data.batData.map((item: any, index: number) => {
+                                        const date = new Date(item.matchDate)
+                                        const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
+
                                         let battingClassName = ``
                                         if (item.run >= 100) {
                                             battingClassName = 'bg-emerald-700 text-white shadow'
@@ -73,6 +77,7 @@ const PlayerView = () => {
                                             <TableCell>{item.strikeRate}</TableCell>
                                             <TableCell className="capitalize">{item.venueId.replaceAll('_', ' ')}</TableCell>
                                             <TableCell>{item.oppCountryId}</TableCell>
+                                            <TableCell>{date.toLocaleString('en-IN', options)}</TableCell>
                                         </TableRow>
                                     })}
                                 </TableBody>
