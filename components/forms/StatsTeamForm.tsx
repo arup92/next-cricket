@@ -14,7 +14,11 @@ const formSchema = z.object({
             message: 'Please select Team A',
         }),
     }),
-    teamB: z.enum(Teams).optional(),
+    teamB: z.enum(Teams, {
+        errorMap: () => ({
+            message: 'Please select Team B',
+        }),
+    }),
 })
 
 interface StatsTeamFormProps {
@@ -24,36 +28,39 @@ interface StatsTeamFormProps {
 const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
     const [teamStat, setTeamStat] = useState('')
 
-    const onSubmit = (values: any) => {
-        let queryParams = ''
-        if (Teams.includes(values.teamA) && Teams.includes(values.teamB)) {
-            queryParams = `teamA=${values.teamA}&teamB=${values.teamB}`
+    const getCustomMatches = async (): Promise<any> => {
+        let teams: string[] = []
+        let teamsString = teamStat.split('&')
+        teamsString.forEach(team => {
+            teams.push(team.split('=')[1])
+        })
 
-            if (values.teamA === values.teamB) {
-                queryParams = `teamA=${values.teamA}`
+        return await axios.all([
+            axios.get(`/api/view/stats-h2h?${teamStat}`),
+            axios.get(`/api/view/stats-team?team=${teams[0]}`),
+            axios.get(`/api/view/stats-team?team=${teams[1]}`),
+            axios.get(`/api/view/stats-new-11-bat?${teamStat}`),
+            axios.get(`/api/view/stats-new-11-bowl?${teamStat}`),
+        ]).then(axios.spread((h2h, sTeamA, sTeamB, new11bat, new11bowl) => {
+            handleData({
+                h2h: h2h.data,
+                sTeamA: sTeamA.data,
+                sTeamB: sTeamB.data,
+                new11bat: new11bat.data,
+                new11bowl: new11bowl.data
+            })
+
+            return {
+                h2h: h2h.data,
+                sTeamA: sTeamA.data,
+                sTeamB: sTeamB.data,
+                new11bat: new11bat.data,
+                new11bowl: new11bowl.data
             }
-        } else if (Teams.includes(values.teamA)) {
-            queryParams = `teamA=${values.teamA}`
-        }
-
-        // Fetch the data
-        refetch()
-
-        // Set team for useQuery
-        setTeamStat(queryParams)
-    }
-
-    const getCustomMatches = async (): Promise<Matches[]> => {
-        return await axios.get(`/api/view/stats-team?${teamStat}`)
-            .then(response => {
-                console.log(response.data);
-                handleData(response.data)
-                return response.data
-            })
-            .catch(err => {
-                console.log(err)
-                return []
-            })
+        })).catch(err => {
+            console.log(err)
+            return []
+        })
     }
 
     // useQuery on form submit
@@ -64,9 +71,20 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
         refetchOnWindowFocus: false,
     })
 
-    // useEffect(() => {
-    //     refetch()
-    // }, [refetch, teamStat])
+    const onSubmit = (values: any) => {
+        let queryParams = ''
+        if (Teams.includes(values.teamA) && Teams.includes(values.teamB)) {
+            queryParams = `teamA=${values.teamA}&teamB=${values.teamB}`
+        }
+        // Set team for useQuery
+        setTeamStat(queryParams)
+    }
+
+    useEffect(() => {
+        if (teamStat) {
+            refetch()
+        }
+    }, [refetch, teamStat])
 
     // Hook Form
     const {
@@ -121,6 +139,9 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
 
             {errors.teamA && (
                 <p className="mb-8">{errors.teamA.message as any}</p>
+            )}
+            {errors.teamB && (
+                <p className="mb-8">{errors.teamB.message as any}</p>
             )}
         </>
     )

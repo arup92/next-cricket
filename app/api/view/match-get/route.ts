@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const matchId = url.searchParams.get('matchId')?.toString()
 
     if (!matchId) {
-        return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
+        return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
     }
 
     try {

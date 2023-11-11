@@ -29,7 +29,7 @@ const MatchData: React.FC<MatchDataProps> = ({ data }) => {
                         <p className="text-sm text-muted-foreground capitalize">{data.result}</p>
                     </div>
 
-                    <div>
+                    <div className="hidden lg:block">
                         <Button variant={"default"} onClick={() => { router.back() }}>Back</Button>
                     </div>
                 </div>

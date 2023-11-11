@@ -1,85 +1,51 @@
 'use client'
 
-import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
 import StatsTeamForm from "../forms/StatsTeamForm"
-import { Button } from "../ui/button"
-import { Card, CardContent } from "../ui/card"
+import Head2Head from "./New11/Head2Head"
+import Player11Bat from "./New11/Player11Bat"
+import Player11Bowl from "./New11/Player11Bowl"
 
-interface ResponseData {
-    h2h: []
-    team: {}
-}
 
 const New11View = () => {
-    const router = useRouter()
-    const getHeadToHead = async () => {
-        try {
-            let data = {
-                h2h: [],
-                team: {}
-            }
-
-            const [h2hResponse, teamResponse] = await Promise.all([
-                axios.get(`/api/view/stats-h2h?teamA=AUS&teamB=afg`),
-                axios.get(`/api/view/stats-team?teamA=AUS`)
-            ])
-
-            data.h2h = h2hResponse.data
-            data.team = teamResponse.data
-            return data
-        } catch (error) {
-            console.error(error)
-            return []
-        }
-    }
-
-    let { data } = useQuery({
-        queryKey: ["MatchesH2H"],
-        queryFn: getHeadToHead
-    })
-
-    data = data as ResponseData | undefined
+    const [h2h, setH2h] = useState<any[]>([])
+    const [sTeamA, setSTeamA] = useState<any>({})
+    const [sTeamB, setSTeamB] = useState<any>({})
+    const [new11bat, setNew11Bat] = useState<any>({})
+    const [new11bowl, setNew11Bowl] = useState<any>({})
 
     // Update the table on form submission
     const handleData = (item: any): void => {
         console.log(item)
+        setSTeamA(item.sTeamA)
+        setSTeamB(item.sTeamB)
+        setH2h(item.h2h)
+        setNew11Bat(item.new11bat)
+        setNew11Bowl(item.new11bowl)
     }
 
     return (
         <>
             <StatsTeamForm handleData={handleData} />
-            {data?.h2h && <Card className="mb-6">
-                <CardContent className="py-3">
-                    <div className="flex justify-between">
-                        <div>
-                            <p className="font-semibold text-sm">
-                                AFG
-                                <span className="text-sm text-muted-foreground capitalize"> (Last 5 Matches)</span>
-                            </p>
-                            <p className="text-sm text-muted-foreground capitalize"></p>
-                        </div>
-
-                        <div>
-                            <p className="font-semibold text-sm">Head to Head</p>
-                            <p className="text-sm text-muted-foreground capitalize">{data?.h2h?.map((item: { result: string }) => item.result)}</p>
-                        </div>
-
-                        <div>
-                            <p className="font-semibold text-sm">
-                                AUS
-                                <span className="text-sm text-muted-foreground capitalize"> (Last 5 Matches)</span>
-                            </p>
-                            <p className="text-sm text-muted-foreground capitalize"></p>
-                        </div>
-
-                        <div>
-                            <Button variant={"default"} onClick={() => { router.back() }}>Back</Button>
-                        </div>
+            <Head2Head h2h={h2h} sTeamA={sTeamA} sTeamB={sTeamB} />
+            <div className="grid gap-5 grid-cols-1 lg:grid-cols-2">
+                {sTeamA.team && sTeamA.team && <>
+                    <div>
+                        <p className="text-center mb-3">{sTeamA.team} Batting</p>
+                        <Player11Bat player11={new11bat[sTeamA.team]} className="mb-5" />
+                        <p className="text-center mb-3">{sTeamA.team} Bowling</p>
+                        <Player11Bowl player11={new11bowl[sTeamA.team]} />
                     </div>
-                </CardContent>
-            </Card>}
+
+                    <div>
+                        <p className="text-center mb-3">{sTeamB.team} Batting</p>
+                        <Player11Bat player11={new11bat[sTeamB.team]} className="mb-5" />
+                        <p className="text-center mb-3">{sTeamB.team} Bowling</p>
+                        <Player11Bowl player11={new11bowl[sTeamB.team]} />
+                    </div>
+                </>
+                }
+            </div>
         </>
     )
 }

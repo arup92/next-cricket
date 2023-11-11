@@ -4,11 +4,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
-    const teamA = url.searchParams.get('teamA')?.toString().toUpperCase()
+    const team = url.searchParams.get('team')?.toString().toUpperCase()
     const venueId = url.searchParams.get('venueId')?.toString().toLowerCase()
 
-    if (!teamA) {
-        return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 401 })
+    if (!team) {
+        return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
     }
 
     try {
@@ -16,8 +16,8 @@ export async function GET(request: Request) {
         const teamStat = await prismaClient.match.findMany({
             where: {
                 OR: [
-                    { teamAId: teamA },
-                    { teamBId: teamA }
+                    { teamAId: team },
+                    { teamBId: team }
                 ]
             },
             select: {
@@ -30,16 +30,16 @@ export async function GET(request: Request) {
         })
 
         // Modify the result for 'w' & 'l'
-        const stats = getWL(teamStat, teamA)
+        const stats = getWL(teamStat, team)
 
         // Filter by venue
         let statsByVenue: string[] = []
         if (!!venueId) {
             let filterByVenue = teamStat.filter(item => item.venueId === venueId)
-            statsByVenue = getWL(filterByVenue, teamA)
+            statsByVenue = getWL(filterByVenue, team)
         }
 
-        return NextResponse.json({ team: teamA, stats, statsByVenue }, { status: 200 })
+        return NextResponse.json({ team: team, stats, statsByVenue }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
