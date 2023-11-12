@@ -20,13 +20,15 @@ export async function GET(request: Request) {
         const batData = await prismaClient.batting.findMany({
             where: {
                 playerId: playerId
-            }
+            },
+            take: 10
         })
 
         const bowlData = await prismaClient.bowling.findMany({
             where: {
                 playerId: playerId
-            }
+            },
+            take: 10
         })
 
         return NextResponse.json({ playerData, batData, bowlData }, { status: 200 })

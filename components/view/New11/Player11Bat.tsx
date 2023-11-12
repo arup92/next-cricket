@@ -1,5 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import Link from "next/link"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import PlayerView from "../PlayerView"
 
 interface Player11Props {
     player11: any
@@ -23,7 +26,19 @@ const Player11Bat: React.FC<Player11Props> = ({ player11, className }) => {
                         <TableBody>
                             {player11 && Object.keys(player11).map((player, index) => (
                                 <TableRow key={index}>
-                                    <TableCell className="capitalize">{player.replaceAll('_', ' ')}</TableCell>
+                                    <TableCell className="capitalize">
+                                        <Dialog>
+                                            <DialogTrigger>
+                                                <span className="capitalize text-blue-700 hover:underline">{player.replaceAll('_', ' ')}</span>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle className="mb-3"><span className="capitalize">{player.replaceAll('_', ' ')}</span></DialogTitle>
+                                                    <PlayerView playerId={player} />
+                                                </DialogHeader>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </TableCell>
                                     <TableCell className="capitalize">
                                         {player11[player].map((score: number, i: number) => {
                                             let battingClassName = ``

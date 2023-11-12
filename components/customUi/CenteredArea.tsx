@@ -4,7 +4,7 @@ interface CenteredAreaProps {
 }
 const CenteredArea: React.FC<CenteredAreaProps> = ({ children, maxWidthClass = 'max-w-sm' }) => {
     return (
-        <div className="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
+        <div className="flex flex-col justify-center flex-1 min-h-full px-0 md:px-6 py-2 lg:py-12 lg:px-8">
             <div className={`sm:mx-auto sm:w-full ${maxWidthClass}`}>
                 {children}
             </div>
