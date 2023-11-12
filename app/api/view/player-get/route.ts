@@ -21,6 +21,9 @@ export async function GET(request: Request) {
             where: {
                 playerId: playerId
             },
+            orderBy: [
+                { matchDate: 'desc' },
+            ],
             take: 10
         })
 
@@ -28,6 +31,9 @@ export async function GET(request: Request) {
             where: {
                 playerId: playerId
             },
+            orderBy: [
+                { matchDate: 'desc' },
+            ],
             take: 10
         })
 
