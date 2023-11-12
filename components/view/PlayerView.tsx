@@ -4,8 +4,10 @@ import axios from "axios"
 import { useSearchParams } from "next/navigation"
 import CenteredArea from "../customUi/CenteredArea"
 import BattingTable from "./player/BattingTable"
-import PlayerData from "./player/PlayerData"
 import BowlingTable from "./player/BowlingTable"
+import PlayerData from "./player/PlayerData"
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import Loading from "@/app/loading"
 
 interface PlayerViewProps {
     playerId?: string
@@ -30,10 +32,15 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId }) => {
             })
     }
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['playerStats', playerIdParam],
         queryFn: getPlayerStats
     })
+
+    if (isLoading)
+        return (
+            <Loading />
+        )
 
     return (
         <>

@@ -16,7 +16,7 @@ const New11View = () => {
 
     // Update the table on form submission
     const handleData = (item: any): void => {
-        console.log(item)
+        // console.log(item)
         setSTeamA(item.sTeamA)
         setSTeamB(item.sTeamB)
         setH2h(item.h2h)

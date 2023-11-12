@@ -1,7 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Link from "next/link"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { HiExternalLink } from 'react-icons/hi'
 import PlayerView from "../PlayerView"
 
 interface Player11Props {
@@ -33,7 +34,11 @@ const Player11Bat: React.FC<Player11Props> = ({ player11, className }) => {
                                             </DialogTrigger>
                                             <DialogContent>
                                                 <DialogHeader>
-                                                    <DialogTitle className="mb-3"><span className="capitalize">{player.replaceAll('_', ' ')}</span></DialogTitle>
+                                                    <DialogTitle className="mb-3">
+                                                        <Link className="text-blue-700 hover:underline capitalize flex items-center" href={`/view/player?playerId=${player}`} target="_blank">
+                                                            {player.replaceAll('_', ' ')} <HiExternalLink className='ml-1' />
+                                                        </Link>
+                                                    </DialogTitle>
                                                     <PlayerView playerId={player} />
                                                 </DialogHeader>
                                             </DialogContent>
