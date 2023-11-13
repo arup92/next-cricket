@@ -1,13 +1,14 @@
 export const Teams = [
-    'IND',
-    'AUS',
-    'RSA',
-    'PAK',
-    'BAN',
-    'NZ',
-    'SL',
     'AFG',
+    'AUS',
+    'BAN',
     'ENG',
-    'WI',
-    'IRE'
+    'IND',
+    'IRE',
+    'NED',
+    'NZ',
+    'PAK',
+    'RSA',
+    'SL',
+    'WI'
 ] as const

@@ -3,4 +3,5 @@ export type BowlingDataType = {
     maiden: number
     wicket: number
     eco: number
+    matchFormat?: string
 }

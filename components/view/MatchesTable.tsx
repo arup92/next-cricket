@@ -39,8 +39,8 @@ const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
                                 </TableCell>
                                 <TableCell>{match.matchFormat}</TableCell>
                                 <TableCell>{date.toLocaleString('en-IN', options)}</TableCell>
-                                <TableCell>{match.batFirst}</TableCell>
                                 <TableCell>{match.result}</TableCell>
+                                <TableCell>{match.batFirst}</TableCell>
                                 <TableCell>
                                     <Button onClick={() => handleUpdateURL(match.id.toString())} variant="outline">Details</Button>
                                 </TableCell>

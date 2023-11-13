@@ -21,7 +21,7 @@ export async function GET(request: Request) {
                     { teamAId: team },
                     { teamBId: team }
                 ],
-                matchFormat
+                matchFormat,
             },
             select: {
                 teamAId: true,
@@ -29,7 +29,10 @@ export async function GET(request: Request) {
                 batFirst: true,
                 result: true,
                 venueId: true
-            }
+            },
+            orderBy: [
+                { matchDate: 'desc' }
+            ]
         })
 
         // Modify the result for 'w' & 'l'
