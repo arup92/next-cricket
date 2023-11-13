@@ -1,26 +1,34 @@
 import prismaClient from "@/libs/prismadb"
 import { ErrorMessage } from "@/responses/messages"
+import { MatchFormat } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
     const playerId = url.searchParams.get('playerId')?.toString()
+    const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString() as MatchFormat
 
-    if (!playerId) {
+    if (!playerId || !matchFormat) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
     }
 
     try {
+        let whereClause: { playerId: string; matchFormat?: MatchFormat } = {
+            playerId: playerId
+        }
+
         const playerData = await prismaClient.player.findUnique({
-            where: {
-                playerId: playerId
-            }
+            where: whereClause
         })
 
+
+        // Add match format
+        if (matchFormat) {
+            whereClause = { ...whereClause, matchFormat: matchFormat.toUpperCase() as MatchFormat }
+        }
+
         const batData = await prismaClient.batting.findMany({
-            where: {
-                playerId: playerId
-            },
+            where: whereClause,
             orderBy: [
                 { matchDate: 'desc' },
             ],
@@ -28,9 +36,7 @@ export async function GET(request: Request) {
         })
 
         const bowlData = await prismaClient.bowling.findMany({
-            where: {
-                playerId: playerId
-            },
+            where: whereClause,
             orderBy: [
                 { matchDate: 'desc' },
             ],

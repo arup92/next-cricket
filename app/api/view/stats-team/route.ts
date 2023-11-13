@@ -1,13 +1,15 @@
 import prismaClient from "@/libs/prismadb";
 import { ErrorMessage } from "@/responses/messages";
+import { MatchFormat } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
-    const team = url.searchParams.get('team')?.toString().toUpperCase()
+    const team = url.searchParams.get('team')?.toString().toUpperCase() as string
     const venueId = url.searchParams.get('venueId')?.toString().toLowerCase()
+    const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString() as MatchFormat
 
-    if (!team) {
+    if (!team && !matchFormat) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
     }
 
@@ -18,7 +20,8 @@ export async function GET(request: Request) {
                 OR: [
                     { teamAId: team },
                     { teamBId: team }
-                ]
+                ],
+                matchFormat
             },
             select: {
                 teamAId: true,

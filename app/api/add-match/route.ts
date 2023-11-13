@@ -2,9 +2,11 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import prismaClient from '@/libs/prismadb';
 import { ErrorMessage, Message } from '@/responses/messages';
 import { battingData, bowlingData, sortStringsAlphabetically, summaryData } from '@/utils/utils';
+import { MatchFormat } from "@prisma/client";
 import { NextResponse } from 'next/server';
 
 interface RequestBody {
+    matchFormat: MatchFormat
     teamA: string
     teamB: string
     batFirst: string
@@ -86,6 +88,7 @@ export async function POST(request: Request) {
         if (!match) {
             match = await prismaClient.match.create({
                 data: {
+                    matchFormat: body.matchFormat,
                     teamAId: teams[0],
                     teamBId: teams[1],
                     result: body.result,
@@ -158,6 +161,7 @@ export async function POST(request: Request) {
 
         // Add Batting: Session A
         const constantBattingAData = {
+            matchFormat: body.matchFormat,
             userId: userSession.id,
             venueId: venue.venueId,
             teamId: body.batFirst,
@@ -179,6 +183,7 @@ export async function POST(request: Request) {
 
         // Add Batting: Session B
         const constantBattingBData = {
+            matchFormat: body.matchFormat,
             userId: userSession.id,
             venueId: venue.venueId,
             teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
@@ -200,6 +205,7 @@ export async function POST(request: Request) {
 
         // Add Bowling: Session A
         const constantBowlingAData = {
+            matchFormat: body.matchFormat,
             userId: userSession.id,
             venueId: venue.venueId,
             teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
@@ -221,6 +227,7 @@ export async function POST(request: Request) {
 
         // Add Bowling: Session B
         const constantBowlingBData = {
+            matchFormat: body.matchFormat,
             userId: userSession.id,
             venueId: venue.venueId,
             teamId: body.batFirst,

@@ -1,7 +1,7 @@
 'use client'
 
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CenteredArea from "../customUi/CenteredArea";
 
 import { useQuery } from "@tanstack/react-query";
@@ -15,6 +15,7 @@ const MatchesView = () => {
     const getMatches = async (): Promise<Matches[]> => {
         return await axios.get(`/api/view/matches-get`)
             .then(response => {
+                setMatches(response.data as Matches[])
                 return response.data
             })
             .catch(err => {
@@ -28,9 +29,6 @@ const MatchesView = () => {
         queryKey: ['matches'],
         queryFn: getMatches
     })
-    useEffect(() => {
-        setMatches(matchesQueryData.data as Matches[])
-    }, [matchesQueryData.data])
 
     // Update the table on form submission
     const handleData = (item: any): void => {

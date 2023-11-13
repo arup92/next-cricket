@@ -1,4 +1,5 @@
 interface Matches {
+    matchFormat: string
     teamAId: string
     teamBId: string
     result: string

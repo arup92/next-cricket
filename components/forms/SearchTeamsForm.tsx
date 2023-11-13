@@ -1,4 +1,5 @@
-import { Teams } from "@/utils/Teams";
+import { MatchFormat } from "@/types/MatchFormat";
+import { Teams } from "@/types/Teams";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -9,12 +10,9 @@ import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const formSchema = z.object({
-    teamA: z.enum(Teams, {
-        errorMap: () => ({
-            message: 'Please select Team A',
-        }),
-    }),
+    teamA: z.enum(Teams).optional(),
     teamB: z.enum(Teams).optional(),
+    matchFormat: z.enum(MatchFormat).optional(),
 })
 
 interface SearchTeamsFormProps {
@@ -25,7 +23,7 @@ const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
     const [teams, setTeams] = useState('')
 
     const onSubmit = (values: any) => {
-        let queryParams = ''
+        let queryParams = ``
         if (Teams.includes(values.teamA) && Teams.includes(values.teamB)) {
             queryParams = `teamA=${values.teamA}&teamB=${values.teamB}`
 
@@ -34,6 +32,11 @@ const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
             }
         } else if (Teams.includes(values.teamA)) {
             queryParams = `teamA=${values.teamA}`
+        }
+
+        // Match Format
+        if (MatchFormat.includes(values.matchFormat)) {
+            queryParams += `&matchFormat=${values.matchFormat}`
         }
 
         // Set team for useQuery
@@ -106,6 +109,25 @@ const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
                             {Teams.map((team) => (
                                 <SelectItem key={team} value={team}>
                                     {team}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div>
+                    <Select
+                        onValueChange={(selectedValue: string) => {
+                            setValue('matchFormat', selectedValue)
+                        }}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Format" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {MatchFormat.map((format) => (
+                                <SelectItem key={format} value={format}>
+                                    {format}
                                 </SelectItem>
                             ))}
                         </SelectContent>

@@ -2,13 +2,18 @@
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Teams } from "@/utils/Teams"
+import { ErrorMessage } from "@/responses/messages"
+import { MatchFormat } from "@/types/MatchFormat"
+import { IPLTeams } from "@/types/IPLTeams"
+import { Teams } from "@/types/Teams"
 import { cn } from "@/utils/shadcnUtils"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from "@radix-ui/react-icons"
+import axios from "axios"
 import { format } from "date-fns"
 import { useState } from "react"
 import { useForm } from 'react-hook-form'
+import toast from "react-hot-toast"
 import { z } from 'zod'
 import CenteredArea from '../customUi/CenteredArea'
 import { Button } from '../ui/button'
@@ -17,11 +22,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "../ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
-import axios from "axios"
-import toast from "react-hot-toast"
-import { ErrorMessage } from "@/responses/messages"
 
 const formSchema = z.object({
+    matchFormat: z.enum(MatchFormat),
     teamA: z.enum(Teams),
     teamB: z.enum(Teams),
     batFirst: z.enum(Teams),
@@ -34,6 +37,7 @@ const formSchema = z.object({
 
     sessionAbat: z.string().trim().min(1, 'Enter valid details'),
     sessionAbowl: z.string().trim().min(1, 'Enter valid details'),
+
     sessionBbat: z.string().trim().min(1, 'Enter valid details'),
     sessionBbowl: z.string().trim().min(1, 'Enter valid details'),
 })
@@ -48,6 +52,7 @@ const AddMatchForm = () => {
         setValue,
     } = useForm({
         defaultValues: {
+            matchFormat: '',
             teamA: '',
             teamB: '',
             batFirst: '',
@@ -55,8 +60,10 @@ const AddMatchForm = () => {
             venue: '',
             venueCountry: '',
             matchDate: new Date(),
+
             sessionAbat: '',
             sessionAbowl: '',
+
             sessionBbat: '',
             sessionBbowl: '',
         },
@@ -65,6 +72,7 @@ const AddMatchForm = () => {
     })
 
     const [tabIndex, setTabIndex] = useState<string>("0")
+    const [matchFormat, setMatchFormat] = useState<string>()
     const [batFirstValues, setBatFirstValues] = useState({ teamA: '', teamB: '' })
 
     const handleChangeTab = (newTabIndex: string) => {
@@ -114,6 +122,26 @@ const AddMatchForm = () => {
                                     <div>
                                         <Select
                                             onValueChange={(selectedValue: string) => {
+                                                setValue('matchFormat', selectedValue)
+                                                setMatchFormat(selectedValue)
+                                            }}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Match Type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {MatchFormat.map((format) => (
+                                                    <SelectItem key={format} value={format}>
+                                                        {format}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div>
+                                        <Select
+                                            onValueChange={(selectedValue: string) => {
                                                 setValue('teamA', selectedValue)
                                                 setBatFirstValues(prevState => ({ ...prevState, teamA: watch().teamA }))
                                             }}
@@ -122,11 +150,23 @@ const AddMatchForm = () => {
                                                 <SelectValue placeholder="Team A" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {Teams.map((team) => (
-                                                    <SelectItem key={team} value={team}>
-                                                        {team}
-                                                    </SelectItem>
-                                                ))}
+                                                {(matchFormat === 'IPL') ? (
+                                                    <>
+                                                        {IPLTeams.map((team) => (
+                                                            <SelectItem key={team} value={team}>
+                                                                {team}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {Teams.map((team) => (
+                                                            <SelectItem key={team} value={team}>
+                                                                {team}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </>
+                                                )}
                                             </SelectContent>
                                         </Select>
 
@@ -143,11 +183,23 @@ const AddMatchForm = () => {
                                                 <SelectValue placeholder="Team B" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {Teams.map((team) => (
-                                                    <SelectItem key={team} value={team}>
-                                                        {team}
-                                                    </SelectItem>
-                                                ))}
+                                                {(matchFormat === 'IPL') ? (
+                                                    <>
+                                                        {IPLTeams.map((team) => (
+                                                            <SelectItem key={team} value={team}>
+                                                                {team}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {Teams.map((team) => (
+                                                            <SelectItem key={team} value={team}>
+                                                                {team}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </>
+                                                )}
                                             </SelectContent>
                                         </Select>
                                     </div>

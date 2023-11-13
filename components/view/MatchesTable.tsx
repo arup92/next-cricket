@@ -19,7 +19,8 @@ const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[30%]">Match</TableHead>
+                            <TableHead className="w-[20%]">Match</TableHead>
+                            <TableHead>Format</TableHead>
                             <TableHead>Date</TableHead>
                             <TableHead>Result</TableHead>
                             <TableHead>Bat First</TableHead>
@@ -36,6 +37,7 @@ const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
                                     <p className="font-semibold">{match.teamAId} vs {match.teamBId}</p>
                                     <p className="text-sm text-muted-foreground">{match.venue.venueName}, {match.venue?.venueCountryId}</p>
                                 </TableCell>
+                                <TableCell>{match.matchFormat}</TableCell>
                                 <TableCell>{date.toLocaleString('en-IN', options)}</TableCell>
                                 <TableCell>{match.batFirst}</TableCell>
                                 <TableCell>{match.result}</TableCell>

@@ -1,14 +1,16 @@
 import prismaClient from "@/libs/prismadb";
 import { ErrorMessage } from "@/responses/messages";
 import { sortStringsAlphabetically } from "@/utils/utils";
+import { MatchFormat } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
     const teamA = url.searchParams.get('teamA')?.toString().toUpperCase()
     const teamB = url.searchParams.get('teamB')?.toString().toUpperCase()
+    const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString() as MatchFormat
 
-    if (!teamA || !teamB) {
+    if (!teamA || !teamB || !matchFormat) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 401 })
     }
 
@@ -20,12 +22,14 @@ export async function GET(request: Request) {
             where: {
                 teamAId: teams[0],
                 teamBId: teams[1],
+                matchFormat
             },
             select: {
                 teamAId: true,
                 teamBId: true,
                 result: true,
-                venueId: true
+                venueId: true,
+                matchFormat: true
             }
         })
 

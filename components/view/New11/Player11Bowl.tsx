@@ -7,10 +7,13 @@ import PlayerView from "../PlayerView"
 
 interface Player11Props {
     player11: any
+    matchFormat: string
     className?: string
 }
 
-const Player11Bowl: React.FC<Player11Props> = ({ player11, className }) => {
+const Player11Bowl: React.FC<Player11Props> = ({ player11, matchFormat, className }) => {
+    // console.log(matchFormat);
+
 
     return (
         <>
@@ -35,11 +38,11 @@ const Player11Bowl: React.FC<Player11Props> = ({ player11, className }) => {
                                             <DialogContent>
                                                 <DialogHeader>
                                                     <DialogTitle className="mb-3">
-                                                        <Link className="text-blue-700 hover:underline capitalize flex items-center" href={`/view/player?playerId=${player}`} target="_blank">
+                                                        <Link className="text-blue-700 hover:underline capitalize flex items-center" href={`/view/player?playerId=${player}&matchFormat=${matchFormat}`} target="_blank">
                                                             {player.replaceAll('_', ' ')} <HiExternalLink className='ml-1' />
                                                         </Link>
                                                     </DialogTitle>
-                                                    <PlayerView playerId={player} />
+                                                    <PlayerView playerId={player} matchFormat={matchFormat} />
                                                 </DialogHeader>
                                             </DialogContent>
                                         </Dialog>

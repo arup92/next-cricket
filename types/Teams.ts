@@ -8,5 +8,6 @@ export const Teams = [
     'SL',
     'AFG',
     'ENG',
-    'WI'
+    'WI',
+    'IRE'
 ] as const

@@ -32,16 +32,16 @@ const New11View = () => {
                 {sTeamA.team && sTeamA.team && <>
                     <div>
                         <p className="text-center mb-3">{sTeamA.team} Batting</p>
-                        <Player11Bat player11={new11bat[sTeamA.team]} className="mb-5" />
+                        <Player11Bat player11={new11bat[sTeamA.team]} matchFormat={new11bat.matchFormat} className="mb-5" />
                         <p className="text-center mb-3">{sTeamA.team} Bowling</p>
-                        <Player11Bowl player11={new11bowl[sTeamA.team]} />
+                        <Player11Bowl player11={new11bowl[sTeamA.team]} matchFormat={new11bowl.matchFormat} />
                     </div>
 
                     <div>
                         <p className="text-center mb-3">{sTeamB.team} Batting</p>
-                        <Player11Bat player11={new11bat[sTeamB.team]} className="mb-5" />
+                        <Player11Bat player11={new11bat[sTeamB.team]} matchFormat={new11bat.matchFormat} className="mb-5" />
                         <p className="text-center mb-3">{sTeamB.team} Bowling</p>
-                        <Player11Bowl player11={new11bowl[sTeamB.team]} />
+                        <Player11Bowl player11={new11bowl[sTeamB.team]} matchFormat={new11bowl.matchFormat} />
                     </div>
                 </>
                 }

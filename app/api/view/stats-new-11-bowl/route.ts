@@ -1,11 +1,13 @@
 import prismaClient from "@/libs/prismadb"
 import { ErrorMessage } from "@/responses/messages"
+import { MatchFormat } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
     const teamA = url.searchParams.get('teamA')?.toString().toUpperCase()
     const teamB = url.searchParams.get('teamB')?.toString().toUpperCase()
+    const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString() as MatchFormat
 
     if (!teamA) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 401 })
@@ -37,6 +39,9 @@ export async function GET(request: Request) {
             }
         }
 
+        // Update the where clause fot match format
+        whereClause = { ...whereClause, matchFormat }
+
         const teamBowl = await prismaClient.bowling.findMany({
             where: whereClause,
             orderBy: [
@@ -57,6 +62,8 @@ export async function GET(request: Request) {
                 [teamA]: {}
             }
         }
+
+        playerData = { ...playerData, matchFormat: matchFormat }
 
         for (const item of teamBowl) {
             if (item.playerId in playerData[item.teamId]) {

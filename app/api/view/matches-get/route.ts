@@ -7,6 +7,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url)
     const teamA = url.searchParams.get('teamA')?.toString()
     const teamB = url.searchParams.get('teamB')?.toString()
+    const matchFormat = url.searchParams.get('matchFormat')?.toString()
 
     try {
         // Construct where clause
@@ -27,6 +28,11 @@ export async function GET(request: Request) {
             }
         }
 
+        // Update the where clause fot match format
+        if (matchFormat) {
+            where = { ...where, matchFormat }
+        }
+
         // Find matches
         const matches = await prismaClient.match.findMany({
             select: {
@@ -36,6 +42,7 @@ export async function GET(request: Request) {
                 result: true,
                 batFirst: true,
                 matchDate: true,
+                matchFormat: true,
                 venueId: true,
                 venue: {
                     select: {

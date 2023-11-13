@@ -59,8 +59,15 @@ model Venue {
   userId String
 }
 
+enum MatchFormat {
+  ODI
+  T20
+  IPL
+}
+
 model Match {
-  id Int @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
+  matchFormat MatchFormat
 
   teamA   Team   @relation("teamA", fields: [teamAId], references: [teamId])
   teamAId String
@@ -95,7 +102,7 @@ model Player {
   playerName      String
   playerCountryId String
   playerType      PlayerType?
-  weakness        String?
+  description     String?
 
   batting Batting[]
   bowling Bowling[]
@@ -109,7 +116,8 @@ model Batting {
   four         Int
   six          Int
   strikeRate   Float
-  matchDate    DateTime @db.Date
+  matchDate    DateTime    @db.Date
+  matchFormat  MatchFormat
 
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String
@@ -134,7 +142,8 @@ model Bowling {
   maiden       Int
   wicket       Int
   eco          Float
-  matchDate    DateTime @db.Date
+  matchDate    DateTime    @db.Date
+  matchFormat  MatchFormat
 
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String

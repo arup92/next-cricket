@@ -1,4 +1,5 @@
-import { Teams } from "@/utils/Teams";
+import { MatchFormat } from "@/types/MatchFormat";
+import { Teams } from "@/types/Teams";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -9,6 +10,11 @@ import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const formSchema = z.object({
+    matchFormat: z.enum(MatchFormat, {
+        errorMap: () => ({
+            message: 'Please select Format',
+        }),
+    }),
     teamA: z.enum(Teams, {
         errorMap: () => ({
             message: 'Please select Team A',
@@ -18,7 +24,7 @@ const formSchema = z.object({
         errorMap: () => ({
             message: 'Please select Team B',
         }),
-    }),
+    })
 })
 
 interface StatsTeamFormProps {
@@ -29,16 +35,16 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
     const [teamStat, setTeamStat] = useState('')
 
     const getCustomMatches = async (): Promise<any> => {
-        let teams: string[] = []
-        let teamsString = teamStat.split('&')
-        teamsString.forEach(team => {
-            teams.push(team.split('=')[1])
+        let statParams: string[] = []
+        let paramString = teamStat.split('&')
+        paramString.forEach(param => {
+            statParams.push(param.split('=')[1])
         })
 
         return await axios.all([
             axios.get(`/api/view/stats-h2h?${teamStat}`),
-            axios.get(`/api/view/stats-team?team=${teams[0]}`),
-            axios.get(`/api/view/stats-team?team=${teams[1]}`),
+            axios.get(`/api/view/stats-team?team=${statParams[0]}&matchFormat=${statParams[2]}`),
+            axios.get(`/api/view/stats-team?team=${statParams[1]}&matchFormat=${statParams[2]}`),
             axios.get(`/api/view/stats-new-11-bat?${teamStat}`),
             axios.get(`/api/view/stats-new-11-bowl?${teamStat}`),
         ]).then(axios.spread((h2h, sTeamA, sTeamB, new11bat, new11bowl) => {
@@ -73,9 +79,10 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
 
     const onSubmit = (values: any) => {
         let queryParams = ''
-        if (Teams.includes(values.teamA) && Teams.includes(values.teamB)) {
-            queryParams = `teamA=${values.teamA}&teamB=${values.teamB}`
+        if (Teams.includes(values.teamA) && Teams.includes(values.teamB) && MatchFormat.includes(values.matchFormat)) {
+            queryParams = `teamA=${values.teamA}&teamB=${values.teamB}&matchFormat=${values.matchFormat}`
         }
+
         // Set team for useQuery
         setTeamStat(queryParams)
     }
@@ -100,6 +107,25 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex gap-3 mb-8">
+                <div>
+                    <Select
+                        onValueChange={(selectedValue: string) => {
+                            setValue('matchFormat', selectedValue)
+                        }}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Format" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {MatchFormat.map((format) => (
+                                <SelectItem key={format} value={format}>
+                                    {format}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
                 <div>
                     <Select
                         onValueChange={(selectedValue: string) => setValue('teamA', selectedValue)}
@@ -137,11 +163,14 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
                 <Button>Submit</Button>
             </form>
 
-            {errors.teamA && (
-                <p className="mb-8">{errors.teamA.message as any}</p>
+            {errors.matchFormat && (
+                <p className="mb-5">{errors.matchFormat.message as any}</p>
             )}
-            {errors.teamB && (
-                <p className="mb-8">{errors.teamB.message as any}</p>
+            {!errors.matchFormat && errors.teamA && (
+                <p className="mb-5">{errors.teamA.message as any}</p>
+            )}
+            {!errors.matchFormat && !errors.teamA && errors.teamB && (
+                <p className="mb-5">{errors.teamB.message as any}</p>
             )}
         </>
     )
