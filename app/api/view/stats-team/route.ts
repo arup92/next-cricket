@@ -32,7 +32,8 @@ export async function GET(request: Request) {
             },
             orderBy: [
                 { matchDate: 'desc' }
-            ]
+            ],
+            take: 5
         })
 
         // Modify the result for 'w' & 'l'
