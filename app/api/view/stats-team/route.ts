@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     const venueId = url.searchParams.get('venueId')?.toString().toLowerCase()
     const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString() as MatchFormat
 
-    if (!team && !matchFormat) {
+    if (!team || !matchFormat) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
     }
 
@@ -39,14 +39,61 @@ export async function GET(request: Request) {
         // Modify the result for 'w' & 'l'
         const stats = getWL(teamStat, team)
 
-        // Filter by venue
+        // Filter by venueId
         let statsByVenue: string[] = []
         if (!!venueId) {
-            let filterByVenue = teamStat.filter(item => item.venueId === venueId)
-            statsByVenue = getWL(filterByVenue, team)
+            const filterVenue = await prismaClient.match.findMany({
+                where: {
+                    OR: [
+                        { teamAId: team },
+                        { teamBId: team }
+                    ],
+                    matchFormat,
+                    venueId
+                },
+                orderBy: [
+                    { matchDate: 'desc' }
+                ],
+                take: 5
+            })
+
+            statsByVenue = getWL(filterVenue, team)
         }
 
-        return NextResponse.json({ team: team, stats, statsByVenue }, { status: 200 })
+        // Get Scores
+        const scores = await prismaClient.batting.groupBy({
+            where: {
+                teamId: team,
+                matchFormat,
+            },
+            _sum: {
+                run: true
+            },
+            by: ["matchId", "matchDate"],
+            take: 5,
+            orderBy: {
+                matchDate: 'desc'
+            }
+        })
+
+
+        // Get Wickets
+        const wickets = await prismaClient.bowling.groupBy({
+            where: {
+                teamId: team,
+                matchFormat,
+            },
+            _sum: {
+                wicket: true
+            },
+            by: ["matchId", "matchDate"],
+            take: 5,
+            orderBy: {
+                matchDate: 'desc'
+            }
+        })
+
+        return NextResponse.json({ team: team, stats, statsByVenue, scores, wickets }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })

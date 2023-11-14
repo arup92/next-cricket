@@ -12,8 +12,6 @@ interface Player11Props {
 }
 
 const Player11Bowl: React.FC<Player11Props> = ({ player11, matchFormat, className }) => {
-    // console.log(matchFormat);
-
 
     return (
         <>
@@ -22,8 +20,8 @@ const Player11Bowl: React.FC<Player11Props> = ({ player11, matchFormat, classNam
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-[30%]">Batsman</TableHead>
-                                <TableHead>Scores (Last 5)</TableHead>
+                                <TableHead className="w-[30%]">Bowler</TableHead>
+                                <TableHead>Wickets (Last 5)</TableHead>
                                 <TableHead>Average (Last 5)</TableHead>
                             </TableRow>
                         </TableHeader>

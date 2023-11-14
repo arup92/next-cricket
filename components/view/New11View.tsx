@@ -21,6 +21,7 @@ const New11View = () => {
         setSTeamA(item.sTeamA)
         setSTeamB(item.sTeamB)
         setH2h(item.h2h)
+
         setNew11Bat(item.new11bat)
         setNew11Bowl(item.new11bowl)
     }
