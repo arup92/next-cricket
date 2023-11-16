@@ -31,10 +31,14 @@ export async function POST(request: Request) {
     const body: RequestBody = await request.json()
 
     // Sessions
-    const sessionABat: string[][] = summaryData(body.sessionAbat, 6)
-    const sessionBBat: string[][] = summaryData(body.sessionBbat, 6)
+    const sessionABat: string[][] = summaryData(body.sessionAbat.split('SR')[1], 6)
+    const sessionBBat: string[][] = summaryData(body.sessionBbat.split('SR')[1], 6)
     const sessionABowl: string[][] = summaryData(body.sessionAbowl, 7)
     const sessionBBowl: string[][] = summaryData(body.sessionBbowl, 7)
+
+    // Scores
+    let sessionAScore = body.sessionAbat.split('SR')[0].split('\n').filter(item => item !== '')[1].split(' ')[0].split('/')
+    let sessionBScore = body.sessionBbat.split('SR')[0].split('\n').filter(item => item !== '')[1].split(' ')[0].split('/')
 
     // Validate venue
     const pattern = /^[a-zA-Z\s]*$/
@@ -48,15 +52,6 @@ export async function POST(request: Request) {
     }
 
     try {
-        // Create Team
-        // await prismaClient.team.create({
-        //     data: {
-        //         teamName: 'West Indies',
-        //         teamId: 'WI',
-        //         userId: userSession.id
-        //     }
-        // })
-
         // Create venue
         let venue = await prismaClient.venue.findUnique({
             where: {
@@ -101,6 +96,24 @@ export async function POST(request: Request) {
         } else {
             return new NextResponse(ErrorMessage.MATCH_EXISTS, { status: 401 })
         }
+
+        // Create Score
+        const score = await prismaClient.scores.createMany({
+            data: [{
+                runs: parseInt(sessionAScore[0]),
+                wickets: parseInt(sessionBScore[1]),
+                matchId: match.id,
+                teamId: teams[0],
+                oppCountryId: teams[1]
+            }, {
+                runs: parseInt(sessionBScore[0]),
+                wickets: parseInt(sessionAScore[1]),
+                matchId: match.id,
+                teamId: teams[1],
+                oppCountryId: teams[0]
+            }]
+        })
+
 
         // Make Player array
         const playerData: Player[] = []

@@ -61,39 +61,46 @@ export async function GET(request: Request) {
         }
 
         // Get Scores
-        const scores = await prismaClient.batting.groupBy({
+        const scores = await prismaClient.scores.findMany({
             where: {
-                teamId: team,
-                matchFormat,
+                teamId: team
             },
-            _sum: {
-                run: true
-            },
-            by: ["matchId", "matchDate"],
-            take: 5,
-            orderBy: {
-                matchDate: 'desc'
-            }
+            take: 5
         })
 
+        // const scores = await prismaClient.batting.groupBy({
+        //     where: {
+        //         teamId: team,
+        //         matchFormat,
+        //     },
+        //     _sum: {
+        //         run: true
+        //     },
+        //     by: ["matchId", "matchDate"],
+        //     take: 5,
+        //     orderBy: {
+        //         matchDate: 'desc'
+        //     }
+        // })
 
-        // Get Wickets
-        const wickets = await prismaClient.bowling.groupBy({
-            where: {
-                teamId: team,
-                matchFormat,
-            },
-            _sum: {
-                wicket: true
-            },
-            by: ["matchId", "matchDate"],
-            take: 5,
-            orderBy: {
-                matchDate: 'desc'
-            }
-        })
 
-        return NextResponse.json({ team: team, stats, statsByVenue, scores, wickets }, { status: 200 })
+        // // Get Wickets
+        // const wickets = await prismaClient.bowling.groupBy({
+        //     where: {
+        //         teamId: team,
+        //         matchFormat,
+        //     },
+        //     _sum: {
+        //         wicket: true
+        //     },
+        //     by: ["matchId", "matchDate"],
+        //     take: 5,
+        //     orderBy: {
+        //         matchDate: 'desc'
+        //     }
+        // })
+
+        return NextResponse.json({ team: team, stats, statsByVenue, scores }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })

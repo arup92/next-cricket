@@ -29,6 +29,20 @@ model User {
   bowling Bowling[]
 }
 
+model Scores {
+  id Int @id @default(autoincrement())
+
+  Team   Team   @relation(fields: [teamId], references: [teamId])
+  teamId String
+
+  runs         Int
+  wickets      Int
+  oppCountryId String
+
+  Match   Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  matchId Int
+}
+
 model Team {
   id       Int    @id @default(autoincrement())
   teamName String
@@ -43,6 +57,7 @@ model Team {
 
   batting Batting[]
   bowling Bowling[]
+  Scores  Scores[]
 }
 
 model Venue {
@@ -89,6 +104,7 @@ model Match {
 
   batting Batting[]
   bowling Bowling[]
+  Scores  Scores[]
 }
 
 enum PlayerType {
