@@ -29,7 +29,12 @@ export async function GET(request: Request) {
                 teamBId: true,
                 result: true,
                 venueId: true,
-                matchFormat: true
+                matchFormat: true,
+                venue: {
+                    select: {
+                        venueCountryId: true
+                    }
+                }
             }
         })
 

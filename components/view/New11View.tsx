@@ -2,12 +2,10 @@
 
 import { useState } from "react"
 import StatsTeamForm from "../forms/StatsTeamForm"
-import Head2Head from "./New11/Head2Head"
-import Player11Bat from "./New11/Player11Bat"
-import Player11Bowl from "./New11/Player11Bowl"
 import MatchResults from "./New11Card/MatchResults"
 import TeamScores from "./New11Card/TeamScores"
 import TeamWickets from "./New11Card/TeamWickets"
+import Head2Head from "./New11Card/Head2Head"
 
 const New11View = () => {
     const [h2h, setH2h] = useState<any[]>([])
@@ -31,7 +29,8 @@ const New11View = () => {
         <>
             <StatsTeamForm handleData={handleData} />
             <div className="grid gap-3 grid-cols-1 lg:grid-cols-8">
-                <MatchResults clasName="col-span-2" teamA={sTeamA} teamB={sTeamB} />
+                <Head2Head className="col-span-2" h2h={h2h} />
+                <MatchResults className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
                 <TeamScores className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
                 <TeamWickets className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
             </div>

@@ -98,19 +98,21 @@ export async function POST(request: Request) {
         }
 
         // Create Score
+        console.log(parseInt(sessionAScore[0]), parseInt(sessionBScore[1]), teams);
+
         const score = await prismaClient.scores.createMany({
             data: [{
                 runs: parseInt(sessionAScore[0]),
                 wickets: parseInt(sessionBScore[1]),
                 matchId: match.id,
-                teamId: teams[0],
-                oppCountryId: teams[1]
+                teamId: body.batFirst,
+                oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
             }, {
                 runs: parseInt(sessionBScore[0]),
                 wickets: parseInt(sessionAScore[1]),
                 matchId: match.id,
-                teamId: teams[1],
-                oppCountryId: teams[0]
+                teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
+                oppCountryId: body.batFirst
             }]
         })
 

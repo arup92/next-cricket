@@ -3,17 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 interface MatchResultsProps {
     teamA: any
     teamB: any
-    clasName?: string
+    className?: string
 }
 
-const MatchResults: React.FC<MatchResultsProps> = ({ teamA, teamB, clasName }) => {
+const MatchResults: React.FC<MatchResultsProps> = ({ teamA, teamB, className }) => {
 
     const teamAStats = teamA?.stats && getWLResults(teamA.stats)
     const teamBStats = teamB?.stats && getWLResults(teamB.stats)
 
     return (
         <>
-            {teamAStats && <Card className={clasName}>
+            {teamAStats && <Card className={className}>
                 <CardHeader>
                     <CardTitle>Recent Performances</CardTitle>
                 </CardHeader>

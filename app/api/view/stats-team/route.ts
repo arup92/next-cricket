@@ -1,6 +1,6 @@
+import { MatchFormat } from '@prisma/client';
 import prismaClient from "@/libs/prismadb";
 import { ErrorMessage } from "@/responses/messages";
-import { MatchFormat } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
