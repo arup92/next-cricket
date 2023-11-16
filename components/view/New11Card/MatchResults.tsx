@@ -3,27 +3,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 interface MatchResultsProps {
     teamA: any
     teamB: any
+    clasName?: string
 }
 
-const MatchResults: React.FC<MatchResultsProps> = ({ teamA, teamB }) => {
+const MatchResults: React.FC<MatchResultsProps> = ({ teamA, teamB, clasName }) => {
 
     const teamAStats = teamA?.stats && getWLResults(teamA.stats)
     const teamBStats = teamB?.stats && getWLResults(teamB.stats)
 
     return (
         <>
-            {teamAStats && <Card>
+            {teamAStats && <Card className={clasName}>
                 <CardHeader>
                     <CardTitle>Recent Performances</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between mb-1 items-center">
                         {teamA.team}
                         <div>
                             {teamAStats}
                         </div>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
                         {teamB.team}
                         <div>
                             {teamBStats}
