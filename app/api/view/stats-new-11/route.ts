@@ -86,7 +86,7 @@ export async function GET(request: Request) {
             }
         }
 
-        return NextResponse.json(playerData, { status: 200 })
+        return NextResponse.json({ teamBat, teamBowl }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })

@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface MatchResultsProps {
     teamA: any
@@ -8,9 +9,6 @@ interface MatchResultsProps {
 }
 
 const MatchResults: React.FC<MatchResultsProps> = ({ teamA, teamB, className }) => {
-
-    console.log(teamA);
-
 
     const teamAStat = Object.keys(teamA).length !== 0 && teamA.teamStat.length > 0 && getWLResults(teamA.teamStat, teamA.team)
     const teamBStat = Object.keys(teamA).length !== 0 && teamB.teamStat.length > 0 && getWLResults(teamB.teamStat, teamB.team)
@@ -61,16 +59,30 @@ function getWLResults(stats: any[], teamId: string) {
             style = 'bg-red-600 text-white'
         }
 
-        return <HoverCard openDelay={300} key={index}>
-            <HoverCardTrigger>
-                <span className={`rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${style}`}>{result}</span>
-            </HoverCardTrigger>
-            <HoverCardContent>
-                <div className="flex items-center">
+        return <div className="inline-block" key={index}>
+            <Popover>
+                <PopoverTrigger className="inline-block lg:hidden">
                     <span className={`rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${style}`}>{result}</span>
-                    <span> vs {vs} <span className="text-sm text-muted-foreground">({date.toLocaleString('en-IN', options)})</span></span>
-                </div>
-            </HoverCardContent>
-        </HoverCard>
+                </PopoverTrigger>
+                <PopoverContent className="inline-block lg:hidden">
+                    <div className="flex items-center">
+                        <span className={`rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${style}`}>{result}</span>
+                        <span> vs {vs} <span className="text-sm text-muted-foreground">({date.toLocaleString('en-IN', options)})</span></span>
+                    </div>
+                </PopoverContent>
+            </Popover>
+
+            <HoverCard openDelay={300}>
+                <HoverCardTrigger className="hidden lg:inline-block">
+                    <span className={`rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${style}`}>{result}</span>
+                </HoverCardTrigger>
+                <HoverCardContent className="hidden lg:inline-block">
+                    <div className="flex items-center">
+                        <span className={`rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${style}`}>{result}</span>
+                        <span> vs {vs} <span className="text-sm text-muted-foreground">({date.toLocaleString('en-IN', options)})</span></span>
+                    </div>
+                </HoverCardContent>
+            </HoverCard>
+        </div>
     })
 }

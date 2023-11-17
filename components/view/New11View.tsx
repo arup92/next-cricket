@@ -6,12 +6,13 @@ import MatchResults from "./New11Card/MatchResults"
 import TeamScores from "./New11Card/TeamScores"
 import TeamWickets from "./New11Card/TeamWickets"
 import Head2Head from "./New11Card/Head2Head"
+import PlayerStats from "./New11Card/PlayerStats"
 
 const New11View = () => {
     const [h2h, setH2h] = useState<any[]>([])
     const [sTeamA, setSTeamA] = useState<any>({})
     const [sTeamB, setSTeamB] = useState<any>({})
-    const [new11bat, setNew11Bat] = useState<any>({})
+    const [playerData, setPlayerData] = useState<any>({})
     const [new11bowl, setNew11Bowl] = useState<any>({})
 
     // Update the table on form submission
@@ -21,7 +22,7 @@ const New11View = () => {
         setSTeamB(item.sTeamB)
         setH2h(item.h2h)
 
-        setNew11Bat(item.new11bat)
+        setPlayerData(item.new11bat)
         setNew11Bowl(item.new11bowl)
     }
 
@@ -33,6 +34,7 @@ const New11View = () => {
                 <MatchResults className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
                 <TeamScores className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
                 <TeamWickets className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
+                <PlayerStats playerData={playerData} />
             </div>
 
             {/* <Head2Head h2h={h2h} sTeamA={sTeamA} sTeamB={sTeamB} />

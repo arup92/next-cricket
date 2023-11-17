@@ -61,6 +61,24 @@ export async function GET(request: Request) {
             where: {
                 teamId: team
             },
+            select: {
+                teamId: true,
+                oppCountryId: true,
+                runs: true,
+                wickets: true,
+                Match: {
+                    select: {
+                        matchDate: true
+                    }
+                }
+            },
+            orderBy: [
+                {
+                    Match: {
+                        matchDate: 'desc'
+                    }
+                }
+            ],
             take: 5
         })
 

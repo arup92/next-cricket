@@ -45,7 +45,7 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
             axios.get(`/api/view/stats-h2h?${teamStat}`),
             axios.get(`/api/view/stats-team?team=${statParams[0]}&matchFormat=${statParams[2]}`),
             axios.get(`/api/view/stats-team?team=${statParams[1]}&matchFormat=${statParams[2]}`),
-            axios.get(`/api/view/stats-new-11-bat?${teamStat}`),
+            axios.get(`/api/view/stats-new-11?${teamStat}`),
             axios.get(`/api/view/stats-new-11-bowl?${teamStat}`),
         ]).then(axios.spread((h2h, sTeamA, sTeamB, new11bat, new11bowl) => {
             handleData({

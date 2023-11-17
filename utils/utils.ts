@@ -62,7 +62,7 @@ export const bowlingData = (summaryData: string[][]): BowlingDataType[] => {
             playerId: summery[0].replaceAll(' ', '_').toLowerCase(),
             maiden: parseInt(summery[2]),
             wicket: parseInt(summery[4]),
-            eco: parseInt(summery[5])
+            eco: parseFloat(summery[5])
         }
 
         result.push(summeryItem)

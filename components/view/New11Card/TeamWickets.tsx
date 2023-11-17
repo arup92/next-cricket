@@ -1,4 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface TeamWicketsProps {
     teamA: any
@@ -15,37 +17,8 @@ const TeamWickets: React.FC<TeamWicketsProps> = ({ teamA, teamB, className }) =>
                     <CardTitle>Wickets Taken</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex justify-between mb-2 items-center">
-                        {teamA.team}
-                        <div>
-                            {teamA.scores.map((score: any, index: number) => {
-                                let scoreClass = ``
-                                if (score.wickets >= 8) {
-                                    scoreClass = 'bg-emerald-600 text-white border-transparent'
-                                } else if (score.wickets <= 4) {
-                                    scoreClass = 'bg-red-600 text-white border-transparent'
-                                }
-
-                                return <span key={index} className={`rounded-sm px-1 w-[27px] mr-1 inline-block text-center shadow text-sm border ${scoreClass}`}>{score.wickets}</span>
-                            })}
-                        </div>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                        {teamB.team}
-                        <div>
-                            {teamB.scores.map((score: any, index: number) => {
-                                let scoreClass = ``
-                                if (score.wickets >= 8) {
-                                    scoreClass = 'bg-emerald-600 text-white border-transparent'
-                                } else if (score.wickets <= 4) {
-                                    scoreClass = 'bg-red-600 text-white border-transparent'
-                                }
-
-                                return <span key={index} className={`rounded-sm px-1 mr-1 w-[27px] inline-block text-center shadow text-sm border ${scoreClass}`}>{score.wickets}</span>
-                            })}
-                        </div>
-                    </div>
+                    {wicketsView(teamA)}
+                    {wicketsView(teamB)}
                 </CardContent>
             </Card>}
         </>
@@ -53,3 +26,48 @@ const TeamWickets: React.FC<TeamWicketsProps> = ({ teamA, teamB, className }) =>
 }
 
 export default TeamWickets
+
+function wicketsView(teamStats: any) {
+    return <div className="flex justify-between mb-2 items-center">
+        {teamStats.team}
+        <div>
+            {teamStats.scores.map((score: any, index: number) => {
+                let scoreClass = ``
+                if (score.wickets >= 8) {
+                    scoreClass = 'bg-emerald-600 text-white border-transparent'
+                } else if (score.wickets <= 4) {
+                    scoreClass = 'bg-red-600 text-white border-transparent'
+                }
+
+                const date = new Date(score.Match.matchDate)
+                const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
+
+                return <div className="inline-block" key={index}>
+                    <Popover>
+                        <PopoverTrigger className="inline-block lg:hidden">
+                            <span className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm border ${scoreClass}`}>{score.runs}</span>
+                        </PopoverTrigger>
+                        <PopoverContent className="inline-block lg:hidden">
+                            <div className="flex items-center">
+                                <span className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm border ${scoreClass}`}>{score.runs}</span>
+                                <span> vs {score.oppCountryId}</span> <span className="text-sm text-muted-foreground">({date.toLocaleString('en-IN', options)})</span>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+
+                    <HoverCard openDelay={300}>
+                        <HoverCardTrigger className="hidden lg:inline-block">
+                            <span className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm border ${scoreClass}`}>{score.wickets}</span>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="hidden lg:inline-block">
+                            <div className="flex items-center">
+                                <span className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm border ${scoreClass}`}>{score.wickets}</span>
+                                <span> vs {score.oppCountryId}</span> <span className="text-sm text-muted-foreground">({date.toLocaleString('en-IN', options)})</span>
+                            </div>
+                        </HoverCardContent>
+                    </HoverCard>
+                </div>
+            })}
+        </div>
+    </div>
+}

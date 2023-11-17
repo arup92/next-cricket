@@ -34,7 +34,8 @@ export async function GET(request: Request) {
                     select: {
                         venueCountryId: true
                     }
-                }
+                },
+                matchDate: true
             }
         })
 
