@@ -7,9 +7,6 @@ interface Head2HeadProps {
 
 const Head2Head: React.FC<Head2HeadProps> = ({ h2h, className }) => {
 
-    console.log(h2h);
-
-
     return (
         <>
             {h2h.length > 0 && <Card className={className}>
