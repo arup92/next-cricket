@@ -54,23 +54,19 @@ function getPlayerStats(playerData: any): any {
             player[item.playerId].matchFormat ??= item.matchFormat
 
             // Bat Data
-            player[item.playerId].bat ??= {}
-            player[item.playerId].bat.run ??= []
-            player[item.playerId].bat.four ??= []
-            player[item.playerId].bat.six ??= []
-            player[item.playerId].bat.strikeRate ??= []
-            player[item.playerId].bat.matchDate ??= []
-            player[item.playerId].bat.oppCountryId ??= []
-            player[item.playerId].bat.venueId ??= []
+            player[item.playerId].bat ??= []
 
-            if (player[item.playerId].bat.run.length < 5) {
-                player[item.playerId].bat.run.push(item.run)
-                player[item.playerId].bat.four.push(item.four)
-                player[item.playerId].bat.six.push(item.six)
-                player[item.playerId].bat.strikeRate.push(item.strikeRate)
-                player[item.playerId].bat.matchDate.push(date.toLocaleString('en-IN', options))
-                player[item.playerId].bat.oppCountryId.push(item.oppCountryId)
-                player[item.playerId].bat.venueId.push(item.venueId)
+            if (player[item.playerId].bat.length < 5) {
+                const playerBat = {
+                    run: item.run,
+                    four: item.four,
+                    six: item.six,
+                    strikeRate: item.strikeRate,
+                    matchDate: date.toLocaleString('en-IN', options),
+                    oppCountryId: item.oppCountryId,
+                    venueId: item.venueId
+                }
+                player[item.playerId].bat.push(playerBat)
             }
         }
 
@@ -83,21 +79,18 @@ function getPlayerStats(playerData: any): any {
             player[item.playerId].matchFormat ??= item.matchFormat
 
             // Bowl Data
-            player[item.playerId].bowl ??= {};
-            player[item.playerId].bowl.wicket ??= [];
-            player[item.playerId].bowl.maiden ??= [];
-            player[item.playerId].bowl.eco ??= [];
-            player[item.playerId].bowl.matchDate ??= [];
-            player[item.playerId].bowl.oppCountryId ??= [];
-            player[item.playerId].bowl.venueId ??= [];
+            player[item.playerId].bowl ??= []
 
-            if (player[item.playerId].bowl.wicket.length < 5) {
-                player[item.playerId].bowl.wicket.push(item.wicket);
-                player[item.playerId].bowl.maiden.push(item.maiden);
-                player[item.playerId].bowl.eco.push(item.eco);
-                player[item.playerId].bowl.matchDate.push(date.toLocaleString('en-IN', options));
-                player[item.playerId].bowl.oppCountryId.push(item.oppCountryId);
-                player[item.playerId].bowl.venueId.push(item.venueId);
+            if (player[item.playerId].bowl.length < 5) {
+                const playerBowl = {
+                    wicket: item.wicket,
+                    maiden: item.maiden,
+                    eco: item.eco,
+                    matchDate: date.toLocaleString('en-IN', options),
+                    oppCountryId: item.oppCountryId,
+                    venueId: item.venueId
+                }
+                player[item.playerId].bowl.push(playerBowl)
             }
         }
     }
