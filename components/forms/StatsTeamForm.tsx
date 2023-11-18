@@ -1,3 +1,4 @@
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { MatchFormat } from "@/types/MatchFormat";
 import { Teams } from "@/types/Teams";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -5,9 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { GoCode } from "react-icons/go";
 import { z } from "zod";
 import { Button } from "../ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { GoCheck } from "react-icons/go";
 
 const formSchema = z.object({
     matchFormat: z.enum(MatchFormat, {
@@ -24,7 +28,8 @@ const formSchema = z.object({
         errorMap: () => ({
             message: 'Please select Team B',
         }),
-    })
+    }),
+    venueId: z.string().trim().min(1, 'Enter valid details'),
 })
 
 interface StatsTeamFormProps {
@@ -33,6 +38,7 @@ interface StatsTeamFormProps {
 
 const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
     const [teamStat, setTeamStat] = useState('')
+    const [open, setOpen] = useState(false)
 
     const getCustomMatches = async (): Promise<any> => {
         let statParams: string[] = []
@@ -99,9 +105,50 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
         handleSubmit,
         getValues,
         setValue,
+        watch
     } = useForm({
         mode: 'onBlur',
         resolver: zodResolver(formSchema)
+    })
+
+    // Get Venues
+    const frameworks = [
+        {
+            value: "next.js",
+            label: "Next.js",
+        },
+        {
+            value: "sveltekit",
+            label: "SvelteKit",
+        },
+        {
+            value: "nuxt.js",
+            label: "Nuxt.js",
+        },
+        {
+            value: "remix",
+            label: "Remix",
+        },
+        {
+            value: "astro",
+            label: "Astro",
+        },
+    ]
+
+    const getVenues = async (): Promise<any> => {
+        return await axios.get(`/api/view/venues-get`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => {
+                console.log(error)
+                return []
+            })
+    }
+
+    const venues = useQuery({
+        queryKey: ['venues'],
+        queryFn: getVenues
     })
 
     return (
@@ -158,6 +205,45 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
                             ))}
                         </SelectContent>
                     </Select>
+                </div>
+
+                <div>
+                    <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={open}
+                                className="w-[200px] justify-between"
+                            >
+                                Select Venue...
+                                <span className="rotate-90"><GoCode /></span>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search venue..." />
+                                <CommandEmpty>No venue found.</CommandEmpty>
+                                <CommandGroup>
+                                    {venues.data && venues.data.map((venue: any) => (
+                                        <CommandItem
+                                            key={venue.venueId}
+                                            value={venue.venueId}
+                                            onSelect={(currentValue) => {
+                                                setValue('venueId', currentValue)
+                                                setOpen(false)
+                                            }}
+                                        >
+                                            {venue.venueName}
+                                            <span className={watch().venueId === venue.venueId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                <GoCheck />
+                                            </span>
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </div>
 
                 <Button>Submit</Button>
