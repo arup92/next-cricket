@@ -82,21 +82,16 @@ export const getPlayerStats = (playerData: any): any => {
     let player: any = {}
 
     if (Object.keys(playerData).length > 0) {
-
-        let totalFantasyPoints = 0
         for (const item of playerData.teamBat) {
             const date = new Date(item.matchDate)
             const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
 
             player[item.playerId] ??= {}
-            player[item.playerId].points ??= 0
-            player[item.playerId].pointsVsTeam ??= 0
             player[item.playerId].teamId ??= item.teamId
             player[item.playerId].matchFormat ??= item.matchFormat
 
             // Bat Data
             player[item.playerId].bat ??= []
-
 
             if (player[item.playerId].bat.length < 5) {
                 const playerBat = {
@@ -111,17 +106,10 @@ export const getPlayerStats = (playerData: any): any => {
                     venueCountry: item.venue.venueCountryId,
                     matchFormat: item.matchFormat
                 }
-
-                totalFantasyPoints += fantasyPointsCount(item, 'bat')
-
                 player[item.playerId].bat.push(playerBat)
-                player[item.playerId].points = totalFantasyPoints
-            } else {
-                totalFantasyPoints = 0
             }
         }
 
-        let totalFantasyPointsVsTeam = 0
         for (const item of playerData.teamBatVsTeam) {
             const date = new Date(item.matchDate)
             const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -146,13 +134,7 @@ export const getPlayerStats = (playerData: any): any => {
                     venueCountry: item.venue.venueCountryId,
                     matchFormat: item.matchFormat
                 }
-
-                totalFantasyPointsVsTeam = fantasyPointsCount(item, 'bat')
-
                 player[item.playerId].batVsTeam.push(playerBat)
-                player[item.playerId].pointsVsTeam = totalFantasyPointsVsTeam
-            } else {
-                totalFantasyPointsVsTeam = 0
             }
         }
 
@@ -179,13 +161,7 @@ export const getPlayerStats = (playerData: any): any => {
                     venueCountry: item.venue.venueCountryId,
                     matchFormat: item.matchFormat
                 }
-
-                totalFantasyPoints += fantasyPointsCount(item, 'bowl')
-
                 player[item.playerId].bowl.push(playerBowl)
-                player[item.playerId].points = player[item.playerId].points + totalFantasyPoints
-            } else {
-                totalFantasyPoints = 0
             }
         }
 
@@ -212,13 +188,7 @@ export const getPlayerStats = (playerData: any): any => {
                     venueCountry: item.venue.venueCountryId,
                     matchFormat: item.matchFormat
                 }
-
-                totalFantasyPointsVsTeam = fantasyPointsCount(item, 'bowl')
-
                 player[item.playerId].bowlVsTeam.push(playerBowl)
-                player[item.playerId].pointsVsTeam = player[item.playerId].pointsVsTeam + totalFantasyPointsVsTeam
-            } else {
-                totalFantasyPointsVsTeam = 0
             }
         }
     }
