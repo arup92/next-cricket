@@ -29,12 +29,21 @@ const New11View = () => {
     return (
         <>
             <StatsTeamForm handleData={handleData} />
-            <div className="grid gap-3 grid-cols-1 lg:grid-cols-8">
+            <div className="grid gap-3 grid-cols-1 lg:grid-cols-8 mb-4">
                 <Head2Head className="col-span-2" h2h={h2h} />
                 <MatchResults className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
                 <TeamScores className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
                 <TeamWickets className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
-                <PlayerStats playerData={playerData} />
+            </div>
+
+            <h2 className="text-xl text-center font-bold mb-4">{sTeamA.team}</h2>
+            <div className="grid gap-3 grid-cols-1 lg:grid-cols-12">
+                <PlayerStats className="col-span-4" playerData={playerData} teamId={sTeamA.team} />
+            </div>
+
+            <h2 className="text-xl text-center font-bold mb-4">{sTeamB.team}</h2>
+            <div className="grid gap-3 grid-cols-1 lg:grid-cols-12">
+                <PlayerStats className="col-span-4" playerData={playerData} teamId={sTeamB.team} />
             </div>
 
             {/* <Head2Head h2h={h2h} sTeamA={sTeamA} sTeamB={sTeamB} />

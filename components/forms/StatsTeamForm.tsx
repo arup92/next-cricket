@@ -6,12 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { GoCode } from "react-icons/go";
+import { GoCheck, GoCode } from "react-icons/go";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { GoCheck } from "react-icons/go";
 
 const formSchema = z.object({
     matchFormat: z.enum(MatchFormat, {
@@ -29,7 +28,7 @@ const formSchema = z.object({
             message: 'Please select Team B',
         }),
     }),
-    venueId: z.string().trim().min(1, 'Enter valid details'),
+    venueId: z.string().trim().min(1, 'Enter valid details').optional(),
 })
 
 interface StatsTeamFormProps {
@@ -112,29 +111,6 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
     })
 
     // Get Venues
-    const frameworks = [
-        {
-            value: "next.js",
-            label: "Next.js",
-        },
-        {
-            value: "sveltekit",
-            label: "SvelteKit",
-        },
-        {
-            value: "nuxt.js",
-            label: "Nuxt.js",
-        },
-        {
-            value: "remix",
-            label: "Remix",
-        },
-        {
-            value: "astro",
-            label: "Astro",
-        },
-    ]
-
     const getVenues = async (): Promise<any> => {
         return await axios.get(`/api/view/venues-get`)
             .then(response => {
@@ -214,13 +190,16 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
                                 variant="outline"
                                 role="combobox"
                                 aria-expanded={open}
-                                className="w-[200px] justify-between"
+                                className="w-[150px] justify-between"
                             >
-                                Select Venue...
+                                {venues.data && watch().venueId ?
+                                    venues.data.find((venue: any) => venue.venueId === watch().venueId)?.venueName :
+                                    'Venue'
+                                }
                                 <span className="rotate-90"><GoCode /></span>
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
+                        <PopoverContent className="w-[150px] p-0">
                             <Command>
                                 <CommandInput placeholder="Search venue..." />
                                 <CommandEmpty>No venue found.</CommandEmpty>
