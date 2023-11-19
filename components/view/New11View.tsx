@@ -13,7 +13,6 @@ const New11View = () => {
     const [sTeamA, setSTeamA] = useState<any>({})
     const [sTeamB, setSTeamB] = useState<any>({})
     const [playerData, setPlayerData] = useState<any>({})
-    const [new11bowl, setNew11Bowl] = useState<any>({})
 
     // Update the table on form submission
     const handleData = (item: any): void => {
@@ -22,8 +21,7 @@ const New11View = () => {
         setSTeamB(item.sTeamB)
         setH2h(item.h2h)
 
-        setPlayerData(item.new11bat)
-        setNew11Bowl(item.new11bowl)
+        setPlayerData(item.new11)
     }
 
     return (
@@ -37,13 +35,13 @@ const New11View = () => {
             </div>
 
             <h2 className="text-xl text-center font-bold mb-4">{sTeamA.team}</h2>
-            <div className="grid gap-3 grid-cols-1 lg:grid-cols-12">
-                <PlayerStats className="col-span-4" playerData={playerData} teamId={sTeamA.team} />
+            <div className="grid gap-3 grid-cols-1 lg:grid-cols-8 mb-4">
+                <PlayerStats className="col-span-2" playerData={playerData} teamId={sTeamA.team} oppCountryId={sTeamB.team} />
             </div>
 
             <h2 className="text-xl text-center font-bold mb-4">{sTeamB.team}</h2>
-            <div className="grid gap-3 grid-cols-1 lg:grid-cols-12">
-                <PlayerStats className="col-span-4" playerData={playerData} teamId={sTeamB.team} />
+            <div className="grid gap-3 grid-cols-1 lg:grid-cols-8">
+                <PlayerStats className="col-span-2" playerData={playerData} teamId={sTeamB.team} oppCountryId={sTeamA.team} />
             </div>
 
             {/* <Head2Head h2h={h2h} sTeamA={sTeamA} sTeamB={sTeamB} />

@@ -1,5 +1,6 @@
 import prismaClient from "@/libs/prismadb"
 import { ErrorMessage } from "@/responses/messages"
+import { getPlayerStats } from "@/utils/utils"
 import { MatchFormat } from "@prisma/client"
 import { NextResponse } from "next/server"
 
@@ -33,6 +34,66 @@ export async function GET(request: Request) {
                 { playerId: 'asc' },
                 { matchDate: 'desc' },
             ],
+            select: {
+                run: true,
+                four: true,
+                six: true,
+                strikeRate: true,
+                matchDate: true,
+                oppCountryId: true,
+                playerId: true,
+                teamId: true,
+                matchFormat: true,
+                venue: {
+                    select: {
+                        venueName: true,
+                        venueCountryId: true,
+                        venueId: true,
+                    }
+                }
+            },
+            take: 440
+        })
+
+        const teamBatVsTeam = await prismaClient.batting.findMany({
+            where: {
+                OR: [
+                    { teamId: teamA },
+                    { teamId: teamB }
+                ],
+                oppCountryId: {
+                    in: [
+                        teamA, teamB
+                    ]
+                },
+                matchDate: {
+                    lte: new Date(),
+                    gte: oneYearAgo
+                },
+                matchFormat
+            },
+            orderBy: [
+                { playerId: 'asc' },
+                { matchDate: 'desc' },
+            ],
+            select: {
+                run: true,
+                four: true,
+                six: true,
+                strikeRate: true,
+                matchDate: true,
+                oppCountryId: true,
+                playerId: true,
+                teamId: true,
+                matchFormat: true,
+                venue: {
+                    select: {
+                        venueName: true,
+                        venueCountryId: true,
+                        venueId: true,
+                    }
+                }
+            },
             take: 440
         })
 
@@ -52,41 +113,70 @@ export async function GET(request: Request) {
                 { playerId: 'asc' },
                 { matchDate: 'desc' },
             ],
+            select: {
+                wicket: true,
+                eco: true,
+                maiden: true,
+                matchDate: true,
+                matchFormat: true,
+                playerId: true,
+                oppCountryId: true,
+                teamId: true,
+                venue: {
+                    select: {
+                        venueName: true,
+                        venueCountryId: true,
+                        venueId: true,
+                    }
+                }
+            },
             take: 440
         })
 
-        // Make the player data
-        let playerData: any = {}
+        const teamBowlVsTeam = await prismaClient.bowling.findMany({
+            where: {
+                OR: [
+                    { teamId: teamA },
+                    { teamId: teamB }
+                ],
+                oppCountryId: {
+                    in: [
+                        teamA, teamB
+                    ]
+                },
+                matchDate: {
+                    lte: new Date(),
+                    gte: oneYearAgo
+                },
+                matchFormat
+            },
+            orderBy: [
+                { playerId: 'asc' },
+                { matchDate: 'desc' },
+            ],
+            select: {
+                wicket: true,
+                eco: true,
+                maiden: true,
+                matchDate: true,
+                matchFormat: true,
+                playerId: true,
+                oppCountryId: true,
+                teamId: true,
+                venue: {
+                    select: {
+                        venueName: true,
+                        venueCountryId: true,
+                        venueId: true,
+                    }
+                }
+            },
+            take: 440
+        })
 
-        for (const item of teamBat) {
-            playerData[item.teamId] ??= {}
-            playerData[item.teamId][item.playerId] ??= { scores: [], wickets: [], vs: { scores: [], wickets: [] } }
+        const response = getPlayerStats({ teamBat, teamBowl, teamBatVsTeam, teamBowlVsTeam })
 
-            if (playerData[item.teamId][item.playerId].scores.length < 5) {
-                playerData[item.teamId][item.playerId].scores.push(item.run)
-            }
-
-            if (playerData[item.teamId][item.playerId].vs.scores.length < 5
-                && (item.oppCountryId === teamA || item.oppCountryId === teamB)) {
-                playerData[item.teamId][item.playerId].vs.scores.push(item.run)
-            }
-        }
-
-        for (const item of teamBowl) {
-            playerData[item.teamId] ??= {}
-            playerData[item.teamId][item.playerId] ??= { scores: [], wickets: [], vs: { scores: [], wickets: [] } }
-
-            if (playerData[item.teamId][item.playerId].wickets.length < 5) {
-                playerData[item.teamId][item.playerId].wickets.push(item.wicket)
-            }
-
-            if (playerData[item.teamId][item.playerId].vs.wickets.length < 5
-                && (item.oppCountryId === teamA || item.oppCountryId === teamB)) {
-                playerData[item.teamId][item.playerId].vs.wickets.push(item.wicket)
-            }
-        }
-
-        return NextResponse.json({ teamBat, teamBowl }, { status: 200 })
+        return NextResponse.json(response, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
