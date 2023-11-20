@@ -14,7 +14,7 @@ export const generateRandomHash = (length: number) => {
 }
 
 export const summaryData = (stringWNwLine: string, chunkSize: number): string[][] => {
-    let rawArray = stringWNwLine.split('\n').map(item => item.trim()).filter(item => (
+    let rawArray = stringWNwLine.split('\n').map(item => item.replaceAll('*', '').trim()).filter(item => (
         item !== ''
         && !item.toLowerCase().startsWith("c ")
         && !item.toLowerCase().startsWith("b ")
