@@ -6,6 +6,7 @@ import CenteredArea from "../customUi/CenteredArea";
 import BattingData from "./match/BattingData";
 import MatchData from "./match/MatchData";
 import BowlingData from "./match/BowlingData";
+import { getFullNameByCode } from "@/utils/utils";
 
 const MatchTable = () => {
     const searchParams = useSearchParams()
@@ -29,13 +30,13 @@ const MatchTable = () => {
         <CenteredArea maxWidthClass="max-w-5xl">
             {data && <div>
                 <MatchData data={data.match} />
-                <h1 className="mb-3 text-center font-bold">{data.match.teamAId} Batting</h1>
+                <h1 className="mb-3 text-center font-bold">{getFullNameByCode(data.match.teamAId)} Batting</h1>
                 <BattingData data={data.batting.battingA} />
-                <h1 className="my-3 text-center font-bold">{data.match.teamBId} Batting</h1>
+                <h1 className="my-3 text-center font-bold">{getFullNameByCode(data.match.teamBId)} Batting</h1>
                 <BattingData data={data.batting.battingB} />
-                <h1 className="my-3 text-center font-bold">{data.match.teamAId} Bowling</h1>
+                <h1 className="my-3 text-center font-bold">{getFullNameByCode(data.match.teamAId)} Bowling</h1>
                 <BowlingData data={data.bowling.bowlingA} />
-                <h1 className="my-3 text-center font-bold">{data.match.teamBId} Bowling</h1>
+                <h1 className="my-3 text-center font-bold">{getFullNameByCode(data.match.teamBId)} Bowling</h1>
                 <BowlingData data={data.bowling.bowlingB} />
             </div>}
         </CenteredArea>

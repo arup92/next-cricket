@@ -7,6 +7,7 @@ import TeamScores from "./New11Card/TeamScores"
 import TeamWickets from "./New11Card/TeamWickets"
 import Head2Head from "./New11Card/Head2Head"
 import PlayerStats from "./New11Card/PlayerStats"
+import { getFullNameByCode } from "@/utils/utils"
 
 const New11View = () => {
     const [h2h, setH2h] = useState<any[]>([])
@@ -34,12 +35,12 @@ const New11View = () => {
                 <TeamWickets className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
             </div>
 
-            <h2 className="text-xl text-center font-bold mb-4">{sTeamA.team}</h2>
+            <h2 className="text-xl text-center font-bold mb-4">{getFullNameByCode(sTeamA.team)}</h2>
             <div className="grid gap-3 grid-cols-1 lg:grid-cols-8 mb-4">
                 <PlayerStats className="col-span-2" playerData={playerData} teamId={sTeamA.team} oppCountryId={sTeamB.team} />
             </div>
 
-            <h2 className="text-xl text-center font-bold mb-4">{sTeamB.team}</h2>
+            <h2 className="text-xl text-center font-bold mb-4">{getFullNameByCode(sTeamB.team)}</h2>
             <div className="grid gap-3 grid-cols-1 lg:grid-cols-8">
                 <PlayerStats className="col-span-2" playerData={playerData} teamId={sTeamB.team} oppCountryId={sTeamA.team} />
             </div>

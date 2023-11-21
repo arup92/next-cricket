@@ -1,5 +1,6 @@
 import { BattingDataType } from "@/types/BattingDataType";
 import { BowlingDataType } from "@/types/BowlingDataType";
+import { TeamFullNames, Teams } from "@/types/Teams";
 
 export const generateRandomHash = (length: number) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -138,6 +139,34 @@ export const getPlayerStats = (playerData: any): any => {
             }
         }
 
+        for (const item of playerData.teamBatInVenue) {
+            const date = new Date(item.matchDate)
+            const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
+
+            player[item.playerId] ??= {}
+            player[item.playerId].teamId ??= item.teamId
+            player[item.playerId].matchFormat ??= item.matchFormat
+
+            // Bat Data
+            player[item.playerId].batInVenue ??= []
+
+            if (player[item.playerId].batInVenue.length < 5) {
+                const playerBat = {
+                    run: item.run,
+                    four: item.four,
+                    six: item.six,
+                    strikeRate: item.strikeRate,
+                    matchDate: date.toLocaleString('en-IN', options),
+                    oppCountryId: item.oppCountryId,
+                    venueId: item.venue.venueId,
+                    venueName: item.venue.venueName,
+                    venueCountry: item.venue.venueCountryId,
+                    matchFormat: item.matchFormat
+                }
+                player[item.playerId].batInVenue.push(playerBat)
+            }
+        }
+
         for (const item of playerData.teamBowl) {
             const date = new Date(item.matchDate)
             const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -191,6 +220,33 @@ export const getPlayerStats = (playerData: any): any => {
                 player[item.playerId].bowlVsTeam.push(playerBowl)
             }
         }
+
+        for (const item of playerData.teamBowlInVenue) {
+            const date = new Date(item.matchDate)
+            const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
+
+            player[item.playerId] ??= {}
+            player[item.playerId].teamId ??= item.teamId
+            player[item.playerId].matchFormat ??= item.matchFormat
+
+            // Bowl Data
+            player[item.playerId].bowlInVenue ??= []
+
+            if (player[item.playerId].bowlInVenue.length < 5) {
+                const playerBowl = {
+                    wicket: item.wicket,
+                    maiden: item.maiden,
+                    eco: item.eco,
+                    matchDate: date.toLocaleString('en-IN', options),
+                    oppCountryId: item.oppCountryId,
+                    venueId: item.venue.venueId,
+                    venueName: item.venue.venueName,
+                    venueCountry: item.venue.venueCountryId,
+                    matchFormat: item.matchFormat
+                }
+                player[item.playerId].bowlInVenue.push(playerBowl)
+            }
+        }
     }
 
     return player
@@ -233,7 +289,7 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                 // For every wicket add 20 points
                 totalFantasyPoints += parseInt(inning.wicket) * 20
 
-                //  For every 3 wickets add 10 points
+                //  For every 10 wickets add 70 points
                 if (inning.wicket === 10) {
                     totalFantasyPoints += 70
                 } else if (inning.wicket === 9) {
@@ -270,8 +326,91 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
             }
             break;
 
+        case 'T20':
+        case 'IPL':
+            if (type === 'bat') {
+                // For every run add 1 point
+                totalFantasyPoints += parseInt(inning.run)
+                // For every 4 add 1 point
+                totalFantasyPoints += parseInt(inning.four)
+                // For every 6 add 2 points
+                totalFantasyPoints += parseInt(inning.six) * 2
+
+                // Points for run
+                if (inning.run >= 100) {
+                    totalFantasyPoints += 30
+                } else if (inning.run >= 50) {
+                    totalFantasyPoints += 20
+                } else if (inning.run >= 30) {
+                    totalFantasyPoints += 10
+                }
+
+                // Strike Rate
+                if (inning.run >= 10) {
+                    if (inning.strikeRate >= 200) {
+                        totalFantasyPoints += 15
+                    } else if (inning.strikeRate >= 150) {
+                        totalFantasyPoints += 10
+                    } else if (inning.strikeRate >= 100) {
+                        totalFantasyPoints += 5
+                    } else if (inning.strikeRate >= 75) {
+                        totalFantasyPoints -= 5
+                    } else if (inning.strikeRate >= 50) {
+                        totalFantasyPoints += -10
+                    } else if (inning.strikeRate >= 0) {
+                        totalFantasyPoints += -15
+                    }
+                }
+            } else if (type === 'bowl') {
+                // For every wicket add 20 points
+                totalFantasyPoints += parseInt(inning.wicket) * 20
+
+                //  For every 10 wickets add 80 points
+                if (inning.wicket === 10) {
+                    totalFantasyPoints += 80
+                } else if (inning.wicket === 9) {
+                    totalFantasyPoints += 70
+                } else if (inning.wicket === 8) {
+                    totalFantasyPoints += 60
+                } else if (inning.wicket === 7) {
+                    totalFantasyPoints += 50
+                } else if (inning.wicket === 6) {
+                    totalFantasyPoints += 40
+                } else if (inning.wicket === 5) {
+                    totalFantasyPoints += 30
+                } else if (inning.wicket === 4) {
+                    totalFantasyPoints += 20
+                } else if (inning.wicket === 3) {
+                    totalFantasyPoints += 10
+                }
+
+                totalFantasyPoints += inning.maiden * 20
+
+                if (inning.eco <= 5) {
+                    totalFantasyPoints += 15
+                } else if (inning.eco <= 8) {
+                    totalFantasyPoints += 10
+                } else if (inning.eco <= 10) {
+                    totalFantasyPoints += 5
+                } else if (inning.eco <= 12) {
+                    totalFantasyPoints -= 5
+                } else if (inning.eco <= 15) {
+                    totalFantasyPoints -= 10
+                } else {
+                    totalFantasyPoints -= 15
+                }
+            }
+            break;
         default:
             break;
     }
     return totalFantasyPoints
+}
+
+export const getFullNameByCode = (teamCode: any): string | undefined => {
+    const index = Teams.indexOf(teamCode)
+    if (index !== -1) {
+        return TeamFullNames[index]
+    }
+    return undefined
 }
