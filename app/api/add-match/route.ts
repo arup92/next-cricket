@@ -98,8 +98,6 @@ export async function POST(request: Request) {
         }
 
         // Create Score
-        console.log(parseInt(sessionAScore[0]), parseInt(sessionBScore[1]), teams);
-
         const score = await prismaClient.scores.createMany({
             data: [{
                 runs: parseInt(sessionAScore[0]),
@@ -261,10 +259,11 @@ export async function POST(request: Request) {
                 data: bowlingData as any
             })
         })
+
+        return NextResponse.json({ message: Message.MATCH_ADDED, matchId: match.id }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     }
 
-    return new NextResponse(Message.MATCH_ADDED, { status: 200 })
 }

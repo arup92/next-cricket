@@ -1,12 +1,12 @@
 'use client'
+import { getFullNameByCode } from "@/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import CenteredArea from "../customUi/CenteredArea";
 import BattingData from "./match/BattingData";
-import MatchData from "./match/MatchData";
 import BowlingData from "./match/BowlingData";
-import { getFullNameByCode } from "@/utils/utils";
+import MatchData from "./match/MatchData";
 
 const MatchTable = () => {
     const searchParams = useSearchParams()
