@@ -19,6 +19,7 @@ export async function GET(request: Request) {
                 matchFormat
             },
             select: {
+                venueId: true,
                 matchFormat: true,
                 teamAId: true,
                 teamBId: true,
@@ -33,6 +34,10 @@ export async function GET(request: Request) {
                         oppCountryId: true
                     }
                 }
+            },
+            take: 5,
+            orderBy: {
+                matchDate: 'desc'
             }
         })
 

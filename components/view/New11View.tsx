@@ -2,17 +2,19 @@
 
 import { useState } from "react"
 import StatsTeamForm from "../forms/StatsTeamForm"
-import MatchResults from "./New11Card/MatchResults"
-import TeamScores from "./New11Card/TeamScores"
-import TeamWickets from "./New11Card/TeamWickets"
-import Head2Head from "./New11Card/Head2Head"
+import MatchResultsCard from "./New11Card/MatchResultsCard"
+import TeamScoresCard from "./New11Card/TeamScoresCard"
+import TeamWicketsCard from "./New11Card/TeamWicketsCard"
+import Head2HeadCard from "./New11Card/Head2HeadCard"
 import PlayerStats from "./New11Card/PlayerStats"
 import { getFullNameByCode } from "@/utils/utils"
+import VenueStatsCard from "./New11Card/VenueStatsCard"
 
 const New11View = () => {
     const [h2h, setH2h] = useState<any[]>([])
     const [sTeamA, setSTeamA] = useState<any>({})
     const [sTeamB, setSTeamB] = useState<any>({})
+    const [sVenue, setSVenue] = useState<any>({})
     const [playerData, setPlayerData] = useState<any>({})
 
     // Update the table on form submission
@@ -21,18 +23,19 @@ const New11View = () => {
         setSTeamA(item.sTeamA)
         setSTeamB(item.sTeamB)
         setH2h(item.h2h)
-
         setPlayerData(item.new11)
+        setSVenue(item.sVenue)
     }
 
     return (
         <>
             <StatsTeamForm handleData={handleData} />
             <div className="grid gap-3 grid-cols-1 lg:grid-cols-8 mb-4">
-                <Head2Head className="col-span-2" h2h={h2h} />
-                <MatchResults className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
-                <TeamScores className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
-                <TeamWickets className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
+                <Head2HeadCard className="col-span-2" h2h={h2h} />
+                <MatchResultsCard className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
+                <TeamScoresCard className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
+                <TeamWicketsCard className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
+                <VenueStatsCard className="col-span-2" venueData={sVenue} />
             </div>
 
             <h2 className="text-xl text-center font-bold mb-4">{getFullNameByCode(sTeamA.team)}</h2>
@@ -44,26 +47,6 @@ const New11View = () => {
             <div className="grid gap-3 grid-cols-1 lg:grid-cols-8">
                 <PlayerStats className="col-span-2" playerData={playerData} teamId={sTeamB.team} oppCountryId={sTeamA.team} />
             </div>
-
-            {/* <Head2Head h2h={h2h} sTeamA={sTeamA} sTeamB={sTeamB} />
-            <div className="grid gap-5 grid-cols-1 lg:grid-cols-2">
-                {sTeamA.team && sTeamA.team && <>
-                    <div>
-                        <p className="text-center mb-3">{sTeamA.team} Batting</p>
-                        <Player11Bat player11={new11bat[sTeamA.team]} matchFormat={new11bat.matchFormat} className="mb-5" />
-                        <p className="text-center mb-3">{sTeamA.team} Bowling</p>
-                        <Player11Bowl player11={new11bowl[sTeamA.team]} matchFormat={new11bowl.matchFormat} />
-                    </div>
-
-                    <div>
-                        <p className="text-center mb-3">{sTeamB.team} Batting</p>
-                        <Player11Bat player11={new11bat[sTeamB.team]} matchFormat={new11bat.matchFormat} className="mb-5" />
-                        <p className="text-center mb-3">{sTeamB.team} Bowling</p>
-                        <Player11Bowl player11={new11bowl[sTeamB.team]} matchFormat={new11bowl.matchFormat} />
-                    </div>
-                </>
-                }
-            </div> */}
         </>
     )
 }

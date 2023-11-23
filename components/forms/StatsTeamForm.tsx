@@ -51,19 +51,22 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
             axios.get(`/api/view/stats-team?team=${statParams[0]}&matchFormat=${statParams[2]}`),
             axios.get(`/api/view/stats-team?team=${statParams[1]}&matchFormat=${statParams[2]}`),
             axios.get(`/api/view/stats-new-11?${teamStat}`),
-        ]).then(axios.spread((h2h, sTeamA, sTeamB, new11) => {
+            axios.get(`/api/view/stats-venue?venueId=${statParams[3]}&matchFormat=${statParams[2]}`),
+        ]).then(axios.spread((h2h, sTeamA, sTeamB, new11, sVenue) => {
             handleData({
                 h2h: h2h.data,
                 sTeamA: sTeamA.data,
                 sTeamB: sTeamB.data,
-                new11: new11.data
+                new11: new11.data,
+                sVenue: sVenue.data
             })
 
             return {
                 h2h: h2h.data,
                 sTeamA: sTeamA.data,
                 sTeamB: sTeamB.data,
-                new11: new11.data
+                new11: new11.data,
+                sVenue: sVenue.data
             }
         })).catch(err => {
             console.log(err)
@@ -82,7 +85,7 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
     const onSubmit = (values: any) => {
         let queryParams = ''
         if (Teams.includes(values.teamA) && Teams.includes(values.teamB) && MatchFormat.includes(values.matchFormat)) {
-            queryParams = `teamA=${values.teamA}&teamB=${values.teamB}&matchFormat=${values.matchFormat}`
+            queryParams = `teamA=${values.teamA}&teamB=${values.teamB}&matchFormat=${values.matchFormat}&venueId=${values.venueId}`
         }
 
         // Set team for useQuery

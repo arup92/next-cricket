@@ -2,40 +2,40 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
-interface TeamWicketsProps {
+interface TeamScoresProps {
     teamA: any
     teamB: any
     className?: string
 }
 
-const TeamWickets: React.FC<TeamWicketsProps> = ({ teamA, teamB, className }) => {
+const TeamScoresCard: React.FC<TeamScoresProps> = ({ teamA, teamB, className }) => {
 
     return (
         <>
             {!!teamA.scores && <Card className={className}>
                 <CardHeader>
-                    <CardTitle>Wickets Taken</CardTitle>
+                    <CardTitle>Team Scores</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {wicketsView(teamA)}
-                    {wicketsView(teamB)}
+                    {scoresView(teamA)}
+                    {scoresView(teamB)}
                 </CardContent>
             </Card>}
         </>
     )
 }
 
-export default TeamWickets
+export default TeamScoresCard
 
-function wicketsView(teamStats: any) {
-    return <div className="flex justify-between mb-2 items-center">
+function scoresView(teamStats: any) {
+    return <div className="flex justify-between items-center mb-2">
         {teamStats.team}
         <div>
             {teamStats.scores.map((score: any, index: number) => {
                 let scoreClass = ``
-                if (score.wickets >= 8) {
+                if (score.runs >= 300) {
                     scoreClass = 'bg-emerald-600 text-white border-transparent'
-                } else if (score.wickets <= 4) {
+                } else if (score.runs <= 200) {
                     scoreClass = 'bg-red-600 text-white border-transparent'
                 }
 
@@ -57,11 +57,11 @@ function wicketsView(teamStats: any) {
 
                     <HoverCard openDelay={300}>
                         <HoverCardTrigger className="hidden lg:inline-block">
-                            <span className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm border ${scoreClass}`}>{score.wickets}</span>
+                            <span className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm border ${scoreClass}`}>{score.runs}</span>
                         </HoverCardTrigger>
                         <HoverCardContent className="hidden lg:inline-block">
                             <div className="flex items-center">
-                                <span className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm border ${scoreClass}`}>{score.wickets}</span>
+                                <span className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm border ${scoreClass}`}>{score.runs}</span>
                                 <span> vs {score.oppCountryId}</span> <span className="text-sm text-muted-foreground">({date.toLocaleString('en-IN', options)})</span>
                             </div>
                         </HoverCardContent>

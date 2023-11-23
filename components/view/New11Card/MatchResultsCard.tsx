@@ -8,7 +8,7 @@ interface MatchResultsProps {
     className?: string
 }
 
-const MatchResults: React.FC<MatchResultsProps> = ({ teamA, teamB, className }) => {
+const MatchResultsCard: React.FC<MatchResultsProps> = ({ teamA, teamB, className }) => {
 
     const teamAStat = Object.keys(teamA).length !== 0 && teamA.teamStat.length > 0 && getWLResults(teamA.teamStat, teamA.team)
     const teamBStat = Object.keys(teamA).length !== 0 && teamB.teamStat.length > 0 && getWLResults(teamB.teamStat, teamB.team)
@@ -38,7 +38,7 @@ const MatchResults: React.FC<MatchResultsProps> = ({ teamA, teamB, className }) 
     )
 }
 
-export default MatchResults
+export default MatchResultsCard
 
 function getWLResults(stats: any[], teamId: string) {
     return stats.map((item: any, index: number) => {

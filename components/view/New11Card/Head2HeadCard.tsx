@@ -7,7 +7,7 @@ interface Head2HeadProps {
     className?: string
 }
 
-const Head2Head: React.FC<Head2HeadProps> = ({ h2h, className }) => {
+const Head2HeadCard: React.FC<Head2HeadProps> = ({ h2h, className }) => {
     return (
         <>
             {h2h.length > 0 && <Card className={className}>
@@ -53,4 +53,4 @@ const Head2Head: React.FC<Head2HeadProps> = ({ h2h, className }) => {
     )
 }
 
-export default Head2Head
+export default Head2HeadCard
