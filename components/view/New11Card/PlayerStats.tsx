@@ -13,6 +13,7 @@ interface PlayerStatsProps {
 
 const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId }) => {
     const playerDataKeys = Object.keys(playerData) // Array of player names
+    let venueName: string = ''
     console.log(playerData);
 
 
@@ -21,6 +22,8 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
             {playerDataKeys.length > 0 && playerDataKeys.map((player: any, index: number) => {
                 let totalFantasyPoints: number = 0
                 let totalFantasyPointsVsTeam: number = 0
+                let totalFantasyPointsInVenue: number = 0
+
                 if (playerData[player].teamId === teamId)
                     return <Card className={className} key={index}>
                         <CardHeader>
@@ -87,6 +90,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                 </>}
 
                                 {playerData[player].batInVenue && <>
+                                    {venueName = playerData[player].batInVenue[0].venueName}
                                     <Separator />
                                     <div className="flex justify-between items-center mb-1 pt-1">
                                         <p>In {playerData[player].batInVenue[0].venueName}</p>
@@ -104,6 +108,9 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                                 } else if (inning.run <= 9) {
                                                     battingClassName = 'bg-gray-200 text-emerald-700 shadow'
                                                 }
+
+                                                // Fantasy Point
+                                                totalFantasyPointsInVenue += fantasyPointsCount(inning, 'bat')
 
                                                 return <PlayerPopUpBat key={index} themeclass={battingClassName} inning={inning} />
                                             })}
@@ -163,6 +170,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                 </>}
 
                                 {playerData[player].bowlInVenue && <>
+                                    {venueName = playerData[player].bowlInVenue[0].venueName}
                                     <Separator />
                                     <div className="flex justify-between pt-1">
                                         <p>In {playerData[player].bowlInVenue[0].venueName}</p>
@@ -178,6 +186,9 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                                 } else if (inning.wicket === 0) {
                                                     bowlingClassName = 'bg-gray-200 text-emerald-700 shadow'
                                                 }
+
+                                                // Fantasy Point
+                                                totalFantasyPointsInVenue += fantasyPointsCount(inning, 'bowl')
 
                                                 return <PlayerPopUpBowl key={index} themeclass={bowlingClassName} inning={inning} />
                                             })}
@@ -200,6 +211,16 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                         <p>Vs {oppCountryId}</p>
                                         <div className="rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase">
                                             {totalFantasyPointsVsTeam}
+                                        </div>
+                                    </div>
+                                </>}
+
+                                {totalFantasyPointsInVenue > 0 && <>
+                                    <Separator />
+                                    <div className="flex justify-between items-center mb-1 pt-1">
+                                        <p>In {venueName}</p>
+                                        <div className="rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase">
+                                            {totalFantasyPointsInVenue}
                                         </div>
                                     </div>
                                 </>}
