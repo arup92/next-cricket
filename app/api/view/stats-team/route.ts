@@ -1,6 +1,6 @@
-import { MatchFormat } from '@prisma/client';
 import prismaClient from "@/libs/prismadb";
 import { ErrorMessage } from "@/responses/messages";
+import { MatchFormat } from '@prisma/client';
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -28,7 +28,8 @@ export async function GET(request: Request) {
                 teamBId: true,
                 batFirst: true,
                 result: true,
-                venueId: true
+                venueId: true,
+                matchDate: true
             },
             orderBy: [
                 { matchDate: 'desc' }
@@ -36,13 +37,10 @@ export async function GET(request: Request) {
             take: 5
         })
 
-        // Modify the result for 'w' & 'l'
-        const stats = getWL(teamStat, team)
-
         // Filter by venueId
-        let statsByVenue: string[] = []
+        let filterVenue = {}
         if (!!venueId) {
-            const filterVenue = await prismaClient.match.findMany({
+            filterVenue = await prismaClient.match.findMany({
                 where: {
                     OR: [
                         { teamAId: team },
@@ -56,65 +54,40 @@ export async function GET(request: Request) {
                 ],
                 take: 5
             })
-
-            statsByVenue = getWL(filterVenue, team)
         }
 
         // Get Scores
         const scores = await prismaClient.scores.findMany({
             where: {
-                teamId: team
+                teamId: team,
+                Match: {
+                    matchFormat
+                }
             },
+            select: {
+                teamId: true,
+                oppCountryId: true,
+                runs: true,
+                wickets: true,
+                Match: {
+                    select: {
+                        matchDate: true
+                    }
+                }
+            },
+            orderBy: [
+                {
+                    Match: {
+                        matchDate: 'desc'
+                    }
+                }
+            ],
             take: 5
         })
 
-        // const scores = await prismaClient.batting.groupBy({
-        //     where: {
-        //         teamId: team,
-        //         matchFormat,
-        //     },
-        //     _sum: {
-        //         run: true
-        //     },
-        //     by: ["matchId", "matchDate"],
-        //     take: 5,
-        //     orderBy: {
-        //         matchDate: 'desc'
-        //     }
-        // })
-
-
-        // // Get Wickets
-        // const wickets = await prismaClient.bowling.groupBy({
-        //     where: {
-        //         teamId: team,
-        //         matchFormat,
-        //     },
-        //     _sum: {
-        //         wicket: true
-        //     },
-        //     by: ["matchId", "matchDate"],
-        //     take: 5,
-        //     orderBy: {
-        //         matchDate: 'desc'
-        //     }
-        // })
-
-        return NextResponse.json({ team: team, stats, statsByVenue, scores }, { status: 200 })
+        return NextResponse.json({ team: team, teamStat, filterVenue, scores }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     }
-}
-
-function getWL(teamStat: any[], teamA: string): string[] {
-    const value = teamStat.map(item => {
-        if (teamA === item.result) {
-            return 'w'
-        } else {
-            return 'l'
-        }
-    })
-
-    return value
 }

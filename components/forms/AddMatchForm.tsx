@@ -22,6 +22,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "../ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
     matchFormat: z.enum(MatchFormat),
@@ -43,6 +44,8 @@ const formSchema = z.object({
 })
 
 const AddMatchForm = () => {
+    const router = useRouter()
+
     const {
         formState: { errors },
         register,
@@ -83,9 +86,9 @@ const AddMatchForm = () => {
         axios.post('/api/add-match', values)
             .then(response => {
                 if (response.status === 200) {
-                    toast.success(response.data)
+                    toast.success(response.data.message)
+                    router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
                 } else {
-                    // console.log(response);
                     toast.error(ErrorMessage.SOMETHING_WRONG)
                 }
             })

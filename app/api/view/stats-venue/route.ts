@@ -1,47 +1,48 @@
 import prismaClient from "@/libs/prismadb";
 import { ErrorMessage } from "@/responses/messages";
-import { sortStringsAlphabetically } from "@/utils/utils";
 import { MatchFormat } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
-    const teamA = url.searchParams.get('teamA')?.toString().toUpperCase()
-    const teamB = url.searchParams.get('teamB')?.toString().toUpperCase()
+    const venueId = url.searchParams.get('venueId')?.toString().toLowerCase()
     const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString() as MatchFormat
 
-    if (!teamA || !teamB || !matchFormat) {
+    if (!venueId || !matchFormat) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 401 })
     }
 
     try {
-        const teams: string[] = sortStringsAlphabetically(teamA, teamB) // Sort teams
-
-        // Prisma call: match
-        const teamStat = await prismaClient.match.findMany({
+        const venues = await prismaClient.match.findMany({
             where: {
-                teamAId: teams[0],
-                teamBId: teams[1],
+                venueId,
                 matchFormat
             },
             select: {
+                venueId: true,
+                matchFormat: true,
                 teamAId: true,
                 teamBId: true,
                 result: true,
-                venueId: true,
-                matchFormat: true,
-                venue: {
+                batFirst: true,
+                matchDate: true,
+                Scores: {
                     select: {
-                        venueCountryId: true
+                        teamId: true,
+                        runs: true,
+                        wickets: true,
+                        oppCountryId: true
                     }
-                },
-                matchDate: true
+                }
+            },
+            take: 5,
+            orderBy: {
+                matchDate: 'desc'
             }
         })
 
-        return NextResponse.json(teamStat.slice(0, 4), { status: 200 })
+        return NextResponse.json(venues, { status: 200 })
     } catch (error) {
-        console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     }
 }

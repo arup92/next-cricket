@@ -12,3 +12,18 @@ export const Teams = [
     'SL',
     'WI'
 ] as const
+
+export const TeamFullNames = [
+    'Afghanistan',
+    'Australia',
+    'Bangladesh',
+    'England',
+    'India',
+    'Ireland',
+    'Netherlands',
+    'New Zealand',
+    'Pakistan',
+    'South Africa',
+    'Sri Lanka',
+    'West Indies'
+] as const

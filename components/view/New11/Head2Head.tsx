@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card"
+import { getFullNameByCode } from "@/utils/utils"
 
 interface Head2HeadProps {
     h2h: any[]
@@ -14,7 +15,7 @@ const Head2Head: React.FC<Head2HeadProps> = ({ h2h, sTeamA, sTeamB }) => {
                     <div className="flex justify-between">
                         <div>
                             <p className="font-semibold text-sm mb-1">
-                                {sTeamA?.team}
+                                {getFullNameByCode(sTeamA?.team)}
                             </p>
 
                             {sTeamA.stats.length > 0 && sTeamA.stats.map((result: string, index: number) => {
@@ -40,7 +41,7 @@ const Head2Head: React.FC<Head2HeadProps> = ({ h2h, sTeamA, sTeamB }) => {
 
                         <div>
                             <p className="font-semibold text-sm mb-1 text-right">
-                                {sTeamB?.team}
+                                {getFullNameByCode(sTeamB?.team)}
                             </p>
 
                             {sTeamB.stats.length > 0 && sTeamB.stats.map((result: string, index: number) => {
