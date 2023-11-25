@@ -59,7 +59,10 @@ export async function GET(request: Request) {
         // Get Scores
         const scores = await prismaClient.scores.findMany({
             where: {
-                teamId: team
+                teamId: team,
+                Match: {
+                    matchFormat
+                }
             },
             select: {
                 teamId: true,

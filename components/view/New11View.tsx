@@ -30,8 +30,8 @@ const New11View = () => {
     return (
         <>
             <StatsTeamForm handleData={handleData} />
+            <Head2HeadCard className="mb-4" h2h={h2h} />
             <div className="grid gap-3 grid-cols-1 lg:grid-cols-8 mb-4">
-                <Head2HeadCard className="col-span-2" h2h={h2h} />
                 <MatchResultsCard className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
                 <TeamScoresCard className="col-span-2" teamA={sTeamA} teamB={sTeamB} />
                 <TeamWicketsCard className="col-span-2" teamA={sTeamA} teamB={sTeamB} />

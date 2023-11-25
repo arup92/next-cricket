@@ -14,8 +14,6 @@ interface PlayerStatsProps {
 const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId }) => {
     const playerDataKeys = Object.keys(playerData) // Array of player names
     let venueName: string = ''
-    console.log(playerData);
-
 
     return (
         <>
