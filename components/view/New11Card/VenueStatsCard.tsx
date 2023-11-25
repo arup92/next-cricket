@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
+import Link from "next/link"
+import { HiExternalLink } from 'react-icons/hi'
 
 interface VenueStatsCardProps {
     venueData: any[]
@@ -13,7 +15,7 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
         <>
             {venueData.length > 0 && <Card className={className}>
                 <CardHeader>
-                    <CardTitle className="capitalize">In {venueData[0].venueId}</CardTitle>
+                    <CardTitle className="capitalize inline">In <Link className="text-blue-700 hover:underline" href={`./venue/${venueData[0].venueId}`}><span>{venueData[0].venueId}</span> <HiExternalLink className='inline mb-[3px]' /></Link></CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="flex justify-between mb-2 items-center">

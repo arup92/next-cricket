@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 	return (
 		<html lang="en">
-			<body className={nunito.className}>
+			<body className={`${nunito.className} bg-gray-50`}>
 				<Toaster />
 				<Navbar currentUser={currentUser} />
 				<div className="px-2 py-2 lg:px-6 lg:py-8 md:px-12 lg:container lg:mx-auto">
