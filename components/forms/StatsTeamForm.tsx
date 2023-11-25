@@ -11,6 +11,7 @@ import { z } from "zod";
 import { Button } from "../ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
     matchFormat: z.enum(MatchFormat, {
@@ -38,6 +39,29 @@ interface StatsTeamFormProps {
 const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
     const [teamStat, setTeamStat] = useState('')
     const [open, setOpen] = useState(false)
+
+    const router = useRouter()
+    const pathname = usePathname()
+
+    const searchParams = useSearchParams()
+    const queryTeamA = searchParams.get('teamA')
+    const queryTeamB = searchParams.get('teamB')
+    const queryMatchFormat = searchParams.get('matchFormat')
+    const queryVenueId = searchParams.get('venueId')
+
+    // set teamStat i.e. query params from url on load
+    useEffect(() => {
+        if (queryTeamA && queryTeamB && queryMatchFormat) {
+            let venueId = ''
+            if (!!queryVenueId) {
+                venueId = `&venueId=${queryVenueId}`
+            }
+
+            let queryParams = `teamA=${queryTeamA}&teamB=${queryTeamB}&matchFormat=${queryMatchFormat}${venueId}`
+
+            setTeamStat(queryParams)
+        }
+    }, [queryTeamA, queryTeamB, queryMatchFormat, queryVenueId])
 
     const getCustomMatches = async (): Promise<any> => {
         let statParams: string[] = []
@@ -85,8 +109,16 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
     const onSubmit = (values: any) => {
         let queryParams = ''
         if (Teams.includes(values.teamA) && Teams.includes(values.teamB) && MatchFormat.includes(values.matchFormat)) {
-            queryParams = `teamA=${values.teamA}&teamB=${values.teamB}&matchFormat=${values.matchFormat}&venueId=${values.venueId}`
+            let venueId = ''
+            if (!!values.venueId) {
+                venueId = `&venueId=${values.venueId}`
+            }
+
+            queryParams = `teamA=${values.teamA}&teamB=${values.teamB}&matchFormat=${values.matchFormat}${venueId}`
         }
+
+        // Update the url
+        router.push(`${pathname}?${queryParams}`)
 
         // Set team for useQuery
         setTeamStat(queryParams)

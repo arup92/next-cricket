@@ -3,6 +3,7 @@ import { fantasyPointsCount } from "@/utils/utils"
 import PlayerPopUpBat from "./Card/PlayerPopUpBat"
 import PlayerPopUpBowl from "./Card/PlayerPopUpBowl"
 import { Separator } from "@/components/ui/separator"
+import { fantasyPointColor } from "@/utils/style"
 
 interface PlayerStatsProps {
     playerData: any
@@ -88,10 +89,9 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                 </>}
 
                                 {playerData[player].batInVenue && <>
-                                    {venueName = playerData[player].batInVenue[0].venueName}
                                     <Separator />
                                     <div className="flex justify-between items-center mb-1 pt-1">
-                                        <p>In {playerData[player].batInVenue[0].venueName}</p>
+                                        <p>In {venueName = playerData[player].batInVenue[0].venueName}</p>
                                         <div>
                                             {playerData[player].batInVenue.map((inning: any, index: number) => {
                                                 let battingClassName = ``
@@ -168,10 +168,9 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                 </>}
 
                                 {playerData[player].bowlInVenue && <>
-                                    {venueName = playerData[player].bowlInVenue[0].venueName}
                                     <Separator />
                                     <div className="flex justify-between pt-1">
-                                        <p>In {playerData[player].bowlInVenue[0].venueName}</p>
+                                        <p>In {venueName = playerData[player].bowlInVenue[0].venueName}</p>
                                         <div>
                                             {playerData[player].bowlInVenue.map((inning: any, index: number) => {
                                                 let bowlingClassName = ``
@@ -198,7 +197,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                             {totalFantasyPoints && <div className="border border-gray-400 px-2 py-1 rounded-sm mb-3">
                                 <div className="flex justify-between items-center mb-1">
                                     <p>Fantasy Points</p>
-                                    <div className="rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase">
+                                    <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPoints)}`}>
                                         {totalFantasyPoints}
                                     </div>
                                 </div>
@@ -207,7 +206,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                     <Separator />
                                     <div className="flex justify-between items-center mb-1 pt-1">
                                         <p>Vs {oppCountryId}</p>
-                                        <div className="rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase">
+                                        <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsVsTeam)}`}>
                                             {totalFantasyPointsVsTeam}
                                         </div>
                                     </div>
@@ -217,7 +216,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                     <Separator />
                                     <div className="flex justify-between items-center mb-1 pt-1">
                                         <p>In {venueName}</p>
-                                        <div className="rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase">
+                                        <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsInVenue)}`}>
                                             {totalFantasyPointsInVenue}
                                         </div>
                                     </div>

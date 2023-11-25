@@ -8,7 +8,6 @@ interface Head2HeadProps {
 }
 
 const Head2HeadCard: React.FC<Head2HeadProps> = ({ h2h, className }) => {
-    console.log(h2h);
 
     return (
         <>
