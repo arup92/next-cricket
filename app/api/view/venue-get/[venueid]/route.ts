@@ -3,7 +3,7 @@ import { ErrorMessage } from "@/responses/messages";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: { params: { venueid: string } }) {
-    const venueId = params.venueid
+    const venueId = params.venueid.toLowerCase()
 
     if (!venueId) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
@@ -26,8 +26,19 @@ export async function GET(request: Request, { params }: { params: { venueid: str
                         result: true,
                         batFirst: true,
                         matchDate: true,
-                        batting: true,
-                        bowling: true,
+                        id: true,
+                        batting: {
+                            select: {
+                                run: true
+                            }
+                        },
+                        bowling: {
+                            select: {
+                                eco: true,
+                                wicket: true,
+                                Player: true
+                            }
+                        },
                         Scores: true,
                     },
                     take: 10

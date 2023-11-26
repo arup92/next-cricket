@@ -113,12 +113,18 @@ enum PlayerType {
   AllRounder
 }
 
+enum BowlingType {
+  Fast
+  Spin
+}
+
 model Player {
-  playerId        String      @id @unique
+  playerId        String       @id @unique
   playerName      String
   playerCountryId String
   playerType      PlayerType?
   description     String?
+  bowlingType     BowlingType?
 
   batting Batting[]
   bowling Bowling[]

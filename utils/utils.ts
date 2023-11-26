@@ -414,3 +414,14 @@ export const getFullNameByCode = (teamCode: any): string | undefined => {
     }
     return undefined
 }
+
+export const formatDateString = (inputDateString: string): string => {
+    const date = new Date(inputDateString);
+
+    const formattedDate = new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        year: '2-digit'
+    }).format(date);
+
+    return formattedDate;
+}
