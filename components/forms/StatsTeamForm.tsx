@@ -222,7 +222,7 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
                                 variant="outline"
                                 role="combobox"
                                 aria-expanded={open}
-                                className="w-[150px] justify-between"
+                                className="w-[150px] justify-between bg-white"
                             >
                                 {venues.data && watch().venueId ?
                                     venues.data.find((venue: any) => venue.venueId === watch().venueId)?.venueName :
