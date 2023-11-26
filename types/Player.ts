@@ -4,6 +4,12 @@ enum PlayerType {
     AllRounder
 }
 
+export const PlayerTypeConst = [
+    'Batsman',
+    'Bowler',
+    'AllRounder'
+] as const
+
 interface Player {
     playerId: string
     playerName: string

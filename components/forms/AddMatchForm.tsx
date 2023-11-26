@@ -83,7 +83,7 @@ const AddMatchForm = () => {
     }
 
     const onSubmit = (values: any) => {
-        axios.post('/api/add-match', values)
+        axios.post('/api/dashboard/add-match', values)
             .then(response => {
                 if (response.status === 200) {
                     toast.success(response.data.message)

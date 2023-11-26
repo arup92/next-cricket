@@ -5,3 +5,8 @@ export type BowlingDataType = {
     eco: number
     matchFormat?: string
 }
+
+export const BowlingTypeConst = [
+    'Fast',
+    'Spin',
+] as const
