@@ -65,55 +65,53 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle className='mb-3'>{player.playerName}</DialogTitle>
-                                    <DialogDescription>
-                                        <form>
-                                            <div className='mb-4'>
-                                                <Input
-                                                    type='text'
-                                                    className='min-w-full'
-                                                    placeholder='Description'
-                                                    {...register('description')}
-                                                />
-                                            </div>
-
-                                            <div className='mb-4'>
-                                                <Select
-                                                    onValueChange={(selectedValue: string) => setValue('playerType', selectedValue)}
-                                                >
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Player Type" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {PlayerTypeConst.map((type) => (
-                                                            <SelectItem key={type} value={type}>
-                                                                {type}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-
-                                            <div className='mb-4'>
-                                                <Select
-                                                    onValueChange={(selectedValue: string) => setValue('bowlingType', selectedValue)}
-                                                >
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Bowling Type" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {BowlingTypeConst.map((type) => (
-                                                            <SelectItem key={type} value={type}>
-                                                                {type}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-
-                                            <Button className='w-full'>Submit</Button>
-                                        </form>
-                                    </DialogDescription>
                                 </DialogHeader>
+                                <form>
+                                    <div className='mb-4'>
+                                        <Input
+                                            type='text'
+                                            className='min-w-full'
+                                            placeholder='Description'
+                                            {...register('description')}
+                                        />
+                                    </div>
+
+                                    <div className='mb-4'>
+                                        <Select
+                                            onValueChange={(selectedValue: string) => setValue('playerType', selectedValue)}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Player Type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {PlayerTypeConst.map((type) => (
+                                                    <SelectItem key={type} value={type}>
+                                                        {type}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className='mb-4'>
+                                        <Select
+                                            onValueChange={(selectedValue: string) => setValue('bowlingType', selectedValue)}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Bowling Type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {BowlingTypeConst.map((type) => (
+                                                    <SelectItem key={type} value={type}>
+                                                        {type}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <Button className='w-full'>Submit</Button>
+                                </form>
                             </DialogContent>
                         </Dialog>
                     </div>
