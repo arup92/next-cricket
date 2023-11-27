@@ -116,9 +116,9 @@ export async function POST(request: Request) {
 
 
         // Make Player array
-        const playerData: Player[] = []
+        const playerData: any[] = []
         for (const sessionA of sessionABat) {
-            const currentPlayerData: Player = {
+            const currentPlayerData: any = {
                 playerId: sessionA[0].replaceAll(' ', '_').toLowerCase(),
                 playerName: sessionA[0],
                 playerCountryId: body.batFirst
@@ -128,7 +128,7 @@ export async function POST(request: Request) {
         }
 
         for (const sessionB of sessionBBat) {
-            const currentPlayerData: Player = {
+            const currentPlayerData: any = {
                 playerId: sessionB[0].replaceAll(' ', '_').toLowerCase(),
                 playerName: sessionB[0],
                 playerCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
@@ -138,7 +138,7 @@ export async function POST(request: Request) {
         }
 
         for (const sessionAB of sessionABowl) {
-            const currentPlayerData: Player = {
+            const currentPlayerData: any = {
                 playerId: sessionAB[0].replaceAll(' ', '_').toLowerCase(),
                 playerName: sessionAB[0],
                 playerCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
@@ -148,7 +148,7 @@ export async function POST(request: Request) {
         }
 
         for (const sessionBB of sessionBBowl) {
-            const currentPlayerData: Player = {
+            const currentPlayerData: any = {
                 playerId: sessionBB[0].replaceAll(' ', '_').toLowerCase(),
                 playerName: sessionBB[0],
                 playerCountryId: body.batFirst

@@ -2,12 +2,15 @@ import { BowlingTypeConst } from '@/types/BowlingDataType';
 import { PlayerTypeConst } from '@/types/Player';
 import { getFullNameByCode } from '@/utils/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { TbEdit } from "react-icons/tb";
 import { z } from 'zod';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
@@ -16,12 +19,31 @@ interface ListPlayersEditProps {
 }
 
 const formSchema = z.object({
+    playerId: z.string().trim().optional(),
     description: z.string().trim().optional(),
     playerType: z.enum(PlayerTypeConst).optional(),
     bowlingType: z.enum(BowlingTypeConst).optional(),
 })
 
 const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
+    const [playerId, setPlayerId] = useState<string>('')
+
+    const submitPlayer = async (values: any) => {
+        values.playerId = playerId
+
+        await axios.patch('/api/dashboard/edit-player', values)
+            .then(response => {
+                if (response.status === 200) {
+                    toast.success(response.data)
+                } else {
+                    toast.error(response.data)
+                }
+            })
+            .catch(err => {
+                toast.error(err.message)
+            })
+    }
+
     // Hook Form
     const {
         formState: { errors },
@@ -60,13 +82,19 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                     <div className='w-[10%]'>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="outline"><TbEdit /></Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                        setPlayerId(player.playerId)
+                                    }}>
+                                    <TbEdit />
+                                </Button>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle className='mb-3'>{player.playerName}</DialogTitle>
                                 </DialogHeader>
-                                <form>
+                                <form onSubmit={handleSubmit(submitPlayer)}>
                                     <div className='mb-4'>
                                         <Input
                                             type='text'
