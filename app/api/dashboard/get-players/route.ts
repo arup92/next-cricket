@@ -37,6 +37,9 @@ export async function GET(request: Request) {
         // Find matches
         const player = await prismaClient.player.findMany({
             where,
+            orderBy: {
+                playerName: 'asc'
+            }
         })
 
         return NextResponse.json(player, { status: 200 })

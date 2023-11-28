@@ -111,11 +111,13 @@ enum PlayerType {
   Batsman
   Bowler
   AllRounder
+  NA
 }
 
 enum BowlingType {
   Fast
   Spin
+  NA
 }
 
 model Player {

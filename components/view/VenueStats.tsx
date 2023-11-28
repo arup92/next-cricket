@@ -8,6 +8,7 @@ import { BiSolidCricketBall } from "react-icons/bi"
 import { GiCricketBat, GiFastArrow, GiFlameSpin } from "react-icons/gi"
 import { HiExternalLink } from 'react-icons/hi'
 import { Card, CardContent } from "../ui/card"
+import VenueSummery from "./venue/VenueSummery"
 
 interface VenueStatsProps {
     venue: string
@@ -34,6 +35,8 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue }) => {
 
     return (
         <>
+            <h2 className="text-2xl mb-4">Most Recent Performance in <span className="capitalize font-semibold">{venue}</span></h2>
+            {data?.matches.length > 0 && <VenueSummery matchData={data.matches} />}
             {data?.matches.length > 0 && data.matches.map((match: any, index: any) => {
                 let highestScore: number = 0
                 let highestWickets: number = 0

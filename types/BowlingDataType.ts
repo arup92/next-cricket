@@ -9,4 +9,5 @@ export type BowlingDataType = {
 export const BowlingTypeConst = [
     'Fast',
     'Spin',
+    'NA'
 ] as const

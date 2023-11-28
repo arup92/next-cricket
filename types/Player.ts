@@ -7,7 +7,8 @@ enum PlayerType {
 export const PlayerTypeConst = [
     'Batsman',
     'Bowler',
-    'AllRounder'
+    'AllRounder',
+    'NA'
 ] as const
 
 interface Player {
