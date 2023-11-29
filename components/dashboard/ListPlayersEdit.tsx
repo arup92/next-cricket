@@ -73,7 +73,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
     return (
         <>
             {playerData.length > 0 && playerData.map((player: any, index: number) => <Card key={index} className='mb-4'>
-                <CardContent className='py-2 px-4 flex items-center'>
+                <CardContent className='flex items-center px-4 py-2'>
                     <div className='w-[25%]'>
                         <Link
                             className='text-gray-700 hover:underline'
@@ -130,7 +130,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                                     <div className='mb-4'>
                                         <Select
                                             onValueChange={(selectedValue: string) => setValue('playerType', selectedValue)}
-                                            defaultValue={!!player.playerType ? player.playerType : 'NA'}
+                                            defaultValue={!!player.playerType ? player.playerType : PlayerTypeConst[3]}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Player Type" />
@@ -148,7 +148,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                                     <div className='mb-4'>
                                         <Select
                                             onValueChange={(selectedValue: string) => setValue('bowlingType', selectedValue)}
-                                            defaultValue={!!player.bowlingType ? player.bowlingType : 'NA'}
+                                            defaultValue={!!player.bowlingType ? player.bowlingType : BowlingTypeConst[2]}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Bowling Type" />
