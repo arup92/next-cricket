@@ -9,24 +9,20 @@ export async function getSession() {
 export default async function getCurrentUser() {
     try {
         const session = await getSession()
-        // console.log(session);
-
-
         if (!session?.user?.email) return null
 
-        // const currentUser = await client.user.findUnique({
-        //     where: {
-        //         email: session.user.email as string
-        //     }
-        // })
+        const currentUser = await client.user.findUnique({
+            where: {
+                email: session.user.email as string
+            }
+        })
 
-        // if (!currentUser) return null
+        if (!currentUser) return null
 
-        // const { hashedPassword, updatedAt, verifyToken, loginId, ...returnData } = currentUser
+        const { hashedPassword, updatedAt, verifyToken, loginId, ...returnData } = currentUser
 
-        // return returnData
+        return returnData
 
-        return session.user?.email
     } catch (error) {
         return null
     }
