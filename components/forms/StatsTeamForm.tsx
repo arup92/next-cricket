@@ -34,9 +34,10 @@ const formSchema = z.object({
 
 interface StatsTeamFormProps {
     handleData: (item: any) => void
+    isLoading: (item: any) => void
 }
 
-const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
+const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData, isLoading }) => {
     const [teamStat, setTeamStat] = useState('')
     const [open, setOpen] = useState(false)
 
@@ -84,6 +85,7 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
                 new11: new11.data,
                 sVenue: sVenue.data
             })
+            isLoading(false)
 
             return {
                 h2h: h2h.data,
@@ -122,6 +124,7 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
 
         // Set team for useQuery
         setTeamStat(queryParams)
+        isLoading(true)
     }
 
     useEffect(() => {
@@ -155,7 +158,7 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData }) => {
     }
 
     const venues = useQuery({
-        queryKey: ['venues'],
+        queryKey: ['allvenues'],
         queryFn: getVenues
     })
 
