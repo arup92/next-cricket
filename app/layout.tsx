@@ -16,13 +16,13 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 
-	const currentUser: SafeUser | null = await getCurrentUser()
+	const currentUser: string | null = await getCurrentUser()
 
 	return (
 		<html lang="en">
 			<body className={`${nunito.className} bg-gray-50`}>
 				<Toaster />
-				<Navbar currentUser={currentUser} />
+				<Navbar session={currentUser} />
 				<div className="px-2 py-2 lg:px-6 lg:py-8 md:px-12 lg:container lg:mx-auto">
 					<ProvidersTanstack>
 						{children}
