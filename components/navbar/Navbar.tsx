@@ -1,3 +1,5 @@
+'use client'
+
 import { SafeUser } from "@/types/SafeUser"
 import Link from "next/link"
 import { RiGalleryFill } from 'react-icons/ri'
@@ -11,6 +13,8 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
+   console.log(currentUser);
+
    return (
       <header>
          <div className="relative z-20 bg-white border-b">
