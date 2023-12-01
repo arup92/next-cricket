@@ -1,12 +1,15 @@
-import getCurrentSession from "@/actions/getCurrentSession";
+'use client'
+
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { FaUserEdit } from "react-icons/fa";
 import { IoMdAddCircle, IoMdLogOut } from "react-icons/io";
 import { RiGalleryFill } from 'react-icons/ri';
 import NavlinkUi from "./NavlinkUi";
 
-const Navbar = async () => {
-   const currentUser: string | null = await getCurrentSession()
+const Navbar = () => {
+   const { data: session } = useSession()
+
 
    return (
       <header>
@@ -31,7 +34,7 @@ const Navbar = async () => {
                         <div className="flex flex-col justify-between h-full lg:items-center lg:flex-row">
                            <ul className="px-6 pt-32 space-y-8 text-custom-alpha md:px-12 lg:space-y-0 lg:flex lg:items-center lg:space-x-12 lg:pt-0">
                               <NavlinkUi linkto="/view/new-11">New 11</NavlinkUi>
-                              {(currentUser) ?
+                              {(session) ?
                                  (
                                     <>
                                        <NavlinkUi className="flex items-center" linkto="/dashboard/add-match">
