@@ -1,16 +1,13 @@
-import { SafeUser } from "@/types/SafeUser"
-import Link from "next/link"
-import { RiGalleryFill } from 'react-icons/ri'
-import NavlinkUi from "./NavlinkUi"
-import { IoMdAddCircle } from "react-icons/io";
-import { IoMdLogOut } from "react-icons/io";
+import getCurrentSession from "@/actions/getCurrentSession";
+import Link from "next/link";
 import { FaUserEdit } from "react-icons/fa";
+import { IoMdAddCircle, IoMdLogOut } from "react-icons/io";
+import { RiGalleryFill } from 'react-icons/ri';
+import NavlinkUi from "./NavlinkUi";
 
-interface NavbarProps {
-   session: string | null
-}
+const Navbar = async () => {
+   const currentUser: string | null = await getCurrentSession()
 
-const Navbar: React.FC<NavbarProps> = ({ session }) => {
    return (
       <header>
          <div className="relative z-20 bg-white border-b">
@@ -34,7 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ session }) => {
                         <div className="flex flex-col justify-between h-full lg:items-center lg:flex-row">
                            <ul className="px-6 pt-32 space-y-8 text-custom-alpha md:px-12 lg:space-y-0 lg:flex lg:items-center lg:space-x-12 lg:pt-0">
                               <NavlinkUi linkto="/view/new-11">New 11</NavlinkUi>
-                              {(session) ?
+                              {(currentUser) ?
                                  (
                                     <>
                                        <NavlinkUi className="flex items-center" linkto="/dashboard/add-match">
