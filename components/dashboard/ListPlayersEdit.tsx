@@ -57,6 +57,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
             })
 
         setIsDialogOpen(false)
+        reset()
     }
 
     // Hook Form
@@ -64,7 +65,8 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
         formState: { errors },
         handleSubmit,
         setValue,
-        register
+        register,
+        reset
     } = useForm({
         mode: 'onBlur',
         resolver: zodResolver(formSchema)
