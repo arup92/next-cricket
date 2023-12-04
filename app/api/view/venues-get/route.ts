@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     try {
         const venues = await prismaClient.venue.findMany({
             orderBy: {
-                venueId: "desc"
+                venueId: "asc"
             }
         })
 
