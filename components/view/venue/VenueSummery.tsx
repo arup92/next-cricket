@@ -15,10 +15,10 @@ const VenueSummery: React.FC<VenueSummeryProps> = ({ matchData }) => {
         match.Scores.forEach((score: any) => {
             if (score.teamId === match.batFirst) {
                 total1stInnScore += score.runs
-                total1stInnWickets += score.wickets
+                total2ndInnWickets += score.wickets
             } else {
                 total2ndInnScore += score.runs
-                total2ndInnWickets += score.wickets
+                total1stInnWickets += score.wickets
             }
         })
     })
@@ -27,19 +27,19 @@ const VenueSummery: React.FC<VenueSummeryProps> = ({ matchData }) => {
         <Card className="mb-4">
             <CardContent className="p-3 flex items-center justify-between">
                 <div>
-                    <p>Avg 1st inn runs: {Math.ceil(total1stInnScore / matchData.length)}</p>
+                    <p>Avg 1st inn runs: {Math.round(total1stInnScore / matchData.length)}</p>
                 </div>
 
                 <div>
-                    <p>Avg 2nd inn runs: {Math.ceil(total2ndInnScore / matchData.length)}</p>
+                    <p>Avg 2nd inn runs: {Math.round(total2ndInnScore / matchData.length)}</p>
                 </div>
 
                 <div>
-                    <p>Avg 1st inn wickets: {Math.ceil(total1stInnWickets / matchData.length)}</p>
+                    <p>Avg 1st inn wickets: {Math.round(total1stInnWickets / matchData.length)}</p>
                 </div>
 
                 <div>
-                    <p>Avg 2nd inn wickets: {Math.ceil(total2ndInnWickets / matchData.length)}</p>
+                    <p>Avg 2nd inn wickets: {Math.round(total2ndInnWickets / matchData.length)}</p>
                 </div>
             </CardContent>
         </Card>
