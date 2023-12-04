@@ -10,7 +10,6 @@ import NavlinkUi from "./NavlinkUi";
 const Navbar = () => {
    const { data: session } = useSession()
 
-
    return (
       <header>
          <div className="relative z-20 bg-white border-b">
