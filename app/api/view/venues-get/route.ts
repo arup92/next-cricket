@@ -5,7 +5,11 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
 
     try {
-        const venues = await prismaClient.venue.findMany()
+        const venues = await prismaClient.venue.findMany({
+            orderBy: {
+                venueId: "asc"
+            }
+        })
 
         return NextResponse.json(venues, { status: 200 })
     } catch (error) {
