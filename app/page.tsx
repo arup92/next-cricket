@@ -1,4 +1,5 @@
 import Matches from "./view/matches/page";
+import Script from 'next/script';
 
 export default function Home() {
   return (
