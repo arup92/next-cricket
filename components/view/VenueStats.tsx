@@ -40,7 +40,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue }) => {
             {data?.matches.length > 0 && data.matches.map((match: any, index: any) => {
                 let highestScore: number = 0
                 let highestWickets: number = 0
-                let highestWicketsEco: number = 0
+                let highestWicketsEco: number = Number.MAX_SAFE_INTEGER
                 let bowlingType: string = ''
 
                 return <Card key={index} className="mb-4 relative">
@@ -97,10 +97,10 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue }) => {
                             <div className="flex items-center justify-end">
                                 <BiSolidCricketBall className='inline mr-1 text-gray-800' />
                                 {match.bowling.forEach((bowl: any) => {
-                                    if (bowl.wicket > highestWickets) {
+                                    if (bowl.wicket >= highestWickets) {
                                         highestWickets = bowl.wicket
-                                        highestWicketsEco = bowl.eco
-                                        bowlingType = bowl.Player.bowlingType
+                                        highestWicketsEco = highestWicketsEco < bowl.eco ? highestWicketsEco : bowl.eco
+                                        bowlingType = highestWicketsEco < bowl.eco ? bowl.Player.bowlingType : bowlingType
                                     }
                                 })}
                                 <p className="text-muted-foreground text-sm px-1 mr-1 border rounded shadow-sm">
