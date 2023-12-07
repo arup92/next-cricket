@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
     const url = new URL(request.url)
     const venueId = url.searchParams.get('venueId')?.toString().toLowerCase()
-    const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString() as MatchFormat
+    const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString().toUpperCase() as MatchFormat
 
     if (!venueId || !matchFormat) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 401 })
