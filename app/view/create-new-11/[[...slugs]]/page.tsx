@@ -9,15 +9,16 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     let title = 'Make new  11'
     if (params && params.slugs?.length > 0) {
-        title = `${getFullNameByCode(params.slugs[0].toUpperCase())} vs ${getFullNameByCode(params.slugs[1].toUpperCase())} Most recent ${params.slugs[2].toUpperCase()} statistics`
+        title = `${getFullNameByCode(params.slugs[0].toUpperCase())} vs ${getFullNameByCode(params.slugs[1].toUpperCase())} Most Recent ${params.slugs[2].toUpperCase()} statistics`
 
         if (params?.slugs[3]) {
-            title += ` in ${params.slugs[3]}`
+            title += ` in ${params.slugs[3].charAt(0).toUpperCase() + params.slugs[3].slice(1)}`
         }
     }
 
     return {
-        title
+        title,
+        description: title
     }
 }
 
