@@ -1,4 +1,5 @@
 import New11ViewV2 from "@/components/view/New11ViewV2"
+import { getFullNameByCode } from "@/utils/utils"
 import { Metadata } from "next"
 
 type Props = {
@@ -6,9 +7,9 @@ type Props = {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    let title = 'View Team Statistics'
+    let title = 'Make new  11'
     if (params && params.slugs?.length > 0) {
-        title = `${params.slugs[0].toUpperCase()} vs ${params.slugs[1].toUpperCase()} Most recent ${params.slugs[2].toUpperCase()} stats`
+        title = `${getFullNameByCode(params.slugs[0].toUpperCase())} vs ${getFullNameByCode(params.slugs[1].toUpperCase())} Most recent ${params.slugs[2].toUpperCase()} statistics`
 
         if (params?.slugs[3]) {
             title += ` in ${params.slugs[3]}`

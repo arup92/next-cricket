@@ -32,7 +32,7 @@ const Navbar = () => {
                      <div className="peer-checked:translate-x-0 fixed inset-0 w-[calc(100%-4.5rem)] translate-x-[-100%] bg-white border-r shadow-xl transition duration-300 lg:border-r-0 lg:w-auto lg:static lg:shadow-none lg:translate-x-0">
                         <div className="flex flex-col justify-between h-full lg:items-center lg:flex-row">
                            <ul className="px-6 pt-32 space-y-8 text-custom-alpha md:px-12 lg:space-y-0 lg:flex lg:items-center lg:space-x-12 lg:pt-0">
-                              <NavlinkUi linkto="/view/new-11">New 11</NavlinkUi>
+                              <NavlinkUi linkto="/view/create-new-11">Make New 11</NavlinkUi>
                               {(session) ?
                                  (
                                     <>

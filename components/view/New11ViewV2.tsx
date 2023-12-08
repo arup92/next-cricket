@@ -47,32 +47,32 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
     })
 
     if (!slugs) {
-        return <StatsTeamFormV2 />
+        return <StatsTeamFormV2 slugs={slugs} />
     }
 
     if (isLoading === true)
         return <>
-            <StatsTeamFormV2 />
+            <StatsTeamFormV2 slugs={slugs} />
             <Loading />
         </>
 
     return (
         <>
             {data && <>
-                <StatsTeamFormV2 />
+                <StatsTeamFormV2 slugs={slugs} />
                 <Head2HeadCard className="mb-4" h2h={data.h2h} />
-                <div className="grid gap-3 grid-cols-1 lg:grid-cols-8 mb-4">
+                <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <MatchResultsCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
                     <TeamScoresCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
                     <TeamWicketsCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
                     <VenueStatsCard className="col-span-2" venueData={data.sVenue} />
                 </div>
-                <h2 className="text-xl text-center font-bold mb-4">{getFullNameByCode(data.sTeamA.team)}</h2>
-                <div className="grid gap-3 grid-cols-1 lg:grid-cols-8 mb-4">
+                <h2 className="mb-4 text-xl font-bold text-center">{getFullNameByCode(data.sTeamA.team)}</h2>
+                <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <PlayerStats className="col-span-2" playerData={data.new11} teamId={data.sTeamA.team} oppCountryId={data.sTeamB.team} />
                 </div>
-                <h2 className="text-xl text-center font-bold mb-4">{getFullNameByCode(data.sTeamB.team)}</h2>
-                <div className="grid gap-3 grid-cols-1 lg:grid-cols-8">
+                <h2 className="mb-4 text-xl font-bold text-center">{getFullNameByCode(data.sTeamB.team)}</h2>
+                <div className="grid grid-cols-1 gap-3 lg:grid-cols-8">
                     <PlayerStats className="col-span-2" playerData={data.new11} teamId={data.sTeamB.team} oppCountryId={data.sTeamA.team} />
                 </div>
             </>}

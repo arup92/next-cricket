@@ -4,14 +4,14 @@ import { Teams } from "@/types/Teams";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { GoCheck, GoCode } from "react-icons/go";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
     matchFormat: z.enum(MatchFormat, {
@@ -32,17 +32,22 @@ const formSchema = z.object({
     venueId: z.string().trim().min(1, 'Enter valid details').optional(),
 })
 
-const StatsTeamFormV2 = () => {
-    const [teamStat, setTeamStat] = useState('')
+interface StatsTeamFormV2 {
+    slugs: any[]
+}
+
+const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
     const [open, setOpen] = useState(false)
 
     const router = useRouter()
 
     const onSubmit = (values: any) => {
+        console.log(values);
+
         let path = ''
         if (Teams.includes(values.teamA) && Teams.includes(values.teamB) && MatchFormat.includes(values.matchFormat)) {
             path = `/${values.teamA}/${values.teamB}/${values.matchFormat}/${values?.venueId}`
-            router.push(`/view/create-new-11${path}`)
+            router.push(`/view/create-new-11${path.toLowerCase()}`)
         }
     }
 
@@ -55,8 +60,19 @@ const StatsTeamFormV2 = () => {
         watch
     } = useForm({
         mode: 'onBlur',
-        resolver: zodResolver(formSchema)
+        resolver: zodResolver(formSchema),
     })
+
+    // Hook Form default values
+    if (!!slugs) {
+        // setValue('matchFormat', slugs[2] ? slugs[2].toUpperCase() : '')
+        // setValue('teamA', slugs[0] ? slugs[0].toUpperCase() : '')
+        // setValue('teamB', slugs[1] ? slugs[1].toUpperCase() : '')
+        // setValue('venueId', slugs[3] ? slugs[3] : '')
+    }
+
+    console.log(errors);
+
 
     // Get Venues
     const getVenues = async (): Promise<any> => {
