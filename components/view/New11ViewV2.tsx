@@ -12,6 +12,9 @@ import TeamWicketsCard from "./New11Card/TeamWicketsCard"
 import VenueStatsCard from "./New11Card/VenueStatsCard"
 import axios from "axios"
 import { useQuery } from "@tanstack/react-query"
+import { Teams } from "@/types/Teams"
+import { MatchFormat } from "@/types/MatchFormat"
+import NotFound from "../NotFound"
 
 interface New11ViewV2Props {
     slugs: any
@@ -48,6 +51,18 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
 
     if (!slugs) {
         return <StatsTeamFormV2 slugs={slugs} />
+    } else if (!!slugs) {
+        // 404
+        if (
+            !Teams.includes(slugs[0].toUpperCase())
+            || !Teams.includes(slugs[1].toUpperCase())
+            || !MatchFormat.includes(slugs[2].toUpperCase())
+        ) {
+            return <>
+                <StatsTeamFormV2 slugs={slugs} />
+                <NotFound />
+            </>
+        }
     }
 
     if (isLoading === true)

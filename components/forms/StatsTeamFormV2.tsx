@@ -38,12 +38,9 @@ interface StatsTeamFormV2 {
 
 const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
     const [open, setOpen] = useState(false)
-
     const router = useRouter()
 
     const onSubmit = (values: any) => {
-        console.log(values);
-
         let path = ''
         if (Teams.includes(values.teamA) && Teams.includes(values.teamB) && MatchFormat.includes(values.matchFormat)) {
             path = `/${values.teamA}/${values.teamB}/${values.matchFormat}/${values?.venueId}`
@@ -66,9 +63,9 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
     // Hook Form default values
     useEffect(() => {
         if (!!slugs) {
-            setValue('matchFormat', slugs[2] ? slugs[2].toUpperCase() : '')
             setValue('teamA', slugs[0] ? slugs[0].toUpperCase() : '')
             setValue('teamB', slugs[1] ? slugs[1].toUpperCase() : '')
+            setValue('matchFormat', slugs[2] ? slugs[2].toUpperCase() : '')
             setValue('venueId', slugs[3] ? slugs[3] : '')
         }
     }, [])
@@ -100,7 +97,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
                         }}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Format" />
+                            <SelectValue placeholder={slugs && slugs[2] ? slugs[2].toUpperCase() : 'Format'} />
                         </SelectTrigger>
                         <SelectContent>
                             {MatchFormat.map((format) => (
@@ -117,7 +114,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
                         onValueChange={(selectedValue: string) => setValue('teamA', selectedValue)}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Team A" />
+                            <SelectValue placeholder={slugs && slugs[0] ? slugs[0].toUpperCase() : 'Team A'} />
                         </SelectTrigger>
                         <SelectContent>
                             {Teams.map((team) => (
@@ -134,7 +131,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
                         onValueChange={(selectedValue: string) => setValue('teamB', selectedValue)}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Team B" />
+                            <SelectValue placeholder={slugs && slugs[1] ? slugs[1].toUpperCase() : 'Team B'} />
                         </SelectTrigger>
                         <SelectContent>
                             {Teams.map((team) => (
