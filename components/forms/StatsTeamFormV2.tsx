@@ -4,6 +4,7 @@ import { Teams } from "@/types/Teams";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { GoCheck, GoCode } from "react-icons/go";
@@ -11,7 +12,6 @@ import { z } from "zod";
 import { Button } from "../ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
     matchFormat: z.enum(MatchFormat, {
@@ -32,106 +32,21 @@ const formSchema = z.object({
     venueId: z.string().trim().min(1, 'Enter valid details').optional(),
 })
 
-interface StatsTeamFormProps {
-    handleData: (item: any) => void
-    isLoading: (item: any) => void
+interface StatsTeamFormV2 {
+    slugs: any[]
 }
 
-const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData, isLoading }) => {
-    const [teamStat, setTeamStat] = useState('')
+const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
     const [open, setOpen] = useState(false)
-
     const router = useRouter()
-    const pathname = usePathname()
-
-    const searchParams = useSearchParams()
-    const queryTeamA = searchParams.get('teamA')
-    const queryTeamB = searchParams.get('teamB')
-    const queryMatchFormat = searchParams.get('matchFormat')
-    const queryVenueId = searchParams.get('venueId')
-
-    // set teamStat i.e. query params from url on load
-    useEffect(() => {
-        if (queryTeamA && queryTeamB && queryMatchFormat) {
-            let venueId = ''
-            if (!!queryVenueId) {
-                venueId = `&venueId=${queryVenueId}`
-            }
-
-            let queryParams = `teamA=${queryTeamA}&teamB=${queryTeamB}&matchFormat=${queryMatchFormat}${venueId}`
-
-            setTeamStat(queryParams)
-        }
-    }, [queryTeamA, queryTeamB, queryMatchFormat, queryVenueId])
-
-    const getCustomMatches = async (): Promise<any> => {
-        let statParams: string[] = []
-        let paramString = teamStat.split('&')
-        paramString.forEach(param => {
-            statParams.push(param.split('=')[1])
-        })
-
-        return await axios.all([
-            axios.get(`/api/view/stats-h2h?${teamStat}`),
-            axios.get(`/api/view/stats-team?team=${statParams[0]}&matchFormat=${statParams[2]}`),
-            axios.get(`/api/view/stats-team?team=${statParams[1]}&matchFormat=${statParams[2]}`),
-            axios.get(`/api/view/stats-new-11?${teamStat}`),
-            axios.get(`/api/view/stats-venue?venueId=${statParams[3]}&matchFormat=${statParams[2]}`),
-        ]).then(axios.spread((h2h, sTeamA, sTeamB, new11, sVenue) => {
-            handleData({
-                h2h: h2h.data,
-                sTeamA: sTeamA.data,
-                sTeamB: sTeamB.data,
-                new11: new11.data,
-                sVenue: sVenue.data
-            })
-            isLoading(false)
-
-            return {
-                h2h: h2h.data,
-                sTeamA: sTeamA.data,
-                sTeamB: sTeamB.data,
-                new11: new11.data,
-                sVenue: sVenue.data
-            }
-        })).catch(err => {
-            console.log(err)
-            return []
-        })
-    }
-
-    // useQuery on form submit
-    const { data, refetch, isError, isRefetching } = useQuery({
-        queryKey: ['matches', teamStat],
-        queryFn: getCustomMatches,
-        enabled: false,
-        refetchOnWindowFocus: false,
-    })
 
     const onSubmit = (values: any) => {
-        let queryParams = ''
+        let path = ''
         if (Teams.includes(values.teamA) && Teams.includes(values.teamB) && MatchFormat.includes(values.matchFormat)) {
-            let venueId = ''
-            if (!!values.venueId) {
-                venueId = `&venueId=${values.venueId}`
-            }
-
-            queryParams = `teamA=${values.teamA}&teamB=${values.teamB}&matchFormat=${values.matchFormat}${venueId}`
+            path = `/${values.teamA}/${values.teamB}/${values.matchFormat}/${values?.venueId}`
+            router.push(`/view/create-new-11${path.toLowerCase()}`)
         }
-
-        // Update the url
-        router.push(`${pathname}?${queryParams}`)
-
-        // Set team for useQuery
-        setTeamStat(queryParams)
-        isLoading(true)
     }
-
-    useEffect(() => {
-        if (teamStat) {
-            refetch()
-        }
-    }, [refetch, teamStat])
 
     // Hook Form
     const {
@@ -142,8 +57,18 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData, isLoading }) 
         watch
     } = useForm({
         mode: 'onBlur',
-        resolver: zodResolver(formSchema)
+        resolver: zodResolver(formSchema),
     })
+
+    // Hook Form default values
+    useEffect(() => {
+        if (!!slugs) {
+            setValue('teamA', slugs[0] ? slugs[0].toUpperCase() : '')
+            setValue('teamB', slugs[1] ? slugs[1].toUpperCase() : '')
+            setValue('matchFormat', slugs[2] ? slugs[2].toUpperCase() : '')
+            setValue('venueId', slugs[3] ? slugs[3] : '')
+        }
+    }, [])
 
     // Get Venues
     const getVenues = async (): Promise<any> => {
@@ -172,7 +97,7 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData, isLoading }) 
                         }}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Format" />
+                            <SelectValue placeholder={slugs && slugs[2] ? slugs[2].toUpperCase() : 'Format'} />
                         </SelectTrigger>
                         <SelectContent>
                             {MatchFormat.map((format) => (
@@ -189,7 +114,7 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData, isLoading }) 
                         onValueChange={(selectedValue: string) => setValue('teamA', selectedValue)}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Team A" />
+                            <SelectValue placeholder={slugs && slugs[0] ? slugs[0].toUpperCase() : 'Team A'} />
                         </SelectTrigger>
                         <SelectContent>
                             {Teams.map((team) => (
@@ -206,7 +131,7 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData, isLoading }) 
                         onValueChange={(selectedValue: string) => setValue('teamB', selectedValue)}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="Team B" />
+                            <SelectValue placeholder={slugs && slugs[1] ? slugs[1].toUpperCase() : 'Team B'} />
                         </SelectTrigger>
                         <SelectContent>
                             {Teams.map((team) => (
@@ -276,4 +201,4 @@ const StatsTeamForm: React.FC<StatsTeamFormProps> = ({ handleData, isLoading }) 
     )
 }
 
-export default StatsTeamForm
+export default StatsTeamFormV2

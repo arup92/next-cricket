@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url)
     const teamA = url.searchParams.get('teamA')?.toString().toUpperCase()
     const teamB = url.searchParams.get('teamB')?.toString().toUpperCase()
-    const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString() as MatchFormat
+    const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString().toUpperCase() as MatchFormat
     const venueId = url.searchParams.get('venueId')?.toString().toLowerCase()
 
     if (!teamA || !teamB || !matchFormat) {
