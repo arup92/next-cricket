@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { GoCheck, GoCode } from "react-icons/go";
 import { z } from "zod";
@@ -64,15 +64,14 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
     })
 
     // Hook Form default values
-    if (!!slugs) {
-        // setValue('matchFormat', slugs[2] ? slugs[2].toUpperCase() : '')
-        // setValue('teamA', slugs[0] ? slugs[0].toUpperCase() : '')
-        // setValue('teamB', slugs[1] ? slugs[1].toUpperCase() : '')
-        // setValue('venueId', slugs[3] ? slugs[3] : '')
-    }
-
-    console.log(errors);
-
+    useEffect(() => {
+        if (!!slugs) {
+            setValue('matchFormat', slugs[2] ? slugs[2].toUpperCase() : '')
+            setValue('teamA', slugs[0] ? slugs[0].toUpperCase() : '')
+            setValue('teamB', slugs[1] ? slugs[1].toUpperCase() : '')
+            setValue('venueId', slugs[3] ? slugs[3] : '')
+        }
+    }, [])
 
     // Get Venues
     const getVenues = async (): Promise<any> => {
