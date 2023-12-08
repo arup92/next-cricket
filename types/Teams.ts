@@ -10,7 +10,8 @@ export const Teams = [
     'PAK',
     'RSA',
     'SL',
-    'WI'
+    'WI',
+    'ZIM'
 ] as const
 
 export const TeamFullNames = [
@@ -25,5 +26,6 @@ export const TeamFullNames = [
     'Pakistan',
     'South Africa',
     'Sri Lanka',
-    'West Indies'
+    'West Indies',
+    'Zimbabwe'
 ] as const
