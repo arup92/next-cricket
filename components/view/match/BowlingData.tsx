@@ -43,7 +43,7 @@ const BattingData: React.FC<BattingDataProps> = ({ data: bowlers, className }) =
                                 </TableCell>
                                 <TableCell><span className={`p-1 block w-5 h-5 leading-[1] text-center rounded-full ${bowlingClassName}`}>{bowler.wicket}</span></TableCell>
                                 <TableCell>{bowler.maiden}</TableCell>
-                                <TableCell><span className={`p-1 block w-5 h-5 leading-[1] text-center rounded-full ${ecoClassName}`}>{bowler.eco}</span></TableCell>
+                                <TableCell><span className={`p-1 h-5 leading-[1] text-center rounded-sm ${ecoClassName}`}>{bowler.eco}</span></TableCell>
                             </TableRow>
                         })}
                     </TableBody>
