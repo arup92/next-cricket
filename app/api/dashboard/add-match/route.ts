@@ -30,15 +30,30 @@ export async function POST(request: Request) {
 
     const body: RequestBody = await request.json()
 
+    // Split scores and players scores
+    const SAIndexToSplit = body.sessionAbat.indexOf("SR")
+    const SBIndexToSplit = body.sessionBbat.indexOf("SR")
+
     // Sessions
-    const sessionABat: string[][] = summaryData(body.sessionAbat.split('SR')[1], 6)
-    const sessionBBat: string[][] = summaryData(body.sessionBbat.split('SR')[1], 6)
+    const sessionABat: string[][] = summaryData(body.sessionAbat.substring(SAIndexToSplit + 2), 6)
+    const sessionBBat: string[][] = summaryData(body.sessionBbat.substring(SBIndexToSplit + 2), 6)
     const sessionABowl: string[][] = summaryData(body.sessionAbowl, 7)
     const sessionBBowl: string[][] = summaryData(body.sessionBbowl, 7)
 
     // Scores
-    let sessionAScore = body.sessionAbat.split('SR')[0].split('\n').filter(item => item !== '')[1].split(' ')[0].split('/')
-    let sessionBScore = body.sessionBbat.split('SR')[0].split('\n').filter(item => item !== '')[1].split(' ')[0].split('/')
+    let sessionAScore = body.sessionAbat
+        .substring(0, SAIndexToSplit)
+        .split('\n')
+        .filter(item => item !== '')[1]
+        .split(' ')[0]
+        .split('/')
+
+    let sessionBScore = body.sessionBbat
+        .substring(0, SBIndexToSplit)
+        .split('\n')
+        .filter(item => item !== '')[1]
+        .split(' ')[0]
+        .split('/')
 
     // Validate venue
     const pattern = /^[a-zA-Z\s]*$/
