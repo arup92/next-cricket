@@ -1,10 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { fantasyPointsCount } from "@/utils/utils"
-import PlayerPopUpBat from "./Card/PlayerPopUpBat"
-import PlayerPopUpBowl from "./Card/PlayerPopUpBowl"
 import { Separator } from "@/components/ui/separator"
 import { fantasyPointColor } from "@/utils/style"
+import { fantasyPointsCount } from "@/utils/utils"
 import Link from "next/link"
+import { useState } from "react"
+import { BiSolidHide, BiSolidShow } from "react-icons/bi"
+import PlayerPopUpBat from "./Card/PlayerPopUpBat"
+import PlayerPopUpBowl from "./Card/PlayerPopUpBowl"
 
 interface PlayerStatsProps {
     playerData: any
@@ -15,8 +17,25 @@ interface PlayerStatsProps {
 }
 
 const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId, matchFormat }) => {
+    const [deSelected, setDeSelected] = useState<any>({})
+    const [shown, setShown] = useState<boolean>(true)
+
     const playerDataKeys = Object.keys(playerData) // Array of player names
     let venueName: string = ''
+
+    // Set: Show Hide Card
+    const handleDeSelected = (index: number) => {
+        if (deSelected[index]) {
+            setDeSelected((prev: any) => {
+                prev[index] = null
+                return { ...prev }
+            })
+        } else {
+            setDeSelected((prev: any) => {
+                return { ...prev, [index]: true }
+            })
+        }
+    }
 
     return (
         <>
@@ -26,12 +45,21 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                 let totalFantasyPointsInVenue: number = 0
 
                 if (playerData[player].teamId === teamId)
-                    return <Card className={className} key={index}>
+                    return <Card className={`relative ${className}`} key={index}>
+                        <div
+                            onClick={() => handleDeSelected(index)}
+                            className="absolute top-0 right-0 text-white text-xs bg-gray-800 rounded-tr-sm rounded-bl-sm cursor-pointer px-1 z-20"
+                        >
+                            {deSelected[index] ? <BiSolidShow /> : <BiSolidHide />}
+                        </div>
+                        <div className={`${deSelected[index] ? 'absolute top-0 left-0 w-full h-full bg-white  backdrop-blur bg-opacity-70 rounded-sm z-10' : ''}`}>
+                        </div>
                         <CardHeader>
                             <CardTitle className="capitalize">
                                 <div className="flex justify-between">
                                     <p>
                                         <Link
+                                            target="_blank"
                                             className="text-blue-700 hover:underline"
                                             href={`${process.env.NEXT_PUBLIC_APP_URL}/view/player/${player}/${matchFormat}`}
                                         >
