@@ -29,17 +29,17 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
 
                         <div className="flex items-center justify-between mb-3 text-muted-foreground">
                             <p>
-                                Avg Wicket: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                Avg W: <span className="text-green-700 font-bold px-1 border rounded-sm">
                                     {Math.round(totalWickets / bowlData.length)}
                                 </span>
                             </p>
                             <p>
-                                Avg Economy: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                E: <span className="text-green-700 font-bold px-1 border rounded-sm">
                                     {Math.round(totalEcos / bowlData.length)}
                                 </span>
                             </p>
                             <p>
-                                Avg Maiden: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                M: <span className="text-green-700 font-bold px-1 border rounded-sm">
                                     {Math.round(totalMaidens / bowlData.length)}
                                 </span>
                             </p>

@@ -35,17 +35,17 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                 </span>
                             </p>
                             <p>
-                                Avg 6: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                6: <span className="text-green-700 font-bold px-1 border rounded-sm">
                                     {Math.round(totalSixes / batData.length)}
                                 </span>
                             </p>
                             <p>
-                                Avg 4: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                4: <span className="text-green-700 font-bold px-1 border rounded-sm">
                                     {Math.round(totalFours / batData.length)}
                                 </span>
                             </p>
                             <p>
-                                Avg SR: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                SR: <span className="text-green-700 font-bold px-1 border rounded-sm">
                                     {Math.round(totalSRs / batData.length)}
                                 </span>
                             </p>
