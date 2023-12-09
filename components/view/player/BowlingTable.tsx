@@ -21,7 +21,9 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                     <TableHead>Wicket</TableHead>
                                     <TableHead>Maiden</TableHead>
                                     <TableHead>Economy</TableHead>
+                                    <TableHead>Innings</TableHead>
                                     <TableHead>Opponent</TableHead>
+                                    <TableHead className="hidden lg:table-cell">Result</TableHead>
                                     <TableHead className="hidden lg:table-cell">Venue</TableHead>
                                     <TableHead className="hidden lg:table-cell">Date</TableHead>
                                 </TableRow>
@@ -40,11 +42,35 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                         bowlingClassName = 'bg-emerald-50 text-emerald-700 shadow'
                                     }
 
+                                    // Results
+                                    let result = 'Win'
+                                    let resultColor = 'bg-emerald-700 text-white shadow'
+                                    if (item.teamId !== item.Match.result) {
+                                        result = 'Lose'
+                                        resultColor = 'bg-red-500 text-white shadow'
+                                    }
+
+                                    // Innings
+                                    let innings = '1st'
+                                    let inningsColor = 'bg-gray-300 shadow'
+                                    if (item.teamId !== item.Match.batFirst) {
+                                        innings = '2nd'
+                                        inningsColor = 'bg-white shadow'
+                                    }
+
                                     return <TableRow key={index}>
                                         <TableCell><span className={`p-1 block w-10 h-5 leading-[1] text-center rounded ${bowlingClassName}`}>{item.wicket}</span></TableCell>
                                         <TableCell>{item.maiden}</TableCell>
-                                        <TableCell>{item.eco}</TableCell>
+                                        <TableCell>{item.eco.toFixed(1)}</TableCell>
+                                        <TableCell>
+                                            <span className={`px-1.5 py-0.5 rounded-sm w-[36px] text-center inline-block ${inningsColor}`}>
+                                                {innings}
+                                            </span>
+                                        </TableCell>
                                         <TableCell>{item.oppCountryId}</TableCell>
+                                        <TableCell className="hidden lg:table-cell">
+                                            <span className={`px-1.5 py-0.5 rounded-sm text-xs ${resultColor}`}>{result}</span>
+                                        </TableCell>
                                         <TableCell className="capitalize hidden lg:table-cell">{item.venueId.replaceAll('_', ' ')}</TableCell>
                                         <TableCell className="hidden lg:table-cell">{date.toLocaleString('en-IN', options)}</TableCell>
                                     </TableRow>

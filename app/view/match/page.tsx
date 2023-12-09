@@ -12,10 +12,4 @@ const Match = () => {
     )
 }
 
-// export async function generateMetadata(): Promise<Metadata> {
-//     return {
-//         title: "product.title",
-//     }
-// }
-
 export default Match

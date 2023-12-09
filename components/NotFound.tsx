@@ -1,6 +1,6 @@
 const NotFound = () => {
     return (
-        <h2 className="text-2xl font-semibold">Not Found</h2>
+        <h2 className="text-2xl font-semibold">The requested page Not Found</h2>
     )
 }
 

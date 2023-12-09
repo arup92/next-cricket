@@ -11,3 +11,9 @@ export const fantasyPointColor = (point: number): string => {
 
     return color
 }
+
+export const capitalizeFullName = (fullName: string) => {
+    return fullName.replace(/\b\w/g, function (match) {
+        return match.toUpperCase();
+    });
+}

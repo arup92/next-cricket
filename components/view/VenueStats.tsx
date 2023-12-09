@@ -98,9 +98,15 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue }) => {
                                 <BiSolidCricketBall className='inline mr-1 text-gray-800' />
                                 {match.bowling.forEach((bowl: any) => {
                                     if (bowl.wicket >= highestWickets) {
-                                        highestWickets = bowl.wicket
-                                        highestWicketsEco = highestWicketsEco < bowl.eco ? highestWicketsEco : bowl.eco
-                                        bowlingType = highestWicketsEco < bowl.eco ? bowl.Player.bowlingType : bowlingType
+                                        if (bowl.wicket >= highestWickets) {
+                                            if (bowl.wicket > highestWickets) {
+                                                highestWicketsEco = bowl.eco
+                                                bowlingType = bowl.Player.bowlingType
+                                            }
+                                            highestWickets = bowl.wicket
+                                            highestWicketsEco = bowl.eco < highestWicketsEco ? bowl.eco : highestWicketsEco
+                                            bowlingType = bowl.Player.bowlingType
+                                        }
                                     }
                                 })}
                                 <p className="text-muted-foreground text-sm px-1 mr-1 border rounded shadow-sm">

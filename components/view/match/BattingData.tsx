@@ -41,7 +41,7 @@ const BattingData: React.FC<BattingDataProps> = ({ data: batters, className }) =
 
                             return <TableRow key={batter.playerId}>
                                 <TableCell className="capitalize">
-                                    <Link href={`/view/player?playerId=${batter.playerId}&matchFormat=${batter.matchFormat}`} className="text-blue-700 hover:underline">{batter.playerId.replaceAll('_', ' ')}</Link>
+                                    <Link href={`/view/player/${batter.playerId}/${batter.matchFormat?.toLowerCase()}`} className="text-blue-700 hover:underline">{batter.playerId.replaceAll('_', ' ')}</Link>
                                 </TableCell>
                                 <TableCell><span className={`p-1 block w-10 h-5 leading-[1] text-center rounded ${battingClassName}`}>{batter.run}</span></TableCell>
                                 <TableCell>{batter.four}</TableCell>

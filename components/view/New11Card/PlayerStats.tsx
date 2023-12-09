@@ -4,15 +4,17 @@ import PlayerPopUpBat from "./Card/PlayerPopUpBat"
 import PlayerPopUpBowl from "./Card/PlayerPopUpBowl"
 import { Separator } from "@/components/ui/separator"
 import { fantasyPointColor } from "@/utils/style"
+import Link from "next/link"
 
 interface PlayerStatsProps {
     playerData: any
     className?: string
     teamId: string
     oppCountryId: string
+    matchFormat?: string
 }
 
-const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId }) => {
+const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId, matchFormat }) => {
     const playerDataKeys = Object.keys(playerData) // Array of player names
     let venueName: string = ''
 
@@ -28,7 +30,14 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                         <CardHeader>
                             <CardTitle className="capitalize">
                                 <div className="flex justify-between">
-                                    <p>{player.replaceAll('_', ' ')}</p>
+                                    <p>
+                                        <Link
+                                            className="text-blue-700 hover:underline"
+                                            href={`${process.env.NEXT_PUBLIC_APP_URL}/view/player/${player}/${matchFormat}`}
+                                        >
+                                            {player.replaceAll('_', ' ')}
+                                        </Link>
+                                    </p>
                                     <p>{teamId}</p>
                                 </div>
                             </CardTitle>

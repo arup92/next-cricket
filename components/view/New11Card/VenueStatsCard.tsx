@@ -16,7 +16,10 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
             {venueData.length > 0 && <Card className={className}>
                 <CardHeader>
                     <CardTitle className="capitalize inline">
-                        In <Link target="_blank" className="text-blue-700 hover:underline" href={`./venue/${venueData[0].venueId}`}>
+                        In <Link
+                            className="text-blue-700 hover:underline"
+                            href={`${process.env.NEXT_PUBLIC_APP_URL}/view/venue/${venueData[0].venueId}`}
+                        >
                             <span>{venueData[0].venueId}</span> <HiExternalLink className='inline mb-[3px]' />
                         </Link>
                     </CardTitle>
