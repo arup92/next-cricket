@@ -76,6 +76,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
     return (
         <CenteredArea maxWidthClass="max-w-5xl">
             {data && <>
+                <div className="text-muted-foreground text-right mb-2 text-sm">Displaying Recent Statistics</div>
                 {data.playerData && <PlayerData playerData={data.playerData} />}
 
                 <Accordion type="multiple" defaultValue={[matchFormat]}>
@@ -87,10 +88,10 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                                 </AccordionTrigger>
                                 <AccordionContent className="mt-4">
                                     {data.batData && <BattingTable
-                                        batData={ODIBatData}
+                                        batData={ODIBatData.slice(0, 10)}
                                     />}
                                     {data.bowlData && <BowlingTable
-                                        bowlData={ODIBowlData}
+                                        bowlData={ODIBowlData.slice(0, 10)}
                                     />}
                                 </AccordionContent>
                             </CardContent>
@@ -105,10 +106,10 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                                 </AccordionTrigger>
                                 <AccordionContent className="mt-4">
                                     {data.batData && <BattingTable
-                                        batData={T20BatData}
+                                        batData={T20BatData.slice(0, 10)}
                                     />}
                                     {data.bowlData && <BowlingTable
-                                        bowlData={T20BowlData}
+                                        bowlData={T20BowlData.slice(0, 10)}
                                     />}
                                 </AccordionContent>
                             </CardContent>
