@@ -6,7 +6,18 @@ interface BattingTableProps {
 }
 
 const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
-    // console.log(batData);
+
+    // Total for Average
+    let totalRuns = 0
+    let totalSixes = 0
+    let totalFours = 0
+    let totalSRs = 0
+    batData.forEach((item: any) => {
+        totalRuns += item.run
+        totalSixes += item.six
+        totalFours += item.four
+        totalSRs += item.strikeRate
+    })
 
     return (
         <>
@@ -15,7 +26,29 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                     <CardContent className="py-3">
                         <div className="text-center mb-3">
                             <h2 className="text-center font-bold text-xl inline mr-1">Batting</h2>
-                            <p className="inline text-muted-foreground text-sm">(Last 10 Records)</p>
+                            <p className="inline text-muted-foreground text-sm">(Recent 10 Records)</p>
+                        </div>
+                        <div className="flex items-center justify-between mb-3 text-muted-foreground">
+                            <p>
+                                Avg Run: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                    {Math.round(totalRuns / batData.length)}
+                                </span>
+                            </p>
+                            <p>
+                                Avg 6: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                    {Math.round(totalSixes / batData.length)}
+                                </span>
+                            </p>
+                            <p>
+                                Avg 4: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                    {Math.round(totalFours / batData.length)}
+                                </span>
+                            </p>
+                            <p>
+                                Avg SR: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                    {Math.round(totalSRs / batData.length)}
+                                </span>
+                            </p>
                         </div>
                         <Table>
                             <TableHeader>
