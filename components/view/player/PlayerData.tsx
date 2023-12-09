@@ -19,9 +19,9 @@ const PlayerData: React.FC<PlayerDataProps> = ({ playerData }) => {
                             <p className="inline"> ({playerData.playerCountryId})</p>
                         </div>
                     </div>
-                    <div className="hidden lg:block">
+                    {/* <div className="hidden lg:block">
                         <Button variant={"default"} onClick={() => { router.back() }}>Back</Button>
-                    </div>
+                    </div> */}
                 </CardContent>
             </Card>}
         </>
