@@ -1,8 +1,12 @@
 'use client'
 
 import Loading from "@/app/loading"
+import { MatchFormat } from "@/types/MatchFormat"
+import { Teams } from "@/types/Teams"
 import { getFullNameByCode } from "@/utils/utils"
-import { useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
+import NotFound from "../NotFound"
 import StatsTeamFormV2 from "../forms/StatsTeamFormV2"
 import Head2HeadCard from "./New11Card/Head2HeadCard"
 import MatchResultsCard from "./New11Card/MatchResultsCard"
@@ -10,11 +14,6 @@ import PlayerStats from "./New11Card/PlayerStats"
 import TeamScoresCard from "./New11Card/TeamScoresCard"
 import TeamWicketsCard from "./New11Card/TeamWicketsCard"
 import VenueStatsCard from "./New11Card/VenueStatsCard"
-import axios from "axios"
-import { useQuery } from "@tanstack/react-query"
-import { Teams } from "@/types/Teams"
-import { MatchFormat } from "@/types/MatchFormat"
-import NotFound from "../NotFound"
 
 interface New11ViewV2Props {
     slugs: any
@@ -84,11 +83,23 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
                 </div>
                 <h2 className="mb-4 text-xl font-bold text-center">{getFullNameByCode(data.sTeamA.team)}</h2>
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
-                    <PlayerStats className="col-span-2" playerData={data.new11} teamId={data.sTeamA.team} oppCountryId={data.sTeamB.team} />
+                    <PlayerStats
+                        className="col-span-2"
+                        playerData={data.new11}
+                        teamId={data.sTeamA.team}
+                        oppCountryId={data.sTeamB.team}
+                        matchFormat={slugs[2]}
+                    />
                 </div>
                 <h2 className="mb-4 text-xl font-bold text-center">{getFullNameByCode(data.sTeamB.team)}</h2>
                 <div className="grid grid-cols-1 gap-3 lg:grid-cols-8">
-                    <PlayerStats className="col-span-2" playerData={data.new11} teamId={data.sTeamB.team} oppCountryId={data.sTeamA.team} />
+                    <PlayerStats
+                        className="col-span-2"
+                        playerData={data.new11}
+                        teamId={data.sTeamB.team}
+                        matchFormat={slugs[2]}
+                        oppCountryId={data.sTeamA.team}
+                    />
                 </div>
             </>}
         </>

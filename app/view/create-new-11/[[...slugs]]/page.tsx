@@ -7,7 +7,7 @@ type Props = {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    let title = 'Make new  11'
+    let title = `Make new  11 | ${process.env.APP_NAME}`
     if (params && params.slugs?.length > 0) {
         title = `${getFullNameByCode(params.slugs[0].toUpperCase())} vs ${getFullNameByCode(params.slugs[1].toUpperCase())} Most Recent ${params.slugs[2].toUpperCase()} statistics`
 
