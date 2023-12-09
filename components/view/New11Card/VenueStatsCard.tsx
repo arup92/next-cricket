@@ -17,6 +17,7 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
                 <CardHeader>
                     <CardTitle className="capitalize inline">
                         In <Link
+                            target="_blank"
                             className="text-blue-700 hover:underline"
                             href={`${process.env.NEXT_PUBLIC_APP_URL}/view/venue/${venueData[0].venueId}`}
                         >
