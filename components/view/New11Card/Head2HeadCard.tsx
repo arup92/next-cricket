@@ -1,6 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import Link from "next/link";
+import { HiExternalLink } from "react-icons/hi";
 
 interface Head2HeadProps {
     h2h: any[]
@@ -8,7 +10,6 @@ interface Head2HeadProps {
 }
 
 const Head2HeadCard: React.FC<Head2HeadProps> = ({ h2h, className }) => {
-
     return (
         <>
             {h2h.length > 0 && <Card className={className}>
@@ -30,18 +31,41 @@ const Head2HeadCard: React.FC<Head2HeadProps> = ({ h2h, className }) => {
 
                                 return <div className="inline-block" key={index}>
                                     <Popover>
-                                        <PopoverTrigger className="inline-block lg:hidden"><span className={`rounded-sm px-1 mr-1 inline-block text-center shadow text-sm border ${teamlass}`}>{team.result}</span></PopoverTrigger>
+                                        <PopoverTrigger className="inline-block lg:hidden">
+                                            <span className={`rounded-sm px-1 mr-1 inline-block text-center shadow text-sm border ${teamlass}`}>
+                                                {team.result}
+                                            </span>
+                                        </PopoverTrigger>
                                         <PopoverContent className="inline-block lg:hidden">
                                             In <span className="capitalize">{team.venueId}, {team.venue.venueCountryId} </span>
-                                            <span className="text-sm text-muted-foreground">({date.toLocaleString('en-IN', options)})</span>
+                                            <span className="text-sm text-muted-foreground">
+                                                ({date.toLocaleString('en-IN', options)})
+                                            </span>
+                                            <Link
+                                                className="absolute -top-[5px] -right-[5px] bg-white rounded-sm border shadow text-blue-600"
+                                                href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${team.id}`}>
+                                                <HiExternalLink />
+                                            </Link>
                                         </PopoverContent>
                                     </Popover>
 
                                     <HoverCard>
-                                        <HoverCardTrigger className="hidden lg:inline-block"><span className={`rounded-sm px-1 mr-1  inline-block text-center shadow text-sm border ${teamlass}`}>{team.result}</span></HoverCardTrigger>
+                                        <HoverCardTrigger className="hidden lg:inline-block">
+                                            <span className={`rounded-sm px-1 mr-1  inline-block text-center shadow text-sm border ${teamlass}`}>
+                                                {team.result}
+                                            </span>
+                                        </HoverCardTrigger>
                                         <HoverCardContent className="hidden lg:inline-block">
                                             In <span className="capitalize">{team.venueId}, {team.venue.venueCountryId} </span>
-                                            <span className="text-sm text-muted-foreground">({date.toLocaleString('en-IN', options)})</span>
+                                            <span className="text-sm text-muted-foreground">
+                                                ({date.toLocaleString('en-IN', options)})
+                                            </span>
+                                            <Link
+                                                target="_blank"
+                                                className="absolute -top-[5px] -right-[5px] bg-white rounded-sm border shadow text-blue-600"
+                                                href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${team.id}`}>
+                                                <HiExternalLink />
+                                            </Link>
                                         </HoverCardContent>
                                     </HoverCard>
                                 </div>

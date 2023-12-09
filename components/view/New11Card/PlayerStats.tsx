@@ -18,7 +18,6 @@ interface PlayerStatsProps {
 
 const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId, matchFormat }) => {
     const [deSelected, setDeSelected] = useState<any>({})
-    const [shown, setShown] = useState<boolean>(true)
 
     const playerDataKeys = Object.keys(playerData) // Array of player names
     let venueName: string = ''
