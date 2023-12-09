@@ -37,6 +37,9 @@ export async function GET(request: Request) {
                     }
                 },
                 matchDate: true
+            },
+            orderBy: {
+                matchDate: 'desc'
             }
         })
 
