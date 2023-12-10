@@ -62,6 +62,8 @@ export async function POST(request: Request) {
 
         return new NextResponse(Message.UPDATED, { status: 200 })
     } catch (error) {
+        console.log(error);
+
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     }
 }
