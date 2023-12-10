@@ -4,7 +4,11 @@ import { ErrorMessage, Message } from '@/responses/messages';
 import { fantasyPointsCount } from "@/utils/utils";
 import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+interface RequestBody {
+    matchId: string
+}
+
+export async function POST(request: Request) {
     // const userSession = await getCurrentUser()
 
     // // Check if user is authenticated
@@ -13,9 +17,14 @@ export async function GET(request: Request) {
     // }
 
     try {
+        const { matchId }: RequestBody = await request.json()
+
         const battingData = await prismaClient.batting.findMany({
             orderBy: {
                 id: 'asc'
+            },
+            where: {
+                matchId: parseInt(matchId)
             }
         })
 

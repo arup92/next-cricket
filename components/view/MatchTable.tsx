@@ -13,6 +13,25 @@ const MatchTable = () => {
     const searchParams = useSearchParams()
     const matchId = searchParams.get('matchId')
 
+    useEffect(() => {
+        const updateF11Points = async () => {
+            const reqBody = {
+                matchId
+            }
+
+            await axios.post(`/api/extra/count-f11p`, reqBody)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.log(error)
+                    return {}
+                })
+        }
+
+        updateF11Points()
+    }, [matchId])
+
     const getMatch = async (): Promise<any> => {
         return await axios.get(`/api/view/match-get?matchId=${matchId}`)
             .then(response => response.data)
