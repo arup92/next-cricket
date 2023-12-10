@@ -47,18 +47,18 @@ export async function POST(request: Request) {
             }
         })
 
-        await prismaClient.$transaction(async (prisma) => {
-            for (const innings of bowlingData) {
-                await prisma.bowling.update({
-                    where: {
-                        id: innings.id
-                    },
-                    data: {
-                        f11points: fantasyPointsCount(innings, "bowl")
-                    }
-                })
-            }
-        })
+        // await prismaClient.$transaction(async (prisma) => {
+        for (const innings of bowlingData) {
+            await prismaClient.bowling.update({
+                where: {
+                    id: innings.id
+                },
+                data: {
+                    f11points: fantasyPointsCount(innings, "bowl")
+                }
+            })
+        }
+        // })
 
         return new NextResponse(Message.UPDATED, { status: 200 })
     } catch (error) {
