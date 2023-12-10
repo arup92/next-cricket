@@ -280,5 +280,4 @@ export async function POST(request: Request) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     }
-
 }

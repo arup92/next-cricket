@@ -46,7 +46,8 @@ export const battingData = (summaryData: string[][]): BattingDataType[] => {
             run: parseInt(summery[1]),
             four: parseInt(summery[3]),
             six: parseInt(summery[4]),
-            strikeRate: parseFloat(summery[5])
+            strikeRate: parseFloat(summery[5]),
+            f11points: fantasyPointsCount(summery, 'bat')
         }
 
         result.push(summeryItem)
@@ -63,7 +64,8 @@ export const bowlingData = (summaryData: string[][]): BowlingDataType[] => {
             playerId: summery[0].replaceAll(' ', '_').toLowerCase(),
             maiden: parseInt(summery[2]),
             wicket: parseInt(summery[4]),
-            eco: parseFloat(summery[5])
+            eco: parseFloat(summery[5]),
+            f11points: fantasyPointsCount(summery, 'bowl')
         }
 
         result.push(summeryItem)

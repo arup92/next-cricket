@@ -4,27 +4,18 @@ import { ErrorMessage, Message } from '@/responses/messages';
 import { fantasyPointsCount } from "@/utils/utils";
 import { NextResponse } from 'next/server';
 
-interface RequestBody {
-    matchId: string
-}
-
 export async function POST(request: Request) {
-    // const userSession = await getCurrentUser()
+    const userSession = await getCurrentUser()
 
-    // // Check if user is authenticated
-    // if (!userSession) {
-    //     return NextResponse.json(ErrorMessage.UNAUTHENTICATED, { status: 401 })
-    // }
+    // Check if user is authenticated
+    if (!userSession) {
+        return NextResponse.json(ErrorMessage.UNAUTHENTICATED, { status: 401 })
+    }
 
     try {
-        const { matchId }: RequestBody = await request.json()
-
         const battingData = await prismaClient.batting.findMany({
             orderBy: {
                 id: 'asc'
-            },
-            where: {
-                matchId: parseInt(matchId)
             }
         })
 
@@ -47,21 +38,8 @@ export async function POST(request: Request) {
             }
         })
 
-        // // await prismaClient.$transaction(async (prisma) => {
-        // for (const innings of bowlingData) {
-        //     await prismaClient.bowling.update({
-        //         where: {
-        //             id: innings.id
-        //         },
-        //         data: {
-        //             f11points: fantasyPointsCount(innings, "bowl")
-        //         }
-        //     })
-        // }
-        // // })
-
         await prismaClient.$transaction(async (prisma) => {
-            const promises = bowlingData.map(async (innings) => {
+            for (const innings of bowlingData) {
                 await prisma.bowling.update({
                     where: {
                         id: innings.id
@@ -69,18 +47,12 @@ export async function POST(request: Request) {
                     data: {
                         f11points: fantasyPointsCount(innings, "bowl")
                     }
-                });
-            });
-
-            // Wait for all promises to complete
-            await Promise.all(promises);
-        });
-
+                })
+            }
+        })
 
         return new NextResponse(Message.UPDATED, { status: 200 })
     } catch (error) {
-        console.log(error);
-
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     }
 }
