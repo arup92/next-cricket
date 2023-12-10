@@ -1,0 +1,6 @@
+psql 'postgresql://arup92:ojKLF8gC5JSK@ep-patient-salad-53402300.us-east-2.aws.neon.tech/neondb?sslmode=require'
+\l == list
+\c == connect
+
+pg_dump -h ep-patient-salad-53402300.us-east-2.aws.neon.tech -U arup92 -d neondb -f /Users/ozee/Downloads/neon_cricket.sql
+pg_restore -h localhost -U postgresql -d test -v /Users/ozee/Downloads/neon_cricket.sql
