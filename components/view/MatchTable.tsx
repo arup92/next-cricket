@@ -7,6 +7,7 @@ import CenteredArea from "../customUi/CenteredArea";
 import BattingData from "./match/BattingData";
 import BowlingData from "./match/BowlingData";
 import MatchData from "./match/MatchData";
+import { useEffect } from "react";
 
 const MatchTable = () => {
     const searchParams = useSearchParams()
