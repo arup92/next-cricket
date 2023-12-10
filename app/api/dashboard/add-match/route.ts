@@ -198,7 +198,7 @@ export async function POST(request: Request) {
             matchId: match.id
         }
 
-        const battingADataUpdated = battingData(sessionABat).map(battingData => ({
+        const battingADataUpdated = battingData(sessionABat, body.matchFormat as MatchFormat).map(battingData => ({
             ...battingData,
             ...constantBattingAData
         }))
@@ -220,7 +220,7 @@ export async function POST(request: Request) {
             matchId: match.id
         }
 
-        const battingBDataUpdated = battingData(sessionBBat).map(battingData => ({
+        const battingBDataUpdated = battingData(sessionBBat, body.matchFormat as MatchFormat).map(battingData => ({
             ...battingData,
             ...constantBattingBData
         }))
@@ -242,7 +242,7 @@ export async function POST(request: Request) {
             matchId: match.id
         }
 
-        const bowlingADataUpdated = bowlingData(sessionABowl).map(bowlingData => ({
+        const bowlingADataUpdated = bowlingData(sessionABowl, body.matchFormat as MatchFormat).map(bowlingData => ({
             ...bowlingData,
             ...constantBowlingAData
         }))
@@ -264,7 +264,7 @@ export async function POST(request: Request) {
             matchId: match.id
         }
 
-        const bowlingBDataUpdated = bowlingData(sessionBBowl).map(bowlingData => ({
+        const bowlingBDataUpdated = bowlingData(sessionBBowl, body.matchFormat as MatchFormat).map(bowlingData => ({
             ...bowlingData,
             ...constantBowlingBData
         }))
