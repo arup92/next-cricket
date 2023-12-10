@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { fantasyPointColor } from "@/utils/style"
-import { fantasyPointsCount } from "@/utils/utils"
 import Link from "next/link"
 import { useState } from "react"
 import { BiSolidHide, BiSolidShow } from "react-icons/bi"
@@ -13,7 +12,7 @@ interface PlayerStatsProps {
     className?: string
     teamId: string
     oppCountryId: string
-    matchFormat?: string
+    matchFormat: string
 }
 
 const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId, matchFormat }) => {
@@ -42,6 +41,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                 let totalFantasyPoints: number = 0
                 let totalFantasyPointsVsTeam: number = 0
                 let totalFantasyPointsInVenue: number = 0
+                matchFormat = matchFormat.toUpperCase()
 
                 if (playerData[player].teamId === teamId)
                     return <Card className={`relative ${className}`} key={index}>
@@ -75,21 +75,10 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                     <p>Runs</p>
                                     <div>
                                         {playerData[player].bat && playerData[player].bat.map((inning: any, index: number) => {
-                                            let battingClassName = ``
-                                            if (inning.run >= 100) {
-                                                battingClassName = 'bg-emerald-700 text-white shadow'
-                                            } else if (inning.run >= 75) {
-                                                battingClassName = 'bg-emerald-600 text-white shadow'
-                                            } else if (inning.run >= 50) {
-                                                battingClassName = 'bg-emerald-500 text-white shadow'
-                                            } else if (inning.run >= 40) {
-                                                battingClassName = 'bg-emerald-50 text-emerald-700 shadow'
-                                            } else if (inning.run <= 9) {
-                                                battingClassName = 'bg-gray-200 text-emerald-700 shadow'
-                                            }
+                                            let battingClassName = highlightColor(inning, matchFormat, 'batting')
 
                                             // Fantasy Point
-                                            totalFantasyPoints += fantasyPointsCount(inning, 'bat')
+                                            totalFantasyPoints += inning.f11points
 
                                             return <PlayerPopUpBat key={index} themeclass={battingClassName} inning={inning} />
                                         })}
@@ -102,21 +91,10 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                         <p>Vs {oppCountryId}</p>
                                         <div>
                                             {playerData[player].batVsTeam.map((inning: any, index: number) => {
-                                                let battingClassName = ``
-                                                if (inning.run >= 100) {
-                                                    battingClassName = 'bg-emerald-700 text-white shadow'
-                                                } else if (inning.run >= 75) {
-                                                    battingClassName = 'bg-emerald-600 text-white shadow'
-                                                } else if (inning.run >= 50) {
-                                                    battingClassName = 'bg-emerald-500 text-white shadow'
-                                                } else if (inning.run >= 40) {
-                                                    battingClassName = 'bg-emerald-50 text-emerald-700 shadow'
-                                                } else if (inning.run <= 9) {
-                                                    battingClassName = 'bg-gray-200 text-emerald-700 shadow'
-                                                }
+                                                let battingClassName = highlightColor(inning, matchFormat, 'batting')
 
                                                 // Fantasy Point
-                                                totalFantasyPointsVsTeam += fantasyPointsCount(inning, 'bat')
+                                                totalFantasyPointsVsTeam += inning.f11points
 
                                                 return <PlayerPopUpBat key={index} themeclass={battingClassName} inning={inning} />
                                             })}
@@ -130,21 +108,10 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                         <p>In {venueName = playerData[player].batInVenue[0].venueName}</p>
                                         <div>
                                             {playerData[player].batInVenue.map((inning: any, index: number) => {
-                                                let battingClassName = ``
-                                                if (inning.run >= 100) {
-                                                    battingClassName = 'bg-emerald-700 text-white shadow'
-                                                } else if (inning.run >= 75) {
-                                                    battingClassName = 'bg-emerald-600 text-white shadow'
-                                                } else if (inning.run >= 50) {
-                                                    battingClassName = 'bg-emerald-500 text-white shadow'
-                                                } else if (inning.run >= 40) {
-                                                    battingClassName = 'bg-emerald-50 text-emerald-700 shadow'
-                                                } else if (inning.run <= 9) {
-                                                    battingClassName = 'bg-gray-200 text-emerald-700 shadow'
-                                                }
+                                                let battingClassName = highlightColor(inning, matchFormat, 'batting')
 
                                                 // Fantasy Point
-                                                totalFantasyPointsInVenue += fantasyPointsCount(inning, 'bat')
+                                                totalFantasyPointsInVenue += inning.f11points
 
                                                 return <PlayerPopUpBat key={index} themeclass={battingClassName} inning={inning} />
                                             })}
@@ -158,19 +125,10 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                     <p>Wickets</p>
                                     <div>
                                         {playerData[player].bowl && playerData[player].bowl.map((inning: any, index: number) => {
-                                            let bowlingClassName = ``
-                                            if (inning.wicket >= 5) {
-                                                bowlingClassName = 'bg-emerald-700 text-white shadow'
-                                            } else if (inning.wicket >= 3) {
-                                                bowlingClassName = 'bg-emerald-600 text-white shadow'
-                                            } else if (inning.wicket >= 2) {
-                                                bowlingClassName = 'bg-emerald-50 text-emerald-700 shadow'
-                                            } else if (inning.wicket === 0) {
-                                                bowlingClassName = 'bg-gray-200 text-emerald-700 shadow'
-                                            }
+                                            let bowlingClassName = highlightColor(inning, matchFormat, 'bowling')
 
                                             // Fantasy Point
-                                            totalFantasyPoints += fantasyPointsCount(inning, 'bowl')
+                                            totalFantasyPoints += inning.f11points
 
                                             return <PlayerPopUpBowl key={index} themeclass={bowlingClassName} inning={inning} />
                                         })}
@@ -183,19 +141,10 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                         <p>Vs {oppCountryId}</p>
                                         <div>
                                             {playerData[player].bowlVsTeam.map((inning: any, index: number) => {
-                                                let bowlingClassName = ``
-                                                if (inning.wicket >= 5) {
-                                                    bowlingClassName = 'bg-emerald-700 text-white shadow'
-                                                } else if (inning.wicket >= 3) {
-                                                    bowlingClassName = 'bg-emerald-600 text-white shadow'
-                                                } else if (inning.wicket >= 2) {
-                                                    bowlingClassName = 'bg-emerald-50 text-emerald-700 shadow'
-                                                } else if (inning.wicket === 0) {
-                                                    bowlingClassName = 'bg-gray-200 text-emerald-700 shadow'
-                                                }
+                                                let bowlingClassName = highlightColor(inning, matchFormat, 'bowling')
 
                                                 // Fantasy Point
-                                                totalFantasyPointsVsTeam += fantasyPointsCount(inning, 'bowl')
+                                                totalFantasyPointsVsTeam += inning.f11points
 
                                                 return <PlayerPopUpBowl key={index} themeclass={bowlingClassName} inning={inning} />
                                             })}
@@ -209,19 +158,10 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                         <p>In {venueName = playerData[player].bowlInVenue[0].venueName}</p>
                                         <div>
                                             {playerData[player].bowlInVenue.map((inning: any, index: number) => {
-                                                let bowlingClassName = ``
-                                                if (inning.wicket >= 5) {
-                                                    bowlingClassName = 'bg-emerald-700 text-white shadow'
-                                                } else if (inning.wicket >= 3) {
-                                                    bowlingClassName = 'bg-emerald-600 text-white shadow'
-                                                } else if (inning.wicket >= 2) {
-                                                    bowlingClassName = 'bg-emerald-50 text-emerald-700 shadow'
-                                                } else if (inning.wicket === 0) {
-                                                    bowlingClassName = 'bg-gray-200 text-emerald-700 shadow'
-                                                }
+                                                let bowlingClassName = highlightColor(inning, matchFormat, 'bowling')
 
                                                 // Fantasy Point
-                                                totalFantasyPointsInVenue += fantasyPointsCount(inning, 'bowl')
+                                                totalFantasyPointsInVenue += inning.f11points
 
                                                 return <PlayerPopUpBowl key={index} themeclass={bowlingClassName} inning={inning} />
                                             })}
@@ -233,7 +173,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                             {totalFantasyPoints && <div className="border border-gray-400 px-2 py-1 rounded-sm mb-3">
                                 <div className="flex justify-between items-center mb-1">
                                     <p>Fantasy Points</p>
-                                    <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPoints)}`}>
+                                    <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPoints, matchFormat)}`}>
                                         {totalFantasyPoints}
                                     </div>
                                 </div>
@@ -242,7 +182,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                     <Separator />
                                     <div className="flex justify-between items-center mb-1 pt-1">
                                         <p>Vs {oppCountryId}</p>
-                                        <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsVsTeam)}`}>
+                                        <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsVsTeam, matchFormat)}`}>
                                             {totalFantasyPointsVsTeam}
                                         </div>
                                     </div>
@@ -252,7 +192,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                     <Separator />
                                     <div className="flex justify-between items-center mb-1 pt-1">
                                         <p>In {venueName}</p>
-                                        <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsInVenue)}`}>
+                                        <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsInVenue, matchFormat)}`}>
                                             {totalFantasyPointsInVenue}
                                         </div>
                                     </div>
@@ -263,6 +203,61 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
             })}
         </>
     )
+}
+
+function highlightColor(inning: any, matchFormat: string, type: 'batting' | 'bowling'): string {
+    let className = ``
+    if (matchFormat === 'ODI') {
+        if (type === 'batting') {
+            if (inning.run >= 100) {
+                className = 'bg-emerald-700 text-white shadow'
+            } else if (inning.run >= 75) {
+                className = 'bg-emerald-600 text-white shadow'
+            } else if (inning.run >= 50) {
+                className = 'bg-emerald-500 text-white shadow'
+            } else if (inning.run >= 40) {
+                className = 'bg-emerald-50 text-emerald-700 shadow'
+            } else if (inning.run <= 9) {
+                className = 'bg-gray-200 text-emerald-700 shadow'
+            }
+        } else if (type === 'bowling') {
+            if (inning.wicket >= 5) {
+                className = 'bg-emerald-700 text-white shadow'
+            } else if (inning.wicket >= 3) {
+                className = 'bg-emerald-600 text-white shadow'
+            } else if (inning.wicket >= 2) {
+                className = 'bg-emerald-50 text-emerald-700 shadow'
+            } else if (inning.wicket === 0) {
+                className = 'bg-gray-200 text-emerald-700 shadow'
+            }
+        }
+    } else if (matchFormat === 'T20' || matchFormat === 'IPL') {
+        if (type === 'batting') {
+            if (inning.run >= 100) {
+                className = 'bg-emerald-700 text-white shadow'
+            } else if (inning.run >= 75) {
+                className = 'bg-emerald-600 text-white shadow'
+            } else if (inning.run >= 50) {
+                className = 'bg-emerald-500 text-white shadow'
+            } else if (inning.run >= 30) {
+                className = 'bg-emerald-50 text-emerald-700 shadow'
+            } else if (inning.run <= 9) {
+                className = 'bg-gray-200 text-emerald-700 shadow'
+            }
+        } else if (type === 'bowling') {
+            if (inning.wicket >= 5) {
+                className = 'bg-emerald-700 text-white shadow'
+            } else if (inning.wicket >= 3) {
+                className = 'bg-emerald-600 text-white shadow'
+            } else if (inning.wicket >= 2) {
+                className = 'bg-emerald-50 text-emerald-700 shadow'
+            } else if (inning.wicket === 0) {
+                className = 'bg-gray-200 text-emerald-700 shadow'
+            }
+        }
+    }
+
+    return className
 }
 
 export default PlayerStats

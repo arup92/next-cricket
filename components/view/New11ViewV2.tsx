@@ -77,7 +77,7 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
                 <Head2HeadCard className="mb-4" h2h={data.h2h} />
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <MatchResultsCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
-                    <TeamScoresCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
+                    <TeamScoresCard className="col-span-2" matchFormat={slugs[2]} teamA={data.sTeamA} teamB={data.sTeamB} />
                     <TeamWicketsCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
                     <VenueStatsCard className="col-span-2" venueData={data.sVenue} />
                 </div>

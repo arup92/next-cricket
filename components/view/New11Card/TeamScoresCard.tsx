@@ -5,10 +5,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 interface TeamScoresProps {
     teamA: any
     teamB: any
+    matchFormat: string
     className?: string
 }
 
-const TeamScoresCard: React.FC<TeamScoresProps> = ({ teamA, teamB, className }) => {
+const TeamScoresCard: React.FC<TeamScoresProps> = ({ teamA, teamB, className, matchFormat }) => {
 
     return (
         <>
@@ -17,8 +18,8 @@ const TeamScoresCard: React.FC<TeamScoresProps> = ({ teamA, teamB, className }) 
                     <CardTitle>Team Scores</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {scoresView(teamA)}
-                    {scoresView(teamB)}
+                    {scoresView(teamA, matchFormat)}
+                    {scoresView(teamB, matchFormat)}
                 </CardContent>
             </Card>}
         </>
@@ -27,16 +28,32 @@ const TeamScoresCard: React.FC<TeamScoresProps> = ({ teamA, teamB, className }) 
 
 export default TeamScoresCard
 
-function scoresView(teamStats: any) {
+function scoresView(teamStats: any, matchFormat: string) {
     return <div className="flex justify-between items-center mb-2">
         {teamStats.team}
         <div>
             {teamStats.scores.map((score: any, index: number) => {
                 let scoreClass = ``
-                if (score.runs >= 300) {
-                    scoreClass = 'bg-emerald-600 text-white border-transparent'
-                } else if (score.runs <= 200) {
-                    scoreClass = 'bg-red-600 text-white border-transparent'
+                switch (matchFormat.toUpperCase()) {
+                    case 'ODI':
+                        if (score.runs >= 300) {
+                            scoreClass = 'bg-emerald-600 text-white border-transparent'
+                        } else if (score.runs <= 200) {
+                            scoreClass = 'bg-red-600 text-white border-transparent'
+                        }
+                        break;
+
+                    case 'T20':
+                    case 'IPL':
+                        if (score.runs >= 200) {
+                            scoreClass = 'bg-emerald-600 text-white border-transparent'
+                        } else if (score.runs <= 140) {
+                            scoreClass = 'bg-red-600 text-white border-transparent'
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
 
                 const date = new Date(score.Match.matchDate)
