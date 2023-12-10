@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { useRouter } from "next/navigation"
 
 interface PlayerDataProps {
     playerData: any
