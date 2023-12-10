@@ -4,7 +4,7 @@ import { ErrorMessage, Message } from '@/responses/messages';
 import { fantasyPointsCount } from "@/utils/utils";
 import { NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
+export async function GET(request: Request) {
     // const userSession = await getCurrentUser()
 
     // // Check if user is authenticated
