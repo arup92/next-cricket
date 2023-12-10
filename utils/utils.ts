@@ -1,6 +1,7 @@
 import { BattingDataType } from "@/types/BattingDataType";
 import { BowlingDataType } from "@/types/BowlingDataType";
 import { TeamFullNames, Teams } from "@/types/Teams";
+import { MatchFormat } from "@prisma/client";
 
 export const generateRandomHash = (length: number) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -37,7 +38,7 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
     return finalArray
 }
 
-export const battingData = (summaryData: string[][]): BattingDataType[] => {
+export const battingData = (summaryData: string[][], matchFormat?: MatchFormat): BattingDataType[] => {
     let result: BattingDataType[] = []
 
     for (const summery of summaryData) {
@@ -46,8 +47,12 @@ export const battingData = (summaryData: string[][]): BattingDataType[] => {
             run: parseInt(summery[1]),
             four: parseInt(summery[3]),
             six: parseInt(summery[4]),
-            strikeRate: parseFloat(summery[5]),
-            f11points: fantasyPointsCount(summery, 'bat')
+            strikeRate: parseFloat(summery[5])
+        }
+
+        if (matchFormat) {
+            summeryItem.matchFormat = matchFormat
+            summeryItem.f11points = fantasyPointsCount(summeryItem, 'bat')
         }
 
         result.push(summeryItem)
@@ -56,7 +61,7 @@ export const battingData = (summaryData: string[][]): BattingDataType[] => {
     return result
 }
 
-export const bowlingData = (summaryData: string[][]): BowlingDataType[] => {
+export const bowlingData = (summaryData: string[][], matchFormat?: MatchFormat): BowlingDataType[] => {
     let result: BowlingDataType[] = []
 
     for (const summery of summaryData) {
@@ -64,8 +69,12 @@ export const bowlingData = (summaryData: string[][]): BowlingDataType[] => {
             playerId: summery[0].replaceAll(' ', '_').toLowerCase(),
             maiden: parseInt(summery[2]),
             wicket: parseInt(summery[4]),
-            eco: parseFloat(summery[5]),
-            f11points: fantasyPointsCount(summery, 'bowl')
+            eco: parseFloat(summery[5])
+        }
+
+        if (matchFormat) {
+            summeryItem.matchFormat = matchFormat
+            summeryItem.f11points = fantasyPointsCount(summeryItem, 'bowl')
         }
 
         result.push(summeryItem)
