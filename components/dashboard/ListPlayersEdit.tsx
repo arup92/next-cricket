@@ -25,6 +25,7 @@ const formSchema = z.object({
     description: z.string().trim().optional(),
     playerType: z.enum(PlayerTypeConst).optional(),
     bowlingType: z.enum(BowlingTypeConst).optional(),
+    inactive: z.string().min(2).max(3).trim().optional(),
 })
 
 const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
@@ -39,7 +40,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
             .then(response => {
                 if (response.status === 200) {
                     toast.success(response.data)
-                    console.log(playerData[dialogIndexNumber], values);
+                    // console.log(playerData[dialogIndexNumber], values);
 
                     if (values.playerType) {
                         playerData[dialogIndexNumber].playerType = values.playerType
@@ -47,6 +48,10 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
 
                     if (values.bowlingType) {
                         playerData[dialogIndexNumber].bowlingType = values.bowlingType
+                    }
+
+                    if (values.inactive) {
+                        playerData[dialogIndexNumber].inactive = values.inactive
                     }
                 } else {
                     toast.error(response.data)
@@ -99,6 +104,12 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
 
                     <div className='w-[15%] text-muted-foreground'>
                         {player.bowlingType ? player.bowlingType : (
+                            <span className='text-sm'>NA</span>
+                        )}
+                    </div>
+
+                    <div className='w-[15%] text-muted-foreground capitalize'>
+                        {player.inactive ? player.inactive : (
                             <span className='text-sm'>NA</span>
                         )}
                     </div>
@@ -161,6 +172,24 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                                                         {type}
                                                     </SelectItem>
                                                 ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className='mb-4'>
+                                        <Select
+                                            onValueChange={(selectedValue: string) => setValue('inactive', selectedValue)}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Inactive?" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="yes">
+                                                    Yes
+                                                </SelectItem>
+                                                <SelectItem value="no">
+                                                    No
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>

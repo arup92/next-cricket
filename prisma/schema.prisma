@@ -121,6 +121,11 @@ enum BowlingType {
   NA
 }
 
+enum Bool {
+  yes
+  no
+}
+
 model Player {
   playerId        String       @id @unique
   playerName      String
@@ -128,6 +133,7 @@ model Player {
   playerType      PlayerType?
   description     String?
   bowlingType     BowlingType?
+  inactive        Bool?
 
   batting Batting[]
   bowling Bowling[]
