@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const playerName = capitalizeFullName(params.slugs[0].replaceAll('_', ' '))
 
     let title = `${playerName} Most Recent Statstics | ${process.env.APP_NAME}`
-    let description = `${playerName} Most Recent International Cricket Statstics | ${process.env.APP_NAME}`
+    let description = `${playerName} Most Recent International Cricket Statistics | ${process.env.APP_NAME}`
 
     if (params.slugs[1]) {
         title = `${playerName} Most Recent ${params.slugs[1]} Statstics | ${process.env.APP_NAME}`
