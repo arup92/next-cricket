@@ -1,6 +1,5 @@
 import prismaClient from "@/libs/prismadb"
 import { ErrorMessage } from "@/responses/messages"
-import { MatchFormat } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
@@ -41,6 +40,7 @@ export async function GET(request: Request) {
                 matchDate: true,
                 playerId: true,
                 strikeRate: true,
+                f11points: true,
                 matchFormat: true,
                 teamId: true,
                 oppCountryId: true,
@@ -68,6 +68,7 @@ export async function GET(request: Request) {
                 id: true,
                 maiden: true,
                 matchDate: true,
+                f11points: true,
                 teamId: true,
                 oppCountryId: true,
                 matchFormat: true,

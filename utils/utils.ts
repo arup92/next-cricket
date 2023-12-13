@@ -100,6 +100,8 @@ export const getPlayerStats = (playerData: any): any => {
 
             player[item.playerId] ??= {}
             player[item.playerId].teamId ??= item.teamId
+            player[item.playerId].playerType ??= item.Player.playerType
+            player[item.playerId].bowlingType ??= item.Player.bowlingType
             player[item.playerId].matchFormat ??= item.matchFormat
 
             // Bat Data
@@ -112,6 +114,7 @@ export const getPlayerStats = (playerData: any): any => {
                     six: item.six,
                     strikeRate: item.strikeRate,
                     matchDate: date.toLocaleString('en-IN', options),
+                    f11points: item.f11points,
                     oppCountryId: item.oppCountryId,
                     venueId: item.venue.venueId,
                     venueName: item.venue.venueName,
@@ -140,6 +143,7 @@ export const getPlayerStats = (playerData: any): any => {
                     six: item.six,
                     strikeRate: item.strikeRate,
                     matchDate: date.toLocaleString('en-IN', options),
+                    f11points: item.f11points,
                     oppCountryId: item.oppCountryId,
                     venueId: item.venue.venueId,
                     venueName: item.venue.venueName,
@@ -168,6 +172,7 @@ export const getPlayerStats = (playerData: any): any => {
                     six: item.six,
                     strikeRate: item.strikeRate,
                     matchDate: date.toLocaleString('en-IN', options),
+                    f11points: item.f11points,
                     oppCountryId: item.oppCountryId,
                     venueId: item.venue.venueId,
                     venueName: item.venue.venueName,
@@ -184,6 +189,8 @@ export const getPlayerStats = (playerData: any): any => {
 
             player[item.playerId] ??= {}
             player[item.playerId].teamId ??= item.teamId
+            player[item.playerId].playerType ??= item.Player.playerType
+            player[item.playerId].bowlingType ??= item.Player.bowlingType
             player[item.playerId].matchFormat ??= item.matchFormat
 
             // Bowl Data
@@ -195,6 +202,7 @@ export const getPlayerStats = (playerData: any): any => {
                     maiden: item.maiden,
                     eco: item.eco,
                     matchDate: date.toLocaleString('en-IN', options),
+                    f11points: item.f11points,
                     oppCountryId: item.oppCountryId,
                     venueId: item.venue.venueId,
                     venueName: item.venue.venueName,
@@ -222,6 +230,7 @@ export const getPlayerStats = (playerData: any): any => {
                     maiden: item.maiden,
                     eco: item.eco,
                     matchDate: date.toLocaleString('en-IN', options),
+                    f11points: item.f11points,
                     oppCountryId: item.oppCountryId,
                     venueId: item.venue.venueId,
                     venueName: item.venue.venueName,
@@ -249,6 +258,7 @@ export const getPlayerStats = (playerData: any): any => {
                     maiden: item.maiden,
                     eco: item.eco,
                     matchDate: date.toLocaleString('en-IN', options),
+                    f11points: item.f11points,
                     oppCountryId: item.oppCountryId,
                     venueId: item.venue.venueId,
                     venueName: item.venue.venueName,

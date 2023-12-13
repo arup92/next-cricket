@@ -37,15 +37,15 @@ const Head2HeadCard: React.FC<Head2HeadProps> = ({ h2h, className }) => {
                                             </span>
                                         </PopoverTrigger>
                                         <PopoverContent className="inline-block lg:hidden">
-                                            In <span className="capitalize">{team.venueId}, {team.venue.venueCountryId} </span>
+                                            <Link
+                                                className="text-blue-600"
+                                                href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${team.id}`}>
+
+                                                In <span className="capitalize">{team.venueId}, {team.venue.venueCountryId} </span>
+                                            </Link>
                                             <span className="text-sm text-muted-foreground">
                                                 ({date.toLocaleString('en-IN', options)})
                                             </span>
-                                            <Link
-                                                className="absolute -top-[5px] -right-[5px] bg-white rounded-sm border shadow text-blue-600"
-                                                href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${team.id}`}>
-                                                <HiExternalLink />
-                                            </Link>
                                         </PopoverContent>
                                     </Popover>
 
@@ -56,16 +56,15 @@ const Head2HeadCard: React.FC<Head2HeadProps> = ({ h2h, className }) => {
                                             </span>
                                         </HoverCardTrigger>
                                         <HoverCardContent className="hidden lg:inline-block">
-                                            In <span className="capitalize">{team.venueId}, {team.venue.venueCountryId} </span>
+                                            <Link
+                                                className="text-blue-600"
+                                                href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${team.id}`}>
+
+                                                In <span className="capitalize">{team.venueId}, {team.venue.venueCountryId} </span>
+                                            </Link>
                                             <span className="text-sm text-muted-foreground">
                                                 ({date.toLocaleString('en-IN', options)})
                                             </span>
-                                            <Link
-                                                target="_blank"
-                                                className="absolute -top-[5px] -right-[5px] bg-white rounded-sm border shadow text-blue-600"
-                                                href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${team.id}`}>
-                                                <HiExternalLink />
-                                            </Link>
                                         </HoverCardContent>
                                     </HoverCard>
                                 </div>
