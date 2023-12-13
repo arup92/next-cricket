@@ -46,6 +46,12 @@ export async function GET(request: Request) {
                 teamId: true,
                 f11points: true,
                 matchFormat: true,
+                Player: {
+                    select: {
+                        playerType: true,
+                        bowlingType: true,
+                    }
+                },
                 venue: {
                     select: {
                         venueName: true,
@@ -126,6 +132,12 @@ export async function GET(request: Request) {
                 f11points: true,
                 oppCountryId: true,
                 teamId: true,
+                Player: {
+                    select: {
+                        playerType: true,
+                        bowlingType: true,
+                    }
+                },
                 venue: {
                     select: {
                         venueName: true,

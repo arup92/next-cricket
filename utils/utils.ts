@@ -100,6 +100,8 @@ export const getPlayerStats = (playerData: any): any => {
 
             player[item.playerId] ??= {}
             player[item.playerId].teamId ??= item.teamId
+            player[item.playerId].playerType ??= item.Player.playerType
+            player[item.playerId].bowlingType ??= item.Player.bowlingType
             player[item.playerId].matchFormat ??= item.matchFormat
 
             // Bat Data
@@ -187,6 +189,8 @@ export const getPlayerStats = (playerData: any): any => {
 
             player[item.playerId] ??= {}
             player[item.playerId].teamId ??= item.teamId
+            player[item.playerId].playerType ??= item.Player.playerType
+            player[item.playerId].bowlingType ??= item.Player.bowlingType
             player[item.playerId].matchFormat ??= item.matchFormat
 
             // Bowl Data
