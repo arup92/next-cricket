@@ -47,7 +47,7 @@ export async function PATCH(request: Request) {
 
         await prismaClient.player.update({
             where: {
-                playerId: body.playerId
+                playerId: body.playerId,
             },
             data
         })
