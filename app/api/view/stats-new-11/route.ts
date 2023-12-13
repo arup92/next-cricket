@@ -1,7 +1,7 @@
 import prismaClient from "@/libs/prismadb"
 import { ErrorMessage } from "@/responses/messages"
 import { getPlayerStats } from "@/utils/utils"
-import { MatchFormat } from "@prisma/client"
+import { Bool, MatchFormat } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
@@ -29,7 +29,13 @@ export async function GET(request: Request) {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat
+                matchFormat,
+                Player: {
+                    OR: [
+                        { inactive: 'no' },
+                        { inactive: null }
+                    ]
+                },
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -50,7 +56,7 @@ export async function GET(request: Request) {
                     select: {
                         playerType: true,
                         bowlingType: true,
-                    }
+                    },
                 },
                 venue: {
                     select: {
@@ -78,7 +84,13 @@ export async function GET(request: Request) {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat
+                matchFormat,
+                Player: {
+                    OR: [
+                        { inactive: 'no' },
+                        { inactive: null }
+                    ]
+                },
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -116,7 +128,13 @@ export async function GET(request: Request) {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat
+                matchFormat,
+                Player: {
+                    OR: [
+                        { inactive: 'no' },
+                        { inactive: null }
+                    ]
+                },
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -164,7 +182,13 @@ export async function GET(request: Request) {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat
+                matchFormat,
+                Player: {
+                    OR: [
+                        { inactive: 'no' },
+                        { inactive: null }
+                    ]
+                },
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -207,7 +231,13 @@ export async function GET(request: Request) {
                         lte: new Date(),
                         gte: oneYearAgo
                     },
-                    matchFormat
+                    matchFormat,
+                    Player: {
+                        OR: [
+                            { inactive: 'no' },
+                            { inactive: null }
+                        ]
+                    },
                 },
                 orderBy: [
                     { playerId: 'asc' },
@@ -246,7 +276,13 @@ export async function GET(request: Request) {
                         lte: new Date(),
                         gte: oneYearAgo
                     },
-                    matchFormat
+                    matchFormat,
+                    Player: {
+                        OR: [
+                            { inactive: 'no' },
+                            { inactive: null }
+                        ]
+                    },
                 },
                 orderBy: [
                     { playerId: 'asc' },
