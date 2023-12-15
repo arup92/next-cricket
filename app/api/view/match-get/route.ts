@@ -15,6 +15,28 @@ export async function GET(request: Request) {
         const match = await prismaClient.match.findUnique({
             where: {
                 id: parseInt(matchId)
+            },
+            select: {
+                batFirst: true,
+                id: true,
+                matchDate: true,
+                matchFormat: true,
+                result: true,
+                teamAId: true,
+                teamBId: true,
+                venueId: true,
+                venue: {
+                    select: {
+                        venueCountryId: true,
+                    }
+                }
+            }
+        })
+
+        // Find Scores
+        const scores = await prismaClient.scores.findMany({
+            where: {
+                matchId: parseInt(matchId)
             }
         })
 
@@ -46,7 +68,8 @@ export async function GET(request: Request) {
 
         // Combine the values
         const returnData = {
-            match: match,
+            match,
+            scores,
             batting: {
                 battingA,
                 battingB

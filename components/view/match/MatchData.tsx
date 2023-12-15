@@ -1,38 +1,44 @@
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { useRouter } from "next/navigation"
+import { Separator } from "@/components/ui/separator"
+import { getFullNameByCode } from "@/utils/utils"
 
 interface MatchDataProps {
     data: Matches
+    scores: any[]
 }
 
-const MatchData: React.FC<MatchDataProps> = ({ data }) => {
-    const router = useRouter()
+const MatchData: React.FC<MatchDataProps> = ({ data, scores }) => {
+    console.log(scores, data);
+    const date = new Date(data.matchDate)
     const dateOptions: any = { year: 'numeric', month: 'long', day: 'numeric' }
 
     return (
         <Card className="mb-6">
-            <CardContent className="py-3">
+            <CardContent className="py-1 flex justify-between">
+                <p className="text-muted-foreground text-sm">
+                    {data.matchFormat}, {date.toLocaleString('en-IN', dateOptions)}
+                </p>
+
+                <p className="text-muted-foreground text-sm capitalize">
+                    {data.venueId}, {data.venue.venueCountryId}
+                </p>
+            </CardContent>
+            <Separator />
+            <CardContent className="py-3 space-y-3">
                 <div className="flex justify-between">
-                    <div>
-                        <p className="font-semibold text-sm">{data.teamAId} vs {data.teamBId}</p>
-                        <p className="text-sm text-muted-foreground capitalize">{data.venueId} ({new Date(data.matchDate).toLocaleString('en-IN', dateOptions)})</p>
-                    </div>
-
-                    <div>
-                        <p className="font-semibold text-sm">Bat First</p>
-                        <p className="text-sm text-muted-foreground capitalize">{data.batFirst}</p>
-                    </div>
-
-                    <div>
-                        <p className="font-semibold text-sm">Result</p>
-                        <p className="text-sm text-muted-foreground capitalize">{data.result}</p>
-                    </div>
-
-                    <div className="hidden lg:block">
-                        <Button variant={"default"} onClick={() => { router.back() }}>Back</Button>
-                    </div>
+                    <h2 className="text-xl font-bold">{getFullNameByCode(scores[0].teamId)}</h2>
+                    <p className="text-xl font-bold">{scores[0].runs}/{scores[1].wickets}</p>
                 </div>
+
+                <div className="flex justify-between">
+                    <h2 className="text-xl font-bold">{getFullNameByCode(scores[1].teamId)}</h2>
+                    <p className="text-xl font-bold">{scores[1].runs}/{scores[0].wickets}</p>
+                </div>
+            </CardContent>
+            <Separator />
+            <CardContent className="py-1 flex justify-between">
+                <p className="text-muted-foreground text-sm">Match Result: <span className="text-emerald-700">{getFullNameByCode(data.result)}</span></p>
+                <p className="text-muted-foreground text-sm">Bat First: <span className="text-emerald-700">{getFullNameByCode(data.batFirst)}</span></p>
             </CardContent>
         </Card>
     )

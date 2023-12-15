@@ -1,15 +1,26 @@
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BattingDataType } from "@/types/BattingDataType"
+import { getFullNameByCode } from "@/utils/utils"
 import Link from "next/link"
 
 interface BattingDataProps {
     data: BattingDataType[]
+    score: number
+    wickets: number
+    teamId: string
     className?: string
 }
-const BattingData: React.FC<BattingDataProps> = ({ data: batters, className }) => {
+
+const BattingData: React.FC<BattingDataProps> = ({ data: batters, score, teamId, wickets, className }) => {
     return (
         <Card className={`py-3 ${className}`}>
+            <CardHeader>
+                <div className="flex justify-between">
+                    <h2 className="text-xl font-bold">{getFullNameByCode(teamId)}</h2>
+                    <p className="text-xl font-bold">{score}/{wickets}</p>
+                </div>
+            </CardHeader>
             <CardContent>
                 <Table>
                     <TableHeader>
