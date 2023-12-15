@@ -6,6 +6,8 @@ interface BattingTableProps {
 }
 
 const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
+    console.log(batData);
+
 
     // Total for Average
     let totalRuns = 0
@@ -112,7 +114,9 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                                 {result}
                                             </span>
                                         </TableCell>
-                                        <TableCell className={`capitalize hidden lg:table-cell`}>{item.venueId.replaceAll('_', ' ')}</TableCell>
+                                        <TableCell className={`capitalize hidden lg:table-cell text-sm`}>
+                                            {item.venueId.replaceAll('_', ' ')}, {item.venue.venueCountryId}
+                                        </TableCell>
                                         <TableCell className="hidden lg:table-cell">{date.toLocaleString('en-IN', options)}</TableCell>
                                     </TableRow>
                                 })}

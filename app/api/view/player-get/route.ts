@@ -46,7 +46,12 @@ export async function GET(request: Request) {
                 oppCountryId: true,
                 venueId: true,
                 id: true,
-                Match: true
+                Match: true,
+                venue: {
+                    select: {
+                        venueCountryId: true
+                    }
+                }
             }
         })
 
@@ -75,6 +80,11 @@ export async function GET(request: Request) {
                 playerId: true,
                 venueId: true,
                 Match: true,
+                venue: {
+                    select: {
+                        venueCountryId: true
+                    }
+                }
             }
         })
 

@@ -5,9 +5,6 @@ interface PlayerDataProps {
 }
 
 const PlayerData: React.FC<PlayerDataProps> = ({ playerData }) => {
-    console.log(playerData);
-
-
     return (
         <>
             {playerData && <Card className="mb-3">
