@@ -7,9 +7,6 @@ interface BattingTableProps {
 }
 
 const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
-    console.log(batData);
-
-
     // Total for Average
     let totalRuns = 0
     let totalSixes = 0
@@ -35,13 +32,13 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                         </div>
                         <div className="flex items-center justify-between mb-3 text-muted-foreground">
                             <p>
-                                Avg F11p: <span className="text-green-700 font-bold px-1 border rounded-sm">
-                                    {Math.round(totalf11p / batData.length)}
+                                Avg Run: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                    {Math.round(totalRuns / batData.length)}
                                 </span>
                             </p>
                             <p>
-                                Run: <span className="text-green-700 font-bold px-1 border rounded-sm">
-                                    {Math.round(totalRuns / batData.length)}
+                                F11p: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                    {Math.round(totalf11p / batData.length)}
                                 </span>
                             </p>
                             <p>

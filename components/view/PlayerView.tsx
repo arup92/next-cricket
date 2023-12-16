@@ -10,6 +10,7 @@ import BowlingTable from "./player/BowlingTable"
 import PlayerData from "./player/PlayerData"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Card, CardContent } from "../ui/card"
+import PlayerFilterForm from "../forms/PlayerFilterForm"
 
 interface PlayerViewProps {
     playerId: string
@@ -78,6 +79,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
             {data && <>
                 <div className="text-muted-foreground text-right mb-2 text-sm">Displaying Recent Statistics</div>
                 {data.playerData && <PlayerData playerData={data.playerData} />}
+                <PlayerFilterForm />
 
                 <Accordion type="multiple" defaultValue={[matchFormat]}>
                     {(ODIBatData.length > 0 || ODIBowlData.length > 0) && <AccordionItem value="odi" className="border-b-0">
