@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import Link from "next/link"
 
 interface BowlingTableProps {
     bowlData: any[]
@@ -55,8 +56,8 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>F11Points</TableHead>
                                     <TableHead>Wicket</TableHead>
+                                    <TableHead>F11Points</TableHead>
                                     <TableHead>Maiden</TableHead>
                                     <TableHead>Economy</TableHead>
                                     <TableHead>Innings</TableHead>
@@ -97,8 +98,8 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                     }
 
                                     return <TableRow key={index}>
-                                        <TableCell>{item.f11points}</TableCell>
                                         <TableCell><span className={`p-1 block w-10 h-5 leading-[1] text-center rounded ${bowlingClassName}`}>{item.wicket}</span></TableCell>
+                                        <TableCell>{item.f11points}</TableCell>
                                         <TableCell>{item.maiden}</TableCell>
                                         <TableCell>{item.eco.toFixed(1)}</TableCell>
                                         <TableCell>
@@ -111,7 +112,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                             <span className={`px-1.5 py-0.5 rounded-sm text-xs ${resultColor}`}>{result}</span>
                                         </TableCell>
                                         <TableCell className="capitalize hidden lg:table-cell text-sm">
-                                            {item.venueId.replaceAll('_', ' ')}, {item.venue.venueCountryId}
+                                            <Link className="text-blue-700 hover:underline" href={`/view/venue/${item.venueId.replaceAll('_', ' ')}`}>{item.venueId.replaceAll('_', ' ')}</Link>, {item.venue.venueCountryId}
                                         </TableCell>
                                         <TableCell className="hidden lg:table-cell">{date.toLocaleString('en-IN', options)}</TableCell>
                                     </TableRow>

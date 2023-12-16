@@ -26,8 +26,8 @@ const BattingData: React.FC<BattingDataProps> = ({ data: batters, score, teamId,
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-[30%]">Batter</TableHead>
-                            <TableHead>F11Points</TableHead>
                             <TableHead>Run</TableHead>
+                            <TableHead>F11Points</TableHead>
                             <TableHead>Fours</TableHead>
                             <TableHead>Sixes</TableHead>
                             <TableHead className="hidden lg:table-cell">Strike Rate</TableHead>
@@ -55,7 +55,6 @@ const BattingData: React.FC<BattingDataProps> = ({ data: batters, score, teamId,
                                 <TableCell className="capitalize">
                                     <Link href={`/view/player/${batter.playerId}/${batter.matchFormat?.toLowerCase()}`} className="text-blue-700 hover:underline">{batter.playerId.replaceAll('_', ' ')}</Link>
                                 </TableCell>
-                                <TableCell>{batter.f11points}</TableCell>
                                 <TableCell>
                                     <span
                                         className={`p-1 block w-10 h-5 leading-[1] text-center rounded ${battingClassName}`}
@@ -63,6 +62,7 @@ const BattingData: React.FC<BattingDataProps> = ({ data: batters, score, teamId,
                                         {batter.run}
                                     </span>
                                 </TableCell>
+                                <TableCell>{batter.f11points}</TableCell>
                                 <TableCell>{batter.four}</TableCell>
                                 <TableCell>{batter.six}</TableCell>
                                 <TableCell className={`capitalize hidden lg:table-cell text-sm`}>
