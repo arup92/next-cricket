@@ -184,6 +184,15 @@ export async function POST(request: Request) {
                 await prismaClient.player.create({
                     data: item as any
                 })
+            } else {
+                await prismaClient.player.update({
+                    where: {
+                        playerId: item.playerId
+                    },
+                    data: {
+                        inactive: 'no'
+                    }
+                })
             }
         }
 

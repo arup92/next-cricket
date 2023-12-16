@@ -11,23 +11,36 @@ export async function GET(request: Request) {
     }
 
     try {
+        // DB Call
         const match = await prismaClient.match.findUnique({
             where: {
                 id: parseInt(matchId)
             },
             include: {
                 Scores: true,
-                batting: true,
-                bowling: true,
+                batting: { orderBy: [{ f11points: 'desc' }] },
+                bowling: { orderBy: [{ f11points: 'desc' }] },
                 venue: true
             }
         })
 
-        const battingA = match?.batting.filter(item => item.teamId === match?.teamAId)
-        const battingB = match?.batting.filter(item => item.teamId === match?.teamBId)
+        // Conditionally make teamAId and teamBId based on batFirst
+        let teamAId = match?.teamAId
+        let teamBId = match?.teamBId
+        if (teamAId !== match?.batFirst) {
+            teamAId = match?.teamBId
+            teamBId = match?.teamAId
+        }
 
-        const bowlingA = match?.bowling.filter(item => item.teamId === match?.teamAId)
-        const bowlingB = match?.bowling.filter(item => item.teamId === match?.teamAId)
+        // Update the values
+        const battingA = match?.batting.filter(item => item.teamId === teamAId)
+        const battingB = match?.batting.filter(item => item.teamId === teamBId)
+
+        const bowlingA = match?.bowling.filter(item => item.teamId === teamAId)
+        const bowlingB = match?.bowling.filter(item => item.teamId === teamBId)
+
+        const scoreA = match?.Scores.filter(item => item.teamId === teamAId) as any[]
+        const scoreB = match?.Scores.filter(item => item.teamId === teamBId) as any[]
 
         // Combine the values
         const returnData = {
@@ -44,7 +57,7 @@ export async function GET(request: Request) {
                     venueCountryId: match?.venue.venueCountryId
                 }
             },
-            scores: match?.Scores,
+            scores: [...scoreA, ...scoreB],
             batting: {
                 battingA,
                 battingB

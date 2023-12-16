@@ -8,7 +8,6 @@ interface MatchDataProps {
 }
 
 const MatchData: React.FC<MatchDataProps> = ({ data, scores }) => {
-    console.log(scores, data);
     const date = new Date(data.matchDate)
     const dateOptions: any = { year: 'numeric', month: 'long', day: 'numeric' }
 
