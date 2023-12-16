@@ -2,9 +2,9 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { BiSolidCricketBall } from "react-icons/bi";
 import { FaUserEdit } from "react-icons/fa";
 import { IoMdAddCircle, IoMdLogOut } from "react-icons/io";
-import { RiGalleryFill } from 'react-icons/ri';
 import NavlinkUi from "./NavlinkUi";
 
 const Navbar = () => {
@@ -17,9 +17,10 @@ const Navbar = () => {
                <div className="flex items-center justify-between">
                   <div className="relative z-20">
                      <Link href={'/'} className="flex items-center text-3xl font-bold">
-                        <RiGalleryFill />
-                        <span className="ml-1">Studio</span>
+                        <BiSolidCricketBall />
+                        <span className="ml-1">Fantasy11</span>
                      </Link>
+                     <p className="text-muted-foreground text-sm text-right -top-1.5 relative">Cricket Statistics</p>
                   </div>
 
                   <div className="flex items-center justify-end border-l lg:border-l-0">

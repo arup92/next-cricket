@@ -16,11 +16,8 @@ const PlayerData: React.FC<PlayerDataProps> = ({ playerData }) => {
                         </div>
                     </div>
                     <div className="text-muted-foreground text-sm">
-                        <p>{playerData.playerType} {playerData.bowlingType === 'NA' ? '' : `(${playerData.bowlingType})`}</p>
+                        <p>{playerData.playerType} {!playerData.bowlingType || playerData.bowlingType === 'NA' ? '' : `(${playerData.bowlingType})`}</p>
                     </div>
-                    {/* <div className="hidden lg:block">
-                        <Button variant={"default"} onClick={() => { router.back() }}>Back</Button>
-                    </div> */}
                 </CardContent>
             </Card>}
         </>

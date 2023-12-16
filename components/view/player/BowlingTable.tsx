@@ -11,10 +11,12 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
     let totalWickets = 0
     let totalEcos = 0
     let totalMaidens = 0
+    let totalF11p = 0
     bowlData.forEach((item: any) => {
         totalWickets += item.wicket
         totalEcos += item.eco
         totalMaidens += item.maiden
+        totalF11p += item.f11points
     })
 
     return (
@@ -29,7 +31,12 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
 
                         <div className="flex items-center justify-between mb-3 text-muted-foreground">
                             <p>
-                                Avg W: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                Avg F11p: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                    {Math.round(totalF11p / bowlData.length)}
+                                </span>
+                            </p>
+                            <p>
+                                W: <span className="text-green-700 font-bold px-1 border rounded-sm">
                                     {Math.round(totalWickets / bowlData.length)}
                                 </span>
                             </p>
@@ -48,6 +55,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead>F11Points</TableHead>
                                     <TableHead>Wicket</TableHead>
                                     <TableHead>Maiden</TableHead>
                                     <TableHead>Economy</TableHead>
@@ -89,6 +97,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                     }
 
                                     return <TableRow key={index}>
+                                        <TableCell>{item.f11points}</TableCell>
                                         <TableCell><span className={`p-1 block w-10 h-5 leading-[1] text-center rounded ${bowlingClassName}`}>{item.wicket}</span></TableCell>
                                         <TableCell>{item.maiden}</TableCell>
                                         <TableCell>{item.eco.toFixed(1)}</TableCell>
