@@ -5,6 +5,11 @@ import { NextResponse } from "next/server"
 export async function GET(request: Request) {
     const url = new URL(request.url)
     const playerId = url.searchParams.get('playerId')?.toString()
+    const playerCountryId = url.searchParams.get('playerCountryId')?.toString()
+    const host = url.searchParams.get('host')?.toString()
+    const innings = url.searchParams.get('innings')?.toString()
+    const opponent = url.searchParams.get('opponent')?.toString()
+    const venueId = url.searchParams.get('venueId')?.toString().toLowerCase()
 
     if (!playerId) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
@@ -14,81 +19,63 @@ export async function GET(request: Request) {
         const twoYearsAgo = new Date();
         twoYearsAgo.setDate(twoYearsAgo.getDate() - 730)
 
+        // Where Clause
+        let whereClause: any = {
+            matchDate: {
+                lte: new Date(),
+                gte: twoYearsAgo
+            },
+            ...((host !== 'null' && host !== undefined) ? {
+                venue: {
+                    venueCountryId: host
+                }
+            } : {}),
+            ...((opponent !== 'null' && opponent !== undefined) ? { oppCountryId: opponent } : {}),
+            ...((venueId !== 'null' && venueId !== undefined) ? { venueId } : {}),
+        }
+
+        if (innings !== 'null' && innings !== undefined) {
+            if (innings === '2nd') {
+                whereClause.Match = {
+                    batFirst: {
+                        not: {
+                            equals: playerCountryId
+                        }
+                    }
+                }
+            } else {
+                whereClause.Match = {
+                    batFirst: playerCountryId
+                }
+            }
+        }
+
         // Player Table
-        const playerData = await prismaClient.player.findUnique({
+        const allPlayerData = await prismaClient.player.findUnique({
             where: {
                 playerId
-            }
-        })
-
-        // Batting Table
-        const batData = await prismaClient.batting.findMany({
-            where: {
-                playerId,
-                matchDate: {
-                    lte: new Date(),
-                    gte: twoYearsAgo
-                },
             },
-            orderBy: [
-                { matchDate: 'desc' },
-            ],
-            select: {
-                run: true,
-                six: true,
-                four: true,
-                matchDate: true,
-                playerId: true,
-                strikeRate: true,
-                f11points: true,
-                matchFormat: true,
-                teamId: true,
-                oppCountryId: true,
-                venueId: true,
-                id: true,
-                Match: true,
-                venue: {
-                    select: {
-                        venueCountryId: true
+            include: {
+                batting: {
+                    where: whereClause,
+                    include: {
+                        Match: true,
+                        venue: true,
+                    }
+                },
+                bowling: {
+                    where: whereClause,
+                    include: {
+                        Match: true,
+                        venue: true,
                     }
                 }
             }
         })
 
-        // Bowling Table
-        const bowlData = await prismaClient.bowling.findMany({
-            where: {
-                playerId,
-                matchDate: {
-                    lte: new Date(),
-                    gte: twoYearsAgo
-                },
-            },
-            orderBy: [
-                { matchDate: 'desc' },
-            ],
-            select: {
-                wicket: true,
-                eco: true,
-                id: true,
-                maiden: true,
-                matchDate: true,
-                f11points: true,
-                teamId: true,
-                oppCountryId: true,
-                matchFormat: true,
-                playerId: true,
-                venueId: true,
-                Match: true,
-                venue: {
-                    select: {
-                        venueCountryId: true
-                    }
-                }
-            }
-        })
+        const { batting, bowling, ...playerData } = allPlayerData as any
 
-        return NextResponse.json({ playerData, batData, bowlData }, { status: 200 })
+        return NextResponse.json({ playerData, batting, bowling }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })

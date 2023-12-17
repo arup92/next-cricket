@@ -25,9 +25,6 @@ const MatchTable = () => {
         queryFn: getMatch
     })
 
-    console.log(data);
-
-
     return (
         <CenteredArea maxWidthClass="max-w-5xl">
             {data && <div className="space-y-5">
