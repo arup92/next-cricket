@@ -5,8 +5,6 @@ interface VenueSummeryProps {
 }
 
 const VenueSummery: React.FC<VenueSummeryProps> = ({ matchData }) => {
-    console.log(matchData);
-
     let total1stInnScore: number = 0
     let total2ndInnScore: number = 0
     let total1stInnWickets: number = 0

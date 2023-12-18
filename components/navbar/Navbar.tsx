@@ -16,11 +16,13 @@ const Navbar = () => {
             <div className="px-6 md:px-12 lg:container lg:mx-auto lg:px-6 lg:py-4">
                <div className="flex items-center justify-between">
                   <div className="relative z-20">
-                     <Link href={'/'} className="flex items-center text-3xl font-bold">
-                        <BiSolidCricketBall />
-                        <span className="ml-1">Fantasy11</span>
+                     <Link href={'/'}>
+                        <div className="flex items-center text-3xl font-bold">
+                           <BiSolidCricketBall />
+                           <span className="ml-1">Fantasy11</span>
+                        </div>
+                        <p className="text-muted-foreground text-sm text-right -top-1.5 relative">Cricket Statistics</p>
                      </Link>
-                     <p className="text-muted-foreground text-sm text-right -top-1.5 relative">Cricket Statistics</p>
                   </div>
 
                   <div className="flex items-center justify-end border-l lg:border-l-0">

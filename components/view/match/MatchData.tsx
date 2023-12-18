@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { getFullNameByCode } from "@/utils/utils"
+import Link from "next/link"
 
 interface MatchDataProps {
     data: Matches
@@ -19,7 +20,7 @@ const MatchData: React.FC<MatchDataProps> = ({ data, scores }) => {
                 </p>
 
                 <p className="text-muted-foreground text-sm capitalize">
-                    {data.venueId}, {data.venue.venueCountryId}
+                    <Link className="text-blue-700 hover:underline" href={`/view/venue/${data.venueId}`}>{data.venueId}</Link>, {data.venue.venueCountryId}
                 </p>
             </CardContent>
             <Separator />

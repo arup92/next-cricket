@@ -10,6 +10,9 @@ import BowlingTable from "./player/BowlingTable"
 import PlayerData from "./player/PlayerData"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Card, CardContent } from "../ui/card"
+import PlayerFilterForm from "../forms/PlayerFilterForm"
+import { useState } from "react"
+import SecNotFound from "@/app/not-found-section"
 
 interface PlayerViewProps {
     playerId: string
@@ -17,9 +20,13 @@ interface PlayerViewProps {
 }
 
 const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
+    const [data, setData] = useState<any>()
     const getPlayerStats = async () => {
         return await axios.get(`/api/view/player-get?playerId=${playerId}`)
-            .then((response) => response.data)
+            .then((response) => {
+                setData(response.data)
+                return response.data
+            })
             .catch((error) => {
                 console.log(error)
                 return []
@@ -30,7 +37,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
         matchFormat = 'odi'
     }
 
-    const { data, isLoading } = useQuery({
+    let { data: playerStats, isLoading } = useQuery({
         queryKey: ['playerStats', playerId, matchFormat],
         queryFn: getPlayerStats
     })
@@ -40,9 +47,6 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
             <Loading />
         )
 
-    if (!data.batData && !data.bowlData)
-        return <NotFound />
-
     // Bat and bowl data on different matchformat
     let ODIBatData: any[] = []
     let ODIBowlData: any[] = []
@@ -51,8 +55,8 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
     let IPLBatData: any[] = []
     let IPLBowlData: any[] = []
 
-    if (data.batData) {
-        data.batData.forEach((item: any) => {
+    if (data.batting) {
+        data.batting.forEach((item: any) => {
             if (item.matchFormat === 'ODI') {
                 ODIBatData.push(item)
             } else if (item.matchFormat === 'T20') {
@@ -61,8 +65,10 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                 IPLBatData.push(item)
             }
         })
+    }
 
-        data.bowlData.forEach((item: any) => {
+    if (data.bowling) {
+        data.bowling.forEach((item: any) => {
             if (item.matchFormat === 'ODI') {
                 ODIBowlData.push(item)
             } else if (item.matchFormat === 'T20') {
@@ -73,11 +79,17 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
         })
     }
 
+    const updateData = (filteredData: any) => {
+        setData(filteredData)
+    }
+
     return (
         <CenteredArea maxWidthClass="max-w-5xl">
             {data && <>
                 <div className="text-muted-foreground text-right mb-2 text-sm">Displaying Recent Statistics</div>
-                {data.playerData && <PlayerData playerData={data.playerData} />}
+                {data.playerData && <PlayerData updateData={updateData} playerData={data.playerData} />}
+
+                {data.batting.length === 0 && data.bowling.length === 0 && <SecNotFound />}
 
                 <Accordion type="multiple" defaultValue={[matchFormat]}>
                     {(ODIBatData.length > 0 || ODIBowlData.length > 0) && <AccordionItem value="odi" className="border-b-0">
@@ -87,10 +99,10 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                                     <span className="capitalize inline font-bold text-lg">ODI Career</span>
                                 </AccordionTrigger>
                                 <AccordionContent className="mt-4">
-                                    {data.batData && <BattingTable
+                                    {data.batting && <BattingTable
                                         batData={ODIBatData.slice(0, 10)}
                                     />}
-                                    {data.bowlData && <BowlingTable
+                                    {data.bowling && <BowlingTable
                                         bowlData={ODIBowlData.slice(0, 10)}
                                     />}
                                 </AccordionContent>
@@ -102,13 +114,13 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                         <Card className="mb-3">
                             <CardContent className="py-3">
                                 <AccordionTrigger className="p-0 hover:text-blue-700">
-                                    <span className="capitalize inline font-bold text-lg">T20I Career</span>
+                                    <span className="capitalize inline font-bold text-lg">T20 Career</span>
                                 </AccordionTrigger>
                                 <AccordionContent className="mt-4">
-                                    {data.batData && <BattingTable
+                                    {data.batting && <BattingTable
                                         batData={T20BatData.slice(0, 10)}
                                     />}
-                                    {data.bowlData && <BowlingTable
+                                    {data.bowling && <BowlingTable
                                         bowlData={T20BowlData.slice(0, 10)}
                                     />}
                                 </AccordionContent>
@@ -120,13 +132,13 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                         <Card className="mb-3">
                             <CardContent className="py-3">
                                 <AccordionTrigger className="p-0 hover:text-blue-700">
-                                    <span className="capitalize inline font-bold text-lg">T20I Career</span>
+                                    <span className="capitalize inline font-bold text-lg">IPL Career</span>
                                 </AccordionTrigger>
                                 <AccordionContent className="mt-4">
-                                    {data.batData && <BattingTable
+                                    {data.batting && <BattingTable
                                         batData={IPLBatData}
                                     />}
-                                    {data.bowlData && <BowlingTable
+                                    {data.bowling && <BowlingTable
                                         bowlData={IPLBowlData}
                                     />}
                                 </AccordionContent>
