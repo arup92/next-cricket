@@ -1,0 +1,112 @@
+------------------------------------------------------------------------------------------------
+-- Batting FP Count
+CREATE OR REPLACE FUNCTION battingFpCount() 
+RETURNS void AS $$
+DECLARE
+    calculated_fp numeric;
+BEGIN
+    UPDATE public."Batting"
+    SET "f11points" = CASE
+        WHEN "matchFormat" = 'ODI' THEN 
+            "run" + "four" + "six" * 2 + (floor("run" / 50) * 10) +
+                CASE
+                    WHEN "run" >= 10 THEN
+                        CASE
+                            WHEN "strikeRate" >= 150 THEN 15
+                            WHEN "strikeRate" >= 125 AND "strikeRate" <= 149.99 THEN 10
+                            WHEN "strikeRate" >= 100 AND "strikeRate" <= 124.99 THEN 5
+                            WHEN "strikeRate" >= 75 AND "strikeRate" <= 99.99 THEN 0
+                            WHEN "strikeRate" >= 50 AND "strikeRate" <= 74.99 THEN -5
+                            WHEN "strikeRate" >= 25 AND "strikeRate" <= 49.99 THEN -10
+                            WHEN "strikeRate" >= 0 AND "strikeRate" <= 24.99 THEN -15
+                        END
+                    ELSE 0
+                END
+        WHEN "matchFormat" = 'T20' OR "matchFormat" = 'IPL' THEN
+            "run" + "four" + "six" * 2 +
+                CASE
+                    WHEN "run" >= 100 THEN 30
+                    WHEN "run" >= 50 THEN 20
+                    WHEN "run" >= 30 THEN 10
+                    ELSE 0
+                END +
+                CASE
+                    WHEN "run" >= 10 THEN
+                        CASE
+                            WHEN "strikeRate" >= 200 THEN 15
+                            WHEN "strikeRate" >= 150 THEN 10
+                            WHEN "strikeRate" >= 100 THEN 5
+                            WHEN "strikeRate" >= 75 THEN -5
+                            WHEN "strikeRate" >= 50 THEN -10
+                            WHEN "strikeRate" >= 0 THEN -15
+                        END
+                    ELSE 0
+                END
+        ELSE 0
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+select battingFpCount()
+
+------------------------------------------------------------------------------------------------
+-- Bowling FP Count
+CREATE OR REPLACE FUNCTION bowlingFpCount() 
+RETURNS void AS $$
+DECLARE
+    totalFantasyPoints numeric;
+BEGIN
+    totalFantasyPoints := 0;
+
+    UPDATE public."Bowling"
+    SET "f11points" = CASE
+        WHEN "matchFormat" = 'ODI' THEN 
+            "wicket" * 20 +
+            CASE
+                WHEN "wicket" = 10 THEN 70
+                WHEN "wicket" = 9 THEN 60
+                WHEN "wicket" = 8 THEN 50
+                WHEN "wicket" = 7 THEN 40
+                WHEN "wicket" = 6 THEN 30
+                WHEN "wicket" = 5 THEN 20
+                WHEN "wicket" = 4 THEN 15
+                WHEN "wicket" = 3 THEN 10
+                ELSE 0
+            END +
+            "maiden" * 10 +
+            CASE
+                WHEN "eco" <= 3 THEN 15
+                WHEN "eco" <= 5 THEN 10
+                WHEN "eco" <= 7 THEN 5
+                WHEN "eco" <= 9 THEN -5
+                WHEN "eco" <= 11 THEN -10
+                ELSE -15
+            END
+        WHEN "matchFormat" = 'T20' OR "matchFormat" = 'IPL' THEN
+            "wicket" * 20 +
+            CASE
+                WHEN "wicket" = 10 THEN 80
+                WHEN "wicket" = 9 THEN 70
+                WHEN "wicket" = 8 THEN 60
+                WHEN "wicket" = 7 THEN 50
+                WHEN "wicket" = 6 THEN 40
+                WHEN "wicket" = 5 THEN 30
+                WHEN "wicket" = 4 THEN 20
+                WHEN "wicket" = 3 THEN 10
+                ELSE 0
+            END +
+            "maiden" * 20 +
+            CASE
+                WHEN "eco" <= 5 THEN 15
+                WHEN "eco" <= 8 THEN 10
+                WHEN "eco" <= 10 THEN 5
+                WHEN "eco" <= 12 THEN -5
+                WHEN "eco" <= 15 THEN -10
+                ELSE -15
+            END
+        ELSE 0
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+select bowlingFpCount()
