@@ -72,7 +72,8 @@ export const bowlingData = (summaryData: string[][], matchFormat?: MatchFormat):
             playerId: summery[0].replaceAll(' ', '_').toLowerCase(),
             maiden: parseInt(summery[2]),
             wicket: parseInt(summery[4]),
-            eco: parseFloat(summery[5])
+            eco: parseFloat(summery[5]),
+            wicketType: summery[7]
         }
 
         if (matchFormat) {
@@ -453,24 +454,27 @@ export const formatDateString = (inputDateString: string): string => {
 export const makeExtra = (sessionBat: string[][], sessionBowl: string[][]) => {
     const playerNames: string[] = []
     const bowlData: string[] = []
-    const result: string[][] = []
+    const result: any = {}
 
     sessionBowl.forEach((item: string[]) => playerNames.push(item[0]))
     sessionBat.forEach((item: string[]) => bowlData.push(item[6]))
 
     bowlData.forEach((item: string) => {
-        if (item.startsWith('b') || item.startsWith('lbw') || item.startsWith('st')) {
-            console.log(item);
-
+        if (item.startsWith('b') || item.startsWith('lbw')) {
+            if (item.startsWith('b')) {
+                result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string] = 'bowled'
+            } else if (item.startsWith('lbw')) {
+                result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string] = 'lbw'
+            }
         } else {
             return
         }
     })
 
-    console.log(playerNames);
+    return result
 }
 
-const getFullNameFromInitials = (playerNames: string[], initial: string) => {
+const getPlayerIdFromInitials = (playerNames: string[], initial: string) => {
     const initialWords = initial.split(' ')
     const initialFirstWordArray = Array.from(initialWords[0])
 

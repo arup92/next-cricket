@@ -5,6 +5,7 @@ export type BowlingDataType = {
     eco: number
     matchFormat?: string
     f11points?: number
+    wicketType?: string
 }
 
 export const BowlingTypeConst = [

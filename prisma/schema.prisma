@@ -167,6 +167,12 @@ model Batting {
   teamId String
 }
 
+enum WicketType {
+  bowled
+  lbw
+  na
+}
+
 model Bowling {
   id Int @id @default(autoincrement())
 
@@ -192,4 +198,6 @@ model Bowling {
 
   Team   Team   @relation(fields: [teamId], references: [teamId])
   teamId String
+
+  wicketType WicketType?
 }
