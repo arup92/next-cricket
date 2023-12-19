@@ -16,21 +16,22 @@ export const generateRandomHash = (length: number) => {
 }
 
 export const summaryData = (stringWNwLine: string, chunkSize: number): string[][] => {
-    let rawArray = stringWNwLine.split('\n').map(item => item.replaceAll('*', '').trim()).filter(item => (
-        item !== ''
-        && !item.toLowerCase().startsWith("c ")
-        && !item.toLowerCase().startsWith("b ")
-        && !item.toLowerCase().startsWith("run")
-        && !item.toLowerCase().startsWith("lbw")
-        && !item.toLowerCase().startsWith("not")
-        && !item.toLowerCase().startsWith("st ")
-        && !item.toLowerCase().startsWith("(")
-        && !item.toLowerCase().startsWith("*")
-        && !item.toLowerCase().startsWith("timed out")
-        && !item.toLowerCase().startsWith("retired")
-        && !item.toLowerCase().startsWith("hit wicket")
-        && !item.toLowerCase().startsWith("absent hurt")
-    ))
+    let rawArray = stringWNwLine.split('\n').map(item => item.replaceAll('*', '').trim())
+        .filter(item => (
+            item !== ''
+            // && !item.toLowerCase().startsWith("c ")
+            // && !item.toLowerCase().startsWith("b ")
+            // && !item.toLowerCase().startsWith("run")
+            // && !item.toLowerCase().startsWith("lbw")
+            // && !item.toLowerCase().startsWith("not")
+            // && !item.toLowerCase().startsWith("st ")
+            && !item.toLowerCase().startsWith("(")
+            && !item.toLowerCase().startsWith("*")
+            // && !item.toLowerCase().startsWith("timed out")
+            // && !item.toLowerCase().startsWith("retired")
+            // && !item.toLowerCase().startsWith("hit wicket")
+            // && !item.toLowerCase().startsWith("absent hurt")
+        ))
     const finalArray: string[][] = []
     for (let i = 0; i < rawArray.length; i += chunkSize) {
         const chunk: string[] = rawArray.slice(i, i + chunkSize)
@@ -447,4 +448,40 @@ export const formatDateString = (inputDateString: string): string => {
     }).format(date);
 
     return formattedDate;
+}
+
+export const makeExtra = (sessionBat: string[][], sessionBowl: string[][]) => {
+    const playerNames: string[] = []
+    const bowlData: string[] = []
+    const result: string[][] = []
+
+    sessionBowl.forEach((item: string[]) => playerNames.push(item[0]))
+    sessionBat.forEach((item: string[]) => bowlData.push(item[6]))
+
+    bowlData.forEach((item: string) => {
+        if (item.startsWith('b') || item.startsWith('lbw') || item.startsWith('st')) {
+            console.log(item);
+
+        } else {
+            return
+        }
+    })
+
+    console.log(playerNames);
+}
+
+const getFullNameFromInitials = (playerNames: string[], initial: string) => {
+    const initialWords = initial.split(' ')
+    const initialFirstWordArray = Array.from(initialWords[0])
+
+    for (const name of playerNames) {
+        const nameArray = Array.from(name)
+
+        if (
+            initialFirstWordArray.every(char => nameArray.includes(char))
+            && name.split(' ').pop() === initialWords.pop()
+        ) {
+            return name
+        }
+    }
 }

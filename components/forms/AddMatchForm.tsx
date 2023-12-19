@@ -87,7 +87,7 @@ const AddMatchForm = () => {
             .then(response => {
                 if (response.status === 200) {
                     toast.success(response.data.message)
-                    router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
+                    // router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
                 } else {
                     toast.error(ErrorMessage.SOMETHING_WRONG)
                 }
@@ -253,7 +253,7 @@ const AddMatchForm = () => {
                                             {...register('venue')}
                                         />
                                         {errors.venue && (
-                                            <p className='text-red-500 inline-flex'>
+                                            <p className='inline-flex text-red-500'>
                                                 {errors.venue.message}
                                             </p>
                                         )}
@@ -286,7 +286,7 @@ const AddMatchForm = () => {
                                                         !watch().matchDate && "text-muted-foreground"
                                                     )}
                                                 >
-                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    <CalendarIcon className="w-4 h-4 mr-2" />
                                                     {watch().matchDate ? format(watch().matchDate as any, "PPP") : <span>Pick a date</span>}
                                                 </Button>
                                             </PopoverTrigger>
