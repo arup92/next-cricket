@@ -174,16 +174,18 @@ export async function POST(request: Request) {
 
         // Insert Player
         for (const item of playerData) {
-            const exists = await prismaClient.player.findUnique({
+            const player = await prismaClient.player.findUnique({
                 where: {
                     playerId: item.playerId
                 }
             })
 
-            if (!exists) {
+            if (!player) {
                 await prismaClient.player.create({
                     data: item as any
                 })
+            } else if (!player.playerCountryId) {
+
             } else {
                 await prismaClient.player.update({
                     where: {

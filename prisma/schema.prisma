@@ -57,9 +57,10 @@ model Team {
   User   User?   @relation(fields: [userId], references: [id])
   userId String?
 
-  batting Batting[]
-  bowling Bowling[]
-  Scores  Scores[]
+  batting     Batting[]
+  bowling     Bowling[]
+  Scores      Scores[]
+  playerTeams PlayerTeam[]
 }
 
 model Venue {
@@ -128,16 +129,27 @@ enum Bool {
 }
 
 model Player {
-  playerId        String       @id @unique
-  playerName      String
-  playerCountryId String
-  playerType      PlayerType?
-  description     String?
-  bowlingType     BowlingType?
-  inactive        Bool?
+  playerId    String       @id @unique
+  playerName  String
+  playerType  PlayerType?
+  description String?
+  bowlingType BowlingType?
+  inactive    Bool?
+  playerTeams PlayerTeam[]
 
   batting Batting[]
   bowling Bowling[]
+}
+
+// Many-to-Many
+model PlayerTeam {
+  team   Team   @relation(fields: [teamId], references: [teamId])
+  teamId String
+
+  player   Player @relation(fields: [playerId], references: [playerId])
+  playerId String
+
+  @@id([playerId, teamId])
 }
 
 model Batting {
