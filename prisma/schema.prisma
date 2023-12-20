@@ -48,6 +48,7 @@ model Team {
   id       Int    @id @default(autoincrement())
   teamName String
   teamId   String @unique
+  teamType String @default("national")
 
   matchesA Match[] @relation("teamA")
   matchesB Match[] @relation("teamB")

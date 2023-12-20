@@ -18,5 +18,6 @@ export enum Message {
     SUCESS_EMAIL_SENT = 'Email verification link has been sent. Please check your email inbox and follow the instructions to verify your email address.',
     SUCCESS_REGISTERED = 'Registered successfully! Please verify your email address.',
     MATCH_ADDED = "Match Added",
+    TEAM_ADDED = "Team Added",
     UPDATED = "Updated successfully"
 }
