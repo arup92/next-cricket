@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import CenteredArea from "../customUi/CenteredArea"
+import axios from "axios"
+import toast from "react-hot-toast"
 
 const AddTeamForm = () => {
     const {
@@ -18,8 +20,11 @@ const AddTeamForm = () => {
         resolver: zodResolver(addTeamSchema)
     })
 
-    const onSubmit = (values: any) => {
+    const onSubmit = async (values: any) => {
         console.log(values);
+        await axios.post('/api/dashboard/add-team', values)
+            .then(response => toast.success(response.data))
+            .catch(error => toast.error(error.response.data))
     }
 
     return (

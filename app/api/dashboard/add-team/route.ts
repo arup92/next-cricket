@@ -1,6 +1,7 @@
 import getCurrentUser from "@/actions/getCurrentUser";
 import prismaClient from "@/libs/prismadb";
 import { ErrorMessage, Message } from '@/responses/messages';
+import { addTeamSchema } from "@/utils/formSchema";
 import { NextResponse } from 'next/server';
 
 interface RequestBody {
@@ -17,20 +18,26 @@ export async function POST(request: Request) {
         return NextResponse.json(ErrorMessage.UNAUTHENTICATED, { status: 401 })
     }
 
-    const { teamName, teamId, teamType }: RequestBody = await request.json()
+    const body: RequestBody = await request.json()
+    const { teamName, teamId, teamType } = addTeamSchema.parse(body)
+
+    const data = {
+        teamName,
+        teamId,
+        userId: userSession.id,
+        ...(!!teamType ? { teamType } : {})
+    }
 
     try {
         await prismaClient.team.create({
-            data: {
-                teamName,
-                teamId,
-                teamType,
-                userId: userSession.id
-            }
+            data
         })
-        return NextResponse.json({ message: Message.TEAM_ADDED }, { status: 200 })
-    } catch (error) {
+        return NextResponse.json(Message.TEAM_ADDED, { status: 200 })
+    } catch (error: any) {
         console.log(error)
+        if (error.code === 'P2002') {
+            return new NextResponse(ErrorMessage.DATA_EXISTS, { status: 500 })
+        }
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     }
 }

@@ -10,6 +10,7 @@ export enum ErrorMessage {
     INV_VENUE = 'Invalid Venue',
     SOMETHING_WRONG = 'Something wrong occured! Please try again later.',
     MATCH_EXISTS = 'Match already exists',
+    DATA_EXISTS = 'Data already exists',
     INV_SESSION_ENTRY = 'Invalid Session Entry'
 }
 
