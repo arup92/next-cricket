@@ -1,7 +1,7 @@
 import getCurrentUser from "@/actions/getCurrentUser";
 import prismaClient from "@/libs/prismadb";
 import { ErrorMessage, Message } from '@/responses/messages';
-import { summaryData } from '@/utils/utils';
+import { battingData, bowlingData, makeExtra, sortStringsAlphabetically, summaryData } from '@/utils/utils';
 import { MatchFormat } from "@prisma/client";
 import { NextResponse } from 'next/server';
 
@@ -67,67 +67,67 @@ export async function POST(request: Request) {
     }
 
     try {
-        // // Create venue
-        // let venue = await prismaClient.venue.findUnique({
-        //     where: {
-        //         venueId: body.venue.replaceAll(' ', '-').toLowerCase()
-        //     }
-        // })
+        // Create venue
+        let venue = await prismaClient.venue.findUnique({
+            where: {
+                venueId: body.venue.replaceAll(' ', '-').toLowerCase()
+            }
+        })
 
-        // if (!venue) {
-        //     venue = await prismaClient.venue.create({
-        //         data: {
-        //             venueId: body.venue.replaceAll(' ', '-').toLowerCase(),
-        //             venueName: body.venue,
-        //             venueCountryId: body.venueCountry,
-        //             userId: userSession.id
-        //         }
-        //     })
-        // }
+        if (!venue) {
+            venue = await prismaClient.venue.create({
+                data: {
+                    venueId: body.venue.replaceAll(' ', '-').toLowerCase(),
+                    venueName: body.venue,
+                    venueCountryId: body.venueCountry,
+                    userId: userSession.id
+                }
+            })
+        }
 
-        // // Create Match
-        // const teams: string[] = sortStringsAlphabetically(body.teamA, body.teamB)
+        // Create Match
+        const teams: string[] = sortStringsAlphabetically(body.teamA, body.teamB)
 
-        // let match = await prismaClient.match.findFirst({
-        //     where: {
-        //         matchDate: new Date(body.matchDate),
-        //         teamAId: teams[0]
-        //     }
-        // })
+        let match = await prismaClient.match.findFirst({
+            where: {
+                matchDate: new Date(body.matchDate),
+                teamAId: teams[0]
+            }
+        })
 
-        // if (!match) {
-        //     match = await prismaClient.match.create({
-        //         data: {
-        //             matchFormat: body.matchFormat,
-        //             teamAId: teams[0],
-        //             teamBId: teams[1],
-        //             result: body.result,
-        //             matchDate: new Date(body.matchDate),
-        //             batFirst: body.batFirst,
-        //             venueId: venue.venueId,
-        //             userId: userSession.id
-        //         }
-        //     })
-        // } else {
-        //     return new NextResponse(ErrorMessage.MATCH_EXISTS, { status: 401 })
-        // }
+        if (!match) {
+            match = await prismaClient.match.create({
+                data: {
+                    matchFormat: body.matchFormat,
+                    teamAId: teams[0],
+                    teamBId: teams[1],
+                    result: body.result,
+                    matchDate: new Date(body.matchDate),
+                    batFirst: body.batFirst,
+                    venueId: venue.venueId,
+                    userId: userSession.id
+                }
+            })
+        } else {
+            return new NextResponse(ErrorMessage.MATCH_EXISTS, { status: 401 })
+        }
 
-        // // Create Score
-        // const score = await prismaClient.scores.createMany({
-        //     data: [{
-        //         runs: parseInt(sessionAScore[0]),
-        //         wickets: parseInt(sessionBScore[1]),
-        //         matchId: match.id,
-        //         teamId: body.batFirst,
-        //         oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
-        //     }, {
-        //         runs: parseInt(sessionBScore[0]),
-        //         wickets: parseInt(sessionAScore[1]),
-        //         matchId: match.id,
-        //         teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
-        //         oppCountryId: body.batFirst
-        //     }]
-        // })
+        // Create Score
+        const score = await prismaClient.scores.createMany({
+            data: [{
+                runs: parseInt(sessionAScore[0]),
+                wickets: parseInt(sessionBScore[1]),
+                matchId: match.id,
+                teamId: body.batFirst,
+                oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
+            }, {
+                runs: parseInt(sessionBScore[0]),
+                wickets: parseInt(sessionAScore[1]),
+                matchId: match.id,
+                teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
+                oppCountryId: body.batFirst
+            }]
+        })
 
 
         // Make Player array
@@ -243,118 +243,118 @@ export async function POST(request: Request) {
             }
         }
 
-        // // Add Batting: Session A
-        // const constantBattingAData = {
-        //     matchFormat: body.matchFormat,
-        //     userId: userSession.id,
-        //     venueId: venue.venueId,
-        //     teamId: body.batFirst,
-        //     oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
-        //     matchDate: new Date(body.matchDate),
-        //     matchId: match.id
-        // }
+        // Add Batting: Session A
+        const constantBattingAData = {
+            matchFormat: body.matchFormat,
+            userId: userSession.id,
+            venueId: venue.venueId,
+            teamId: body.batFirst,
+            oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
+            matchDate: new Date(body.matchDate),
+            matchId: match.id
+        }
 
-        // const battingADataUpdated = battingData(sessionABat, body.matchFormat as MatchFormat).map(battingData => ({
-        //     ...battingData,
-        //     ...constantBattingAData
-        // }))
+        const battingADataUpdated = battingData(sessionABat, body.matchFormat as MatchFormat).map(battingData => ({
+            ...battingData,
+            ...constantBattingAData
+        }))
 
-        // battingADataUpdated.forEach(async (battingData) => {
-        //     await prismaClient.batting.create({
-        //         data: battingData as any
-        //     })
-        // })
+        battingADataUpdated.forEach(async (battingData) => {
+            await prismaClient.batting.create({
+                data: battingData as any
+            })
+        })
 
-        // // Add Batting: Session B
-        // const constantBattingBData = {
-        //     matchFormat: body.matchFormat,
-        //     userId: userSession.id,
-        //     venueId: venue.venueId,
-        //     teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
-        //     oppCountryId: body.batFirst,
-        //     matchDate: new Date(body.matchDate),
-        //     matchId: match.id
-        // }
+        // Add Batting: Session B
+        const constantBattingBData = {
+            matchFormat: body.matchFormat,
+            userId: userSession.id,
+            venueId: venue.venueId,
+            teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
+            oppCountryId: body.batFirst,
+            matchDate: new Date(body.matchDate),
+            matchId: match.id
+        }
 
-        // const battingBDataUpdated = battingData(sessionBBat, body.matchFormat as MatchFormat).map(battingData => ({
-        //     ...battingData,
-        //     ...constantBattingBData
-        // }))
+        const battingBDataUpdated = battingData(sessionBBat, body.matchFormat as MatchFormat).map(battingData => ({
+            ...battingData,
+            ...constantBattingBData
+        }))
 
-        // battingBDataUpdated.forEach(async (battingData) => {
-        //     await prismaClient.batting.create({
-        //         data: battingData as any
-        //     })
-        // })
+        battingBDataUpdated.forEach(async (battingData) => {
+            await prismaClient.batting.create({
+                data: battingData as any
+            })
+        })
 
-        // // Add Bowling: Session A
+        // Add Bowling: Session A
 
-        // // Add the extra data
-        // const extraBowlingAData = makeExtra(sessionABat, sessionABowl)
-        // sessionABowl.forEach(item => {
-        //     if (extraBowlingAData.hasOwnProperty(item[0])) {
-        //         item.push(extraBowlingAData[item[0]])
-        //     } else {
-        //         item.push('na')
-        //     }
-        // })
+        // Add the extra data
+        const extraBowlingAData = makeExtra(sessionABat, sessionABowl)
+        sessionABowl.forEach(item => {
+            if (extraBowlingAData.hasOwnProperty(item[0])) {
+                item.push(extraBowlingAData[item[0]])
+            } else {
+                item.push('na')
+            }
+        })
 
-        // const constantBowlingAData = {
-        //     matchFormat: body.matchFormat,
-        //     userId: userSession.id,
-        //     venueId: venue.venueId,
-        //     teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
-        //     oppCountryId: body.batFirst,
-        //     matchDate: new Date(body.matchDate),
-        //     matchId: match.id
-        // }
+        const constantBowlingAData = {
+            matchFormat: body.matchFormat,
+            userId: userSession.id,
+            venueId: venue.venueId,
+            teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
+            oppCountryId: body.batFirst,
+            matchDate: new Date(body.matchDate),
+            matchId: match.id
+        }
 
-        // const bowlingADataUpdated = bowlingData(sessionABowl, body.matchFormat as MatchFormat).map(bowlingData => ({
-        //     ...bowlingData,
-        //     ...constantBowlingAData
-        // }))
+        const bowlingADataUpdated = bowlingData(sessionABowl, body.matchFormat as MatchFormat).map(bowlingData => ({
+            ...bowlingData,
+            ...constantBowlingAData
+        }))
 
-        // bowlingADataUpdated.forEach(async (bowlingData) => {
-        //     await prismaClient.bowling.create({
-        //         data: bowlingData as any
-        //     })
-        // })
+        bowlingADataUpdated.forEach(async (bowlingData) => {
+            await prismaClient.bowling.create({
+                data: bowlingData as any
+            })
+        })
 
-        // // Add Bowling: Session B
+        // Add Bowling: Session B
 
-        // // Add the extra data
-        // const extraBowlingBData = makeExtra(sessionBBat, sessionBBowl)
-        // sessionBBowl.forEach(item => {
-        //     if (extraBowlingBData.hasOwnProperty(item[0])) {
-        //         item.push(extraBowlingBData[item[0]])
-        //     } else {
-        //         item.push('na')
-        //     }
-        // })
+        // Add the extra data
+        const extraBowlingBData = makeExtra(sessionBBat, sessionBBowl)
+        sessionBBowl.forEach(item => {
+            if (extraBowlingBData.hasOwnProperty(item[0])) {
+                item.push(extraBowlingBData[item[0]])
+            } else {
+                item.push('na')
+            }
+        })
 
-        // const constantBowlingBData = {
-        //     matchFormat: body.matchFormat,
-        //     userId: userSession.id,
-        //     venueId: venue.venueId,
-        //     teamId: body.batFirst,
-        //     oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
-        //     matchDate: new Date(body.matchDate),
-        //     matchId: match.id
-        // }
+        const constantBowlingBData = {
+            matchFormat: body.matchFormat,
+            userId: userSession.id,
+            venueId: venue.venueId,
+            teamId: body.batFirst,
+            oppCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA,
+            matchDate: new Date(body.matchDate),
+            matchId: match.id
+        }
 
-        // const bowlingBDataUpdated = bowlingData(sessionBBowl, body.matchFormat as MatchFormat).map(bowlingData => ({
-        //     ...bowlingData,
-        //     ...constantBowlingBData
-        // }))
+        const bowlingBDataUpdated = bowlingData(sessionBBowl, body.matchFormat as MatchFormat).map(bowlingData => ({
+            ...bowlingData,
+            ...constantBowlingBData
+        }))
 
-        // bowlingBDataUpdated.forEach(async (bowlingData) => {
-        //     await prismaClient.bowling.create({
-        //         data: bowlingData as any
-        //     })
-        // })
+        bowlingBDataUpdated.forEach(async (bowlingData) => {
+            await prismaClient.bowling.create({
+                data: bowlingData as any
+            })
+        })
 
-        // return NextResponse.json({ message: Message.MATCH_ADDED, matchId: match.id }, { status: 200 })
-        return NextResponse.json({ message: Message.MATCH_ADDED }, { status: 200 })
+        return NextResponse.json({ message: Message.MATCH_ADDED, matchId: match.id }, { status: 200 })
+        // return NextResponse.json({ message: Message.MATCH_ADDED }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })

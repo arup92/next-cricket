@@ -6,6 +6,7 @@ import { BiSolidCricketBall } from "react-icons/bi";
 import { FaUserEdit } from "react-icons/fa";
 import { IoMdAddCircle, IoMdLogOut } from "react-icons/io";
 import NavlinkUi from "./NavlinkUi";
+import { RiTeamFill } from "react-icons/ri";
 
 const Navbar = () => {
    const { data: session } = useSession()
@@ -41,6 +42,9 @@ const Navbar = () => {
                                     <>
                                        <NavlinkUi className="flex items-center" linkto="/dashboard/add-match">
                                           <IoMdAddCircle /> <span className="ml-[2px]">Match</span>
+                                       </NavlinkUi>
+                                       <NavlinkUi className="flex items-center" linkto="/dashboard/add-team">
+                                          <RiTeamFill /> <span className="ml-[2px]">Team</span>
                                        </NavlinkUi>
                                        <NavlinkUi className="flex items-center" linkto="/dashboard/edit-player">
                                           <FaUserEdit /> <span className="ml-[2px]">Player</span>
