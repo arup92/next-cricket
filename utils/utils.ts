@@ -476,14 +476,14 @@ export const makeExtra = (sessionBat: string[][], sessionBowl: string[][]) => {
 
 const getPlayerIdFromInitials = (playerNames: string[], initial: string) => {
     const initialWords = initial.split(' ')
-    const initialFirstWordArray = Array.from(initialWords[0])
+    const initialFirstWordArray = Array.from(initialWords[0].toLowerCase()) // Convert to lowercase
 
     for (const name of playerNames) {
-        const nameArray = Array.from(name)
+        const nameArray = Array.from(name.toLowerCase()) // Convert to lowercase
 
         if (
             initialFirstWordArray.every(char => nameArray.includes(char))
-            && name.split(' ').pop() === initialWords.pop()
+            && name.split(' ').slice(-1)[0] === initialWords.slice(-1)[0]
         ) {
             return name
         }
