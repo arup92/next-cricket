@@ -40,6 +40,9 @@ model Scores {
   wickets      Int
   oppCountryId String
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   Match   Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
   matchId Int
 }
@@ -49,6 +52,9 @@ model Team {
   teamName String
   teamId   String @unique
   teamType String @default("national")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   matchesA Match[] @relation("teamA")
   matchesB Match[] @relation("teamB")
@@ -68,6 +74,9 @@ model Venue {
   venueId        String  @unique
   venueName      String
   venueCountryId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   matches Match[]
   batting Batting[]
@@ -105,6 +114,9 @@ model Match {
   User   User   @relation(fields: [userId], references: [id])
   userId String
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   batting Batting[]
   bowling Bowling[]
   Scores  Scores[]
@@ -137,6 +149,9 @@ model Player {
   inactive    Bool?
   playerTeams PlayerTeam[]
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   batting Batting[]
   bowling Bowling[]
 }
@@ -149,7 +164,11 @@ model PlayerTeam {
   player   Player @relation(fields: [playerId], references: [playerId])
   playerId String
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@id([playerId, teamId])
+  @@unique([teamId, playerId])
 }
 
 model Batting {
@@ -163,6 +182,9 @@ model Batting {
   matchDate    DateTime    @db.Date
   matchFormat  MatchFormat
   f11points    Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String
@@ -196,6 +218,9 @@ model Bowling {
   matchDate    DateTime    @db.Date
   matchFormat  MatchFormat
   f11points    Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String
