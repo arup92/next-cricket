@@ -70,6 +70,9 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
             <Loading />
         </>
 
+    console.log(data);
+
+
     return (
         <>
             {data && <>

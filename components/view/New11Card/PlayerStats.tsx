@@ -23,8 +23,6 @@ interface PlayerStatsProps {
 const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId, matchFormat }) => {
     const deSelected = useZStore()
     const pathname = usePathname()
-    console.log(playerData);
-
 
     useEffect(() => {
         if (pathname.split('create-new-11/')[1] !== deSelected.currentPage) {

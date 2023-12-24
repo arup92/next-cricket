@@ -348,6 +348,11 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                 } else {
                     totalFantasyPoints -= 15
                 }
+
+                // Wicket type
+                if (inning.wicketType === 'bowled' || inning.wicketType === 'lbw') {
+                    totalFantasyPoints += 5
+                }
             }
             break;
 
