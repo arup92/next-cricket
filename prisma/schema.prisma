@@ -40,6 +40,9 @@ model Scores {
   wickets      Int
   oppCountryId String
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   Match   Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
   matchId Int
 }
@@ -48,6 +51,10 @@ model Team {
   id       Int    @id @default(autoincrement())
   teamName String
   teamId   String @unique
+  teamType String @default("national")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   matchesA Match[] @relation("teamA")
   matchesB Match[] @relation("teamB")
@@ -56,9 +63,10 @@ model Team {
   User   User?   @relation(fields: [userId], references: [id])
   userId String?
 
-  batting Batting[]
-  bowling Bowling[]
-  Scores  Scores[]
+  batting     Batting[]
+  bowling     Bowling[]
+  Scores      Scores[]
+  playerTeams PlayerTeam[]
 }
 
 model Venue {
@@ -66,6 +74,9 @@ model Venue {
   venueId        String  @unique
   venueName      String
   venueCountryId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   matches Match[]
   batting Batting[]
@@ -103,6 +114,9 @@ model Match {
   User   User   @relation(fields: [userId], references: [id])
   userId String
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   batting Batting[]
   bowling Bowling[]
   Scores  Scores[]
@@ -127,16 +141,34 @@ enum Bool {
 }
 
 model Player {
-  playerId        String       @id @unique
-  playerName      String
-  playerCountryId String
-  playerType      PlayerType?
-  description     String?
-  bowlingType     BowlingType?
-  inactive        Bool?
+  playerId    String       @id @unique
+  playerName  String
+  playerType  PlayerType?
+  description String?
+  bowlingType BowlingType?
+  inactive    Bool?
+  playerTeams PlayerTeam[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   batting Batting[]
   bowling Bowling[]
+}
+
+// Many-to-Many
+model PlayerTeam {
+  team   Team   @relation(fields: [teamId], references: [teamId])
+  teamId String
+
+  player   Player @relation(fields: [playerId], references: [playerId])
+  playerId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([playerId, teamId])
+  @@unique([teamId, playerId])
 }
 
 model Batting {
@@ -151,6 +183,9 @@ model Batting {
   matchFormat  MatchFormat
   f11points    Int?
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String
 
@@ -167,6 +202,12 @@ model Batting {
   teamId String
 }
 
+enum WicketType {
+  bowled
+  lbw
+  na
+}
+
 model Bowling {
   id Int @id @default(autoincrement())
 
@@ -177,6 +218,9 @@ model Bowling {
   matchDate    DateTime    @db.Date
   matchFormat  MatchFormat
   f11points    Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String
@@ -192,4 +236,6 @@ model Bowling {
 
   Team   Team   @relation(fields: [teamId], references: [teamId])
   teamId String
+
+  wicketType WicketType?
 }

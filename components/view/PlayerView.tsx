@@ -1,18 +1,15 @@
 'use client'
 import Loading from "@/app/loading"
+import SecNotFound from "@/app/not-found-section"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { useSearchParams } from "next/navigation"
-import NotFound from "../NotFound"
+import { useEffect, useState } from "react"
 import CenteredArea from "../customUi/CenteredArea"
+import { Card, CardContent } from "../ui/card"
 import BattingTable from "./player/BattingTable"
 import BowlingTable from "./player/BowlingTable"
 import PlayerData from "./player/PlayerData"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Card, CardContent } from "../ui/card"
-import PlayerFilterForm from "../forms/PlayerFilterForm"
-import { useState } from "react"
-import SecNotFound from "@/app/not-found-section"
 
 interface PlayerViewProps {
     playerId: string
@@ -42,6 +39,12 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
         queryFn: getPlayerStats
     })
 
+    useEffect(() => {
+        if (playerStats) {
+            setData(playerStats)
+        }
+    }, [playerStats])
+
     if (isLoading)
         return (
             <Loading />
@@ -55,7 +58,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
     let IPLBatData: any[] = []
     let IPLBowlData: any[] = []
 
-    if (data.batting) {
+    if (data && data.batting) {
         data.batting.forEach((item: any) => {
             if (item.matchFormat === 'ODI') {
                 ODIBatData.push(item)
@@ -67,7 +70,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
         })
     }
 
-    if (data.bowling) {
+    if (data && data.bowling) {
         data.bowling.forEach((item: any) => {
             if (item.matchFormat === 'ODI') {
                 ODIBowlData.push(item)

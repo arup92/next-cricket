@@ -1,24 +1,21 @@
 'use client'
 
-import { Teams } from '@/types/Teams'
+import SecNotFound from '@/app/not-found-section'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { z } from 'zod'
+import ListPlayersEdit from '../dashboard/ListPlayersEdit'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import { useState } from 'react'
-import toast from 'react-hot-toast'
-import ListPlayersEdit from '../dashboard/ListPlayersEdit'
 
 const formSchema = z.object({
     playerName: z.string().trim().optional(),
-    team: z.enum(Teams, {
-        errorMap: () => ({
-            message: 'Please select Team',
-        }),
-    })
+    team: z.string().trim().min(2, 'Minimum 2 characters').optional()
 })
 
 const PlayerDataForm = () => {
@@ -47,9 +44,26 @@ const PlayerDataForm = () => {
         resolver: zodResolver(formSchema)
     })
 
+    // React Query
+    const getTeams = async () => {
+        return await axios.get(`/api/view/teams-get`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => {
+                console.log(error)
+                return []
+            })
+    }
+
+    const { data: Teams } = useQuery({
+        queryKey: ['teams',],
+        queryFn: getTeams
+    })
+
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex gap-3 mb-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex gap-3 mb-8 items-center">
                 <div>
                     <Input
                         type='text'
@@ -59,6 +73,8 @@ const PlayerDataForm = () => {
                     />
                 </div>
 
+                <p>OR</p>
+
                 <div>
                     <Select
                         onValueChange={(selectedValue: string) => setValue('team', selectedValue)}
@@ -67,9 +83,9 @@ const PlayerDataForm = () => {
                             <SelectValue placeholder="Team" />
                         </SelectTrigger>
                         <SelectContent>
-                            {Teams.map((team) => (
-                                <SelectItem key={team} value={team}>
-                                    {team}
+                            {Teams && Teams.map((team: any) => (
+                                <SelectItem key={team.teamId} value={team.teamId}>
+                                    {team.teamName}
                                 </SelectItem>
                             ))}
                         </SelectContent>
@@ -79,7 +95,7 @@ const PlayerDataForm = () => {
                 <Button>Submit</Button>
             </form>
 
-            <ListPlayersEdit playerData={playerData} />
+            {playerData.length > 0 ? <ListPlayersEdit playerData={playerData} /> : <SecNotFound />}
         </>
     )
 }

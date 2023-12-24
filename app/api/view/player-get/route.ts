@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 export async function GET(request: Request) {
     const url = new URL(request.url)
     const playerId = url.searchParams.get('playerId')?.toString()
-    const playerCountryId = url.searchParams.get('playerCountryId')?.toString()
+    const teamId = url.searchParams.get('teamId')?.toString().split(',')
     const host = url.searchParams.get('host')?.toString()
     const innings = url.searchParams.get('innings')?.toString()
     const opponent = url.searchParams.get('opponent')?.toString()
@@ -39,13 +39,15 @@ export async function GET(request: Request) {
                 whereClause.Match = {
                     batFirst: {
                         not: {
-                            equals: playerCountryId
+                            in: teamId
                         }
                     }
                 }
             } else {
                 whereClause.Match = {
-                    batFirst: playerCountryId
+                    batFirst: {
+                        in: teamId
+                    }
                 }
             }
         }
@@ -56,6 +58,11 @@ export async function GET(request: Request) {
                 playerId
             },
             include: {
+                playerTeams: {
+                    select: {
+                        teamId: true,
+                    }
+                },
                 batting: {
                     where: whereClause,
                     include: {
@@ -74,6 +81,9 @@ export async function GET(request: Request) {
         })
 
         const { batting, bowling, ...playerData } = allPlayerData as any
+
+        console.log(batting);
+
 
         return NextResponse.json({ playerData, batting, bowling }, { status: 200 })
     } catch (error) {

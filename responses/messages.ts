@@ -10,6 +10,7 @@ export enum ErrorMessage {
     INV_VENUE = 'Invalid Venue',
     SOMETHING_WRONG = 'Something wrong occured! Please try again later.',
     MATCH_EXISTS = 'Match already exists',
+    DATA_EXISTS = 'Data already exists',
     INV_SESSION_ENTRY = 'Invalid Session Entry'
 }
 
@@ -18,5 +19,6 @@ export enum Message {
     SUCESS_EMAIL_SENT = 'Email verification link has been sent. Please check your email inbox and follow the instructions to verify your email address.',
     SUCCESS_REGISTERED = 'Registered successfully! Please verify your email address.',
     MATCH_ADDED = "Match Added",
+    TEAM_ADDED = "Team Added",
     UPDATED = "Updated successfully"
 }

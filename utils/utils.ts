@@ -16,21 +16,22 @@ export const generateRandomHash = (length: number) => {
 }
 
 export const summaryData = (stringWNwLine: string, chunkSize: number): string[][] => {
-    let rawArray = stringWNwLine.split('\n').map(item => item.replaceAll('*', '').trim()).filter(item => (
-        item !== ''
-        && !item.toLowerCase().startsWith("c ")
-        && !item.toLowerCase().startsWith("b ")
-        && !item.toLowerCase().startsWith("run")
-        && !item.toLowerCase().startsWith("lbw")
-        && !item.toLowerCase().startsWith("not")
-        && !item.toLowerCase().startsWith("st ")
-        && !item.toLowerCase().startsWith("(")
-        && !item.toLowerCase().startsWith("*")
-        && !item.toLowerCase().startsWith("timed out")
-        && !item.toLowerCase().startsWith("retired")
-        && !item.toLowerCase().startsWith("hit wicket")
-        && !item.toLowerCase().startsWith("absent hurt")
-    ))
+    let rawArray = stringWNwLine.split('\n').map(item => item.replaceAll('*', '').trim())
+        .filter(item => (
+            item !== ''
+            // && !item.toLowerCase().startsWith("c ")
+            // && !item.toLowerCase().startsWith("b ")
+            // && !item.toLowerCase().startsWith("run")
+            // && !item.toLowerCase().startsWith("lbw")
+            // && !item.toLowerCase().startsWith("not")
+            // && !item.toLowerCase().startsWith("st ")
+            && !item.toLowerCase().startsWith("(")
+            && !item.toLowerCase().startsWith("*")
+            // && !item.toLowerCase().startsWith("timed out")
+            // && !item.toLowerCase().startsWith("retired")
+            // && !item.toLowerCase().startsWith("hit wicket")
+            // && !item.toLowerCase().startsWith("absent hurt")
+        ))
     const finalArray: string[][] = []
     for (let i = 0; i < rawArray.length; i += chunkSize) {
         const chunk: string[] = rawArray.slice(i, i + chunkSize)
@@ -71,7 +72,8 @@ export const bowlingData = (summaryData: string[][], matchFormat?: MatchFormat):
             playerId: summery[0].replaceAll(' ', '_').toLowerCase(),
             maiden: parseInt(summery[2]),
             wicket: parseInt(summery[4]),
-            eco: parseFloat(summery[5])
+            eco: parseFloat(summery[5]),
+            wicketType: summery[7]
         }
 
         if (matchFormat) {
@@ -346,6 +348,11 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                 } else {
                     totalFantasyPoints -= 15
                 }
+
+                // Wicket type
+                if (inning.wicketType === 'bowled' || inning.wicketType === 'lbw') {
+                    totalFantasyPoints += 5
+                }
             }
             break;
 
@@ -447,4 +454,43 @@ export const formatDateString = (inputDateString: string): string => {
     }).format(date);
 
     return formattedDate;
+}
+
+export const makeExtra = (sessionBat: string[][], sessionBowl: string[][]) => {
+    const playerNames: string[] = []
+    const bowlData: string[] = []
+    const result: any = {}
+
+    sessionBowl.forEach((item: string[]) => playerNames.push(item[0]))
+    sessionBat.forEach((item: string[]) => bowlData.push(item[6]))
+
+    bowlData.forEach((item: string) => {
+        if (item.startsWith('b') || item.startsWith('lbw')) {
+            if (item.startsWith('b')) {
+                result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string] = 'bowled'
+            } else if (item.startsWith('lbw')) {
+                result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string] = 'lbw'
+            }
+        } else {
+            return
+        }
+    })
+
+    return result
+}
+
+const getPlayerIdFromInitials = (playerNames: string[], initial: string) => {
+    const initialWords = initial.split(' ')
+    const initialFirstWordArray = Array.from(initialWords[0].toLowerCase()) // Convert to lowercase
+
+    for (const name of playerNames) {
+        const nameArray = Array.from(name.toLowerCase()) // Convert to lowercase
+
+        if (
+            initialFirstWordArray.every(char => nameArray.includes(char))
+            && name.split(' ').slice(-1)[0] === initialWords.slice(-1)[0]
+        ) {
+            return name
+        }
+    }
 }

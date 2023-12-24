@@ -68,7 +68,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
 
     const onSubmit = async (values: any) => {
         values.playerId = playerData.playerId
-        values.playerCountryId = playerData.playerCountryId
+        values.teamId = playerData.playerTeams.map((team: { teamId: string }) => team.teamId)
         const searchParams = new URLSearchParams(values).toString()
 
         if (searchData !== searchParams) {

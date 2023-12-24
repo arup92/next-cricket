@@ -30,13 +30,20 @@ export async function GET(request: Request) {
             }
         } else if (team) {
             where = {
-                playerCountryId: team.toUpperCase()
+                playerTeams: {
+                    every: {
+                        teamId: team.toUpperCase()
+                    }
+                }
             }
         }
 
         // Find matches
         const player = await prismaClient.player.findMany({
             where,
+            include: {
+                playerTeams: true
+            },
             orderBy: {
                 playerName: 'asc'
             }

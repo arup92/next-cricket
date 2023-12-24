@@ -1,6 +1,5 @@
 import prismaClient from "@/libs/prismadb"
 import { ErrorMessage } from "@/responses/messages"
-import axios from "axios"
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import { NextResponse } from "next/server"
@@ -36,7 +35,7 @@ export async function POST(request: Request) {
         }
 
         // Send the email
-        await axios.post(`${process.env.APP_URL}/api/email/sendverifyemail`, data)
+        // await axios.post(`${process.env.APP_URL}/api/email/sendverifyemail`, data)
 
         const { hashedPassword, ...result } = user
 

@@ -93,7 +93,11 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                     </div>
 
                     <div className='w-[25%] text-muted-foreground'>
-                        {getFullNameByCode(player.playerCountryId)}
+                        {/* {getFullNameByCode(player.playerCountryId)} */}
+                        {player.playerTeams.map(
+                            (item: { teamId: string }) =>
+                                <span className="shadow-sm border px-1 rounded-sm" key={item.teamId}>{item.teamId}</span>
+                        )}
                     </div>
 
                     <div className='w-[25%] text-muted-foreground'>

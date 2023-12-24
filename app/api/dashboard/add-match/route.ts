@@ -1,7 +1,7 @@
 import getCurrentUser from "@/actions/getCurrentUser";
-import prismaClient from '@/libs/prismadb';
+import prismaClient from "@/libs/prismadb";
 import { ErrorMessage, Message } from '@/responses/messages';
-import { battingData, bowlingData, sortStringsAlphabetically, summaryData } from '@/utils/utils';
+import { battingData, bowlingData, makeExtra, sortStringsAlphabetically, summaryData } from '@/utils/utils';
 import { MatchFormat } from "@prisma/client";
 import { NextResponse } from 'next/server';
 
@@ -35,10 +35,10 @@ export async function POST(request: Request) {
     const SBIndexToSplit = body.sessionBbat.indexOf("SR")
 
     // Sessions
-    const sessionABat: string[][] = summaryData(body.sessionAbat.substring(SAIndexToSplit + 2), 6)
-    const sessionBBat: string[][] = summaryData(body.sessionBbat.substring(SBIndexToSplit + 2), 6)
-    const sessionABowl: string[][] = summaryData(body.sessionAbowl, 7)
-    const sessionBBowl: string[][] = summaryData(body.sessionBbowl, 7)
+    const sessionABat: string[][] = summaryData(body.sessionAbat.substring(SAIndexToSplit + 2), 7)
+    const sessionBBat: string[][] = summaryData(body.sessionBbat.substring(SBIndexToSplit + 2), 7)
+    let sessionABowl: string[][] = summaryData(body.sessionAbowl, 7)
+    let sessionBBowl: string[][] = summaryData(body.sessionBbowl, 7)
 
     // Scores
     let sessionAScore = body.sessionAbat
@@ -132,57 +132,86 @@ export async function POST(request: Request) {
 
         // Make Player array
         const playerData: any[] = []
+        const playerTeam: any[] = []
+
         for (const sessionA of sessionABat) {
+            const playerId = sessionA[0].replaceAll(' ', '_').toLowerCase()
             const currentPlayerData: any = {
-                playerId: sessionA[0].replaceAll(' ', '_').toLowerCase(),
-                playerName: sessionA[0],
-                playerCountryId: body.batFirst
+                playerId,
+                playerName: sessionA[0]
+            }
+
+            const currentPlayerTeam = {
+                playerId,
+                teamId: body.batFirst
             }
 
             playerData.push(currentPlayerData)
+            playerTeam.push(currentPlayerTeam)
         }
 
         for (const sessionB of sessionBBat) {
+            const playerId = sessionB[0].replaceAll(' ', '_').toLowerCase()
+
             const currentPlayerData: any = {
-                playerId: sessionB[0].replaceAll(' ', '_').toLowerCase(),
-                playerName: sessionB[0],
-                playerCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
+                playerId,
+                playerName: sessionB[0]
+            }
+
+            const currentPlayerTeam = {
+                playerId,
+                teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
             }
 
             playerData.push(currentPlayerData)
+            playerTeam.push(currentPlayerTeam)
         }
 
         for (const sessionAB of sessionABowl) {
+            const playerId = sessionAB[0].replaceAll(' ', '_').toLowerCase()
+
             const currentPlayerData: any = {
-                playerId: sessionAB[0].replaceAll(' ', '_').toLowerCase(),
-                playerName: sessionAB[0],
-                playerCountryId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
+                playerId,
+                playerName: sessionAB[0]
+            }
+
+            const currentPlayerTeam = {
+                playerId,
+                teamId: (body.batFirst === body.teamA) ? body.teamB : body.teamA
             }
 
             playerData.push(currentPlayerData)
+            playerTeam.push(currentPlayerTeam)
         }
 
         for (const sessionBB of sessionBBowl) {
+            const playerId = sessionBB[0].replaceAll(' ', '_').toLowerCase()
+
             const currentPlayerData: any = {
-                playerId: sessionBB[0].replaceAll(' ', '_').toLowerCase(),
-                playerName: sessionBB[0],
-                playerCountryId: body.batFirst
+                playerId,
+                playerName: sessionBB[0]
+            }
+
+            const currentPlayerTeam = {
+                playerId,
+                teamId: body.batFirst
             }
 
             playerData.push(currentPlayerData)
+            playerTeam.push(currentPlayerTeam)
         }
 
         // Insert Player
         for (const item of playerData) {
-            const exists = await prismaClient.player.findUnique({
+            const player = await prismaClient.player.findUnique({
                 where: {
                     playerId: item.playerId
                 }
             })
 
-            if (!exists) {
+            if (!player) {
                 await prismaClient.player.create({
-                    data: item as any
+                    data: item
                 })
             } else {
                 await prismaClient.player.update({
@@ -192,6 +221,24 @@ export async function POST(request: Request) {
                     data: {
                         inactive: 'no'
                     }
+                })
+            }
+        }
+
+        // Insert PlayerTeam
+        for (const item of playerTeam) {
+            const playerTeamData = await prismaClient.playerTeam.findUnique({
+                where: {
+                    playerId_teamId: {
+                        playerId: item.playerId,
+                        teamId: item.teamId
+                    }
+                }
+            })
+
+            if (!playerTeamData) {
+                await prismaClient.playerTeam.create({
+                    data: item
                 })
             }
         }
@@ -241,6 +288,17 @@ export async function POST(request: Request) {
         })
 
         // Add Bowling: Session A
+
+        // Add the extra data
+        const extraBowlingAData = makeExtra(sessionABat, sessionABowl)
+        sessionABowl.forEach(item => {
+            if (extraBowlingAData.hasOwnProperty(item[0])) {
+                item.push(extraBowlingAData[item[0]])
+            } else {
+                item.push('na')
+            }
+        })
+
         const constantBowlingAData = {
             matchFormat: body.matchFormat,
             userId: userSession.id,
@@ -263,6 +321,17 @@ export async function POST(request: Request) {
         })
 
         // Add Bowling: Session B
+
+        // Add the extra data
+        const extraBowlingBData = makeExtra(sessionBBat, sessionBBowl)
+        sessionBBowl.forEach(item => {
+            if (extraBowlingBData.hasOwnProperty(item[0])) {
+                item.push(extraBowlingBData[item[0]])
+            } else {
+                item.push('na')
+            }
+        })
+
         const constantBowlingBData = {
             matchFormat: body.matchFormat,
             userId: userSession.id,
@@ -285,6 +354,7 @@ export async function POST(request: Request) {
         })
 
         return NextResponse.json({ message: Message.MATCH_ADDED, matchId: match.id }, { status: 200 })
+        // return NextResponse.json({ message: Message.MATCH_ADDED }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
