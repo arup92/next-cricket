@@ -68,7 +68,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
             setValue('matchFormat', slugs[2] ? slugs[2].toUpperCase() : '')
             setValue('venueId', slugs[3] ? slugs[3] : '')
         }
-    }, [])
+    })
 
     // Get Venues
     const getVenues = async (): Promise<any> => {

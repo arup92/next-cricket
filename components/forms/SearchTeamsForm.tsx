@@ -20,9 +20,8 @@ interface SearchTeamsFormProps {
 }
 
 const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
-    const [teams, setTeams] = useState('')
 
-    const onSubmit = (values: any) => {
+    const onSubmit = async (values: any) => {
         let queryParams = ``
         if (Teams.includes(values.teamA) && Teams.includes(values.teamB)) {
             queryParams = `teamA=${values.teamA}&teamB=${values.teamB}`
@@ -40,11 +39,7 @@ const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
         }
 
         // Set team for useQuery
-        setTeams(queryParams)
-    }
-
-    const getCustomMatches = async (): Promise<Matches[]> => {
-        return await axios.get(`/api/view/matches-get?${teams}`)
+        await axios.get(`/api/view/matches-get?${queryParams}`)
             .then(response => {
                 handleData(response.data)
                 return response.data
@@ -55,17 +50,23 @@ const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
             })
     }
 
+    const getCustomMatches = async (): Promise<Matches[]> => {
+        return await axios.get(`/api/view/matches-get`)
+            .then(response => {
+                return response.data
+            })
+            .catch(err => {
+                console.log(err)
+                return []
+            })
+    }
+
     // useQuery on form submit
-    const { data, refetch, isError, isRefetching } = useQuery({
-        queryKey: ['matches', teams],
+    const { data: matches } = useQuery({
+        queryKey: ['matches'],
         queryFn: getCustomMatches,
-        enabled: false,
         refetchOnWindowFocus: false,
     })
-
-    useEffect(() => {
-        refetch()
-    }, [refetch, teams])
 
     // Hook Form
     const {
@@ -77,6 +78,11 @@ const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
         mode: 'onBlur',
         resolver: zodResolver(formSchema)
     })
+
+    // Send matches to the calling component
+    if (matches) {
+        handleData(matches)
+    }
 
     return (
         <>
