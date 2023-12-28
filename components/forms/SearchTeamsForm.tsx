@@ -25,7 +25,7 @@ const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
     const [tAOpen, setTAOpen] = useState(false)
     const [tBOpen, setTBOpen] = useState(false)
 
-    // React Query
+    // React Query: Get Teams
     const getTeams = async () => {
         return await axios.get(`/api/view/teams-get`)
             .then(response => {

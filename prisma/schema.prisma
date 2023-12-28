@@ -20,7 +20,7 @@ model User {
   image          String?
   hashedPassword String
   createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  updatedAt      DateTime @default(now()) @updatedAt
   loginId        String?
 
   teams   Team[]
@@ -41,7 +41,7 @@ model Scores {
   oppCountryId String
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   Match   Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
   matchId Int
@@ -54,7 +54,7 @@ model Team {
   teamType String @default("national")
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   matchesA Match[] @relation("teamA")
   matchesB Match[] @relation("teamB")
@@ -76,7 +76,7 @@ model Venue {
   venueCountryId String?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   matches Match[]
   batting Batting[]
@@ -115,7 +115,7 @@ model Match {
   userId String
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   batting Batting[]
   bowling Bowling[]
@@ -150,7 +150,7 @@ model Player {
   playerTeams PlayerTeam[]
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   batting Batting[]
   bowling Bowling[]
@@ -165,7 +165,7 @@ model PlayerTeam {
   playerId String
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@id([playerId, teamId])
   @@unique([teamId, playerId])
@@ -184,7 +184,7 @@ model Batting {
   f11points    Int?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String
@@ -220,7 +220,7 @@ model Bowling {
   f11points    Int?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   venue   Venue  @relation(fields: [venueId], references: [venueId])
   venueId String
