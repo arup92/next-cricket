@@ -47,11 +47,17 @@ model Scores {
   matchId Int
 }
 
+enum Bool {
+  yes
+  no
+}
+
 model Team {
   id       Int    @id @default(autoincrement())
   teamName String
   teamId   String @unique
   teamType String @default("national")
+  active   Bool?  @default(yes)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -133,11 +139,6 @@ enum BowlingType {
   Fast
   Spin
   NA
-}
-
-enum Bool {
-  yes
-  no
 }
 
 model Player {

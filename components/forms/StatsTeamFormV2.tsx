@@ -1,6 +1,5 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { MatchFormat } from "@/types/MatchFormat";
-import { Teams } from "@/types/Teams";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -19,16 +18,8 @@ const formSchema = z.object({
             message: 'Please select Format',
         }),
     }),
-    teamA: z.enum(Teams, {
-        errorMap: () => ({
-            message: 'Please select Team A',
-        }),
-    }),
-    teamB: z.enum(Teams, {
-        errorMap: () => ({
-            message: 'Please select Team B',
-        }),
-    }),
+    teamA: z.string().min(2, 'Enter valid details'),
+    teamB: z.string().min(2, 'Enter valid details'),
     venueId: z.string().trim().min(1, 'Enter valid details').optional(),
 })
 
@@ -43,9 +34,29 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
 
     const router = useRouter()
 
+    // React Query: Get Teams
+    const getTeams = async () => {
+        return await axios.get(`/api/view/teams-get`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => {
+                console.log(error)
+                return []
+            })
+    }
+
+    const { data: Teams } = useQuery({
+        queryKey: ['teams'],
+        queryFn: getTeams
+    })
+
     const onSubmit = (values: any) => {
         let path = ''
-        if (Teams.includes(values.teamA) && Teams.includes(values.teamB) && MatchFormat.includes(values.matchFormat)) {
+
+        if (Teams.map((item: any) => item.teamId).includes(values.teamA)
+            && Teams.map((item: any) => item.teamId).includes(values.teamB)
+            && MatchFormat.includes(values.matchFormat)) {
             path = `/${values.teamA}/${values.teamB}/${values.matchFormat}/${values?.venueId}`
             router.push(`/view/create-new-11${path.toLowerCase()}`)
         }
@@ -88,23 +99,6 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
     const venues = useQuery({
         queryKey: ['allvenues'],
         queryFn: getVenues
-    })
-
-    // React Query: Get Teams
-    const getTeams = async () => {
-        return await axios.get(`/api/view/teams-get`)
-            .then(response => {
-                return response.data
-            })
-            .catch(error => {
-                console.log(error)
-                return []
-            })
-    }
-
-    const { data: Teams } = useQuery({
-        queryKey: ['teams'],
-        queryFn: getTeams
     })
 
 
