@@ -19,7 +19,7 @@ const formSchema = z.object({
 })
 
 const PlayerDataForm = () => {
-    const [playerData, setPlayerData] = useState<any[]>([])
+    const [playerData, setPlayerData] = useState<any[]>()
 
     const onSubmit = (values: any) => {
         const params = new URLSearchParams(values).toString()
@@ -95,7 +95,7 @@ const PlayerDataForm = () => {
                 <Button>Submit</Button>
             </form>
 
-            {playerData.length > 0 ? <ListPlayersEdit playerData={playerData} /> : <SecNotFound />}
+            {playerData && (playerData.length > 0 ? <ListPlayersEdit playerData={playerData} /> : <SecNotFound />)}
         </>
     )
 }
