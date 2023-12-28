@@ -1,6 +1,5 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { MatchFormat } from "@/types/MatchFormat";
-import { Teams } from "@/types/Teams";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -19,16 +18,8 @@ const formSchema = z.object({
             message: 'Please select Format',
         }),
     }),
-    teamA: z.enum(Teams, {
-        errorMap: () => ({
-            message: 'Please select Team A',
-        }),
-    }),
-    teamB: z.enum(Teams, {
-        errorMap: () => ({
-            message: 'Please select Team B',
-        }),
-    }),
+    teamA: z.string().min(2, 'Enter valid details'),
+    teamB: z.string().min(2, 'Enter valid details'),
     venueId: z.string().trim().min(1, 'Enter valid details').optional(),
 })
 
@@ -38,11 +29,34 @@ interface StatsTeamFormV2 {
 
 const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
     const [open, setOpen] = useState(false)
+    const [tAOpen, setTAOpen] = useState(false)
+    const [tBOpen, setTBOpen] = useState(false)
+
     const router = useRouter()
+
+    // React Query: Get Teams
+    const getTeams = async () => {
+        return await axios.get(`/api/view/teams-get`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => {
+                console.log(error)
+                return []
+            })
+    }
+
+    const { data: Teams } = useQuery({
+        queryKey: ['teams'],
+        queryFn: getTeams
+    })
 
     const onSubmit = (values: any) => {
         let path = ''
-        if (Teams.includes(values.teamA) && Teams.includes(values.teamB) && MatchFormat.includes(values.matchFormat)) {
+
+        if (Teams.map((item: any) => item.teamId).includes(values.teamA)
+            && Teams.map((item: any) => item.teamId).includes(values.teamB)
+            && MatchFormat.includes(values.matchFormat)) {
             path = `/${values.teamA}/${values.teamB}/${values.matchFormat}/${values?.venueId}`
             router.push(`/view/create-new-11${path.toLowerCase()}`)
         }
@@ -87,6 +101,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
         queryFn: getVenues
     })
 
+
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex gap-3 mb-8">
@@ -110,37 +125,87 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
                 </div>
 
                 <div>
-                    <Select
-                        onValueChange={(selectedValue: string) => setValue('teamA', selectedValue)}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder={slugs && slugs[0] ? slugs[0].toUpperCase() : 'Team A'} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {Teams.map((team) => (
-                                <SelectItem key={team} value={team}>
-                                    {team}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <Popover open={tAOpen} onOpenChange={setTAOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={tAOpen}
+                                className="w-[150px] justify-between bg-white"
+                            >
+                                {Teams && watch().teamA ?
+                                    Teams.find((team: any) => team.teamId === watch().teamA.toUpperCase()).teamId :
+                                    'Team A'
+                                }
+                                <span className="rotate-90"><GoCode /></span>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[150px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search Team..." />
+                                <CommandEmpty>No Team Found.</CommandEmpty>
+                                <CommandGroup>
+                                    {Teams && Teams.map((team: any) => (
+                                        <CommandItem
+                                            key={team.teamId}
+                                            value={team.teamId}
+                                            onSelect={(currentValue) => {
+                                                setValue('teamA', currentValue.toUpperCase())
+                                                setTAOpen(false)
+                                            }}
+                                        >
+                                            {team.teamId}
+                                            <span className={watch().teamA === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                <GoCheck />
+                                            </span>
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </div>
 
                 <div>
-                    <Select
-                        onValueChange={(selectedValue: string) => setValue('teamB', selectedValue)}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder={slugs && slugs[1] ? slugs[1].toUpperCase() : 'Team B'} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {Teams.map((team) => (
-                                <SelectItem key={team} value={team}>
-                                    {team}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <Popover open={tBOpen} onOpenChange={setTBOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={tBOpen}
+                                className="w-[150px] justify-between bg-white"
+                            >
+                                {Teams && watch().teamB ?
+                                    Teams.find((team: any) => team.teamId === watch().teamB.toUpperCase()).teamId :
+                                    'Team B'
+                                }
+                                <span className="rotate-90"><GoCode /></span>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[150px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search Team..." />
+                                <CommandEmpty>No Team Found.</CommandEmpty>
+                                <CommandGroup>
+                                    {Teams && Teams.map((team: any) => (
+                                        <CommandItem
+                                            key={team.teamId}
+                                            value={team.teamId}
+                                            onSelect={(currentValue) => {
+                                                setValue('teamB', currentValue.toUpperCase())
+                                                setTBOpen(false)
+                                            }}
+                                        >
+                                            {team.teamId}
+                                            <span className={watch().teamB === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                <GoCheck />
+                                            </span>
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </div>
 
                 <div>

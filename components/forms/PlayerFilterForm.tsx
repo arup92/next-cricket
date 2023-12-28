@@ -13,16 +13,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
 const formSchema = z.object({
-    opponent: z.enum(Teams, {
-        errorMap: () => ({
-            message: 'Please select Opponent',
-        }),
-    }).nullable().optional(),
-    host: z.enum(Teams, {
-        errorMap: () => ({
-            message: 'Please select Country',
-        }),
-    }).nullable().optional(),
+    opponent: z.string().min(2).nullable().optional(),
+    host: z.string().min(2).nullable().optional(),
     venueId: z.string().trim().min(3, 'Enter valid details').nullable().optional(),
     innings: z.string().trim().min(3, 'Enter valid details').max(3, 'Enter valid details').nullable().optional()
 })

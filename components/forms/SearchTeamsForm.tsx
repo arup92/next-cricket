@@ -1,5 +1,4 @@
 import { MatchFormat } from "@/types/MatchFormat";
-import { Teams } from "@/types/Teams";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -8,10 +7,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { GoCode, GoCheck } from "react-icons/go";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
 
 const formSchema = z.object({
-    teamA: z.enum(Teams).optional(),
-    teamB: z.enum(Teams).optional(),
+    teamA: z.string().min(2),
+    teamB: z.string().min(2).optional(),
     matchFormat: z.enum(MatchFormat).optional(),
 })
 
@@ -20,17 +22,36 @@ interface SearchTeamsFormProps {
 }
 
 const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
-    const [teams, setTeams] = useState('')
+    const [tAOpen, setTAOpen] = useState(false)
+    const [tBOpen, setTBOpen] = useState(false)
 
-    const onSubmit = (values: any) => {
+    // React Query: Get Teams
+    const getTeams = async () => {
+        return await axios.get(`/api/view/teams-get`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => {
+                console.log(error)
+                return []
+            })
+    }
+
+    const { data: Teams } = useQuery({
+        queryKey: ['teams'],
+        queryFn: getTeams
+    })
+
+    const onSubmit = async (values: any) => {
         let queryParams = ``
-        if (Teams.includes(values.teamA) && Teams.includes(values.teamB)) {
+        if (Teams.map((item: any) => item.teamId).includes(values.teamA)
+            && Teams.map((item: any) => item.teamId).includes(values.teamB)) {
             queryParams = `teamA=${values.teamA}&teamB=${values.teamB}`
 
             if (values.teamA === values.teamB) {
                 queryParams = `teamA=${values.teamA}`
             }
-        } else if (Teams.includes(values.teamA)) {
+        } else if (Teams.map((item: any) => item.teamId).includes(values.teamA)) {
             queryParams = `teamA=${values.teamA}`
         }
 
@@ -40,13 +61,19 @@ const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
         }
 
         // Set team for useQuery
-        setTeams(queryParams)
+        await axios.get(`/api/view/matches-get?${queryParams}`)
+            .then(response => {
+                handleData(response.data)
+            })
+            .catch(err => {
+                console.log(err)
+                return []
+            })
     }
 
     const getCustomMatches = async (): Promise<Matches[]> => {
-        return await axios.get(`/api/view/matches-get?${teams}`)
+        return await axios.get(`/api/view/matches-get`)
             .then(response => {
-                handleData(response.data)
                 return response.data
             })
             .catch(err => {
@@ -55,64 +82,116 @@ const SearchTeamsForm: React.FC<SearchTeamsFormProps> = ({ handleData }) => {
             })
     }
 
-    // useQuery on form submit
-    const { data, refetch, isError, isRefetching } = useQuery({
-        queryKey: ['matches', teams],
+    // Query: on form submit
+    const { data: matches } = useQuery({
+        queryKey: ['matches'],
         queryFn: getCustomMatches,
-        enabled: false,
         refetchOnWindowFocus: false,
     })
-
-    useEffect(() => {
-        refetch()
-    }, [refetch, teams])
 
     // Hook Form
     const {
         formState: { errors },
         handleSubmit,
-        getValues,
+        watch,
         setValue,
     } = useForm({
         mode: 'onBlur',
         resolver: zodResolver(formSchema)
     })
 
+    // Send matches to the calling component
+    useEffect(() => {
+        if (matches) {
+            handleData(matches)
+        }
+    }, [matches])
+
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex gap-3 mb-8">
                 <div>
-                    <Select
-                        onValueChange={(selectedValue: string) => setValue('teamA', selectedValue)}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Team A" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {Teams.map((team) => (
-                                <SelectItem key={team} value={team}>
-                                    {team}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <Popover open={tAOpen} onOpenChange={setTAOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={tAOpen}
+                                className="w-[150px] justify-between bg-white"
+                            >
+                                {Teams && watch().teamA ?
+                                    Teams.find((team: any) => team.teamId === watch().teamA.toUpperCase()).teamId :
+                                    'Team A'
+                                }
+                                <span className="rotate-90"><GoCode /></span>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[150px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search Team..." />
+                                <CommandEmpty>No Team Found.</CommandEmpty>
+                                <CommandGroup>
+                                    {Teams && Teams.map((team: any) => (
+                                        <CommandItem
+                                            key={team.teamId}
+                                            value={team.teamId}
+                                            onSelect={(currentValue) => {
+                                                setValue('teamA', currentValue.toUpperCase())
+                                                setTAOpen(false)
+                                            }}
+                                        >
+                                            {team.teamId}
+                                            <span className={watch().teamA === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                <GoCheck />
+                                            </span>
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </div>
 
                 <div>
-                    <Select
-                        onValueChange={(selectedValue: string) => setValue('teamB', selectedValue)}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Team B" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {Teams.map((team) => (
-                                <SelectItem key={team} value={team}>
-                                    {team}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <Popover open={tBOpen} onOpenChange={setTBOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={tBOpen}
+                                className="w-[150px] justify-between bg-white"
+                            >
+                                {Teams && watch().teamB ?
+                                    Teams.find((team: any) => team.teamId === watch().teamB.toUpperCase()).teamId :
+                                    'Team B'
+                                }
+                                <span className="rotate-90"><GoCode /></span>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[150px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search Team..." />
+                                <CommandEmpty>No Team Found.</CommandEmpty>
+                                <CommandGroup>
+                                    {Teams && Teams.map((team: any) => (
+                                        <CommandItem
+                                            key={team.teamId}
+                                            value={team.teamId}
+                                            onSelect={(currentValue) => {
+                                                setValue('teamB', currentValue.toUpperCase())
+                                                setTBOpen(false)
+                                            }}
+                                        >
+                                            {team.teamId}
+                                            <span className={watch().teamB === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                <GoCheck />
+                                            </span>
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </div>
 
                 <div>
