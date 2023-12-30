@@ -68,6 +68,9 @@ export async function GET(request: Request) {
                     include: {
                         Match: true,
                         venue: true,
+                    },
+                    orderBy: {
+                        matchDate: 'desc'
                     }
                 },
                 bowling: {
@@ -75,9 +78,12 @@ export async function GET(request: Request) {
                     include: {
                         Match: true,
                         venue: true,
+                    },
+                    orderBy: {
+                        matchDate: 'desc'
                     }
                 }
-            }
+            },
         })
 
         const { batting, bowling, ...playerData } = allPlayerData as any
