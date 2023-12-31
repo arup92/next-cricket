@@ -123,7 +123,6 @@ const AddMatchForm = () => {
         queryFn: getTeams
     })
 
-
     return (
         <CenteredArea maxWidthClass="max-w-xl">
             <Tabs value={tabIndex}>
@@ -140,7 +139,6 @@ const AddMatchForm = () => {
                                 <CardTitle>Card Title</CardTitle>
                                 <CardDescription>Card Description</CardDescription>
                             </CardHeader>
-
 
                             <CardContent>
                                 <div className="space-y-3">

@@ -1,5 +1,4 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Teams } from "@/types/Teams"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -25,6 +24,9 @@ interface PlayerFilterFormProps {
 }
 
 const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleData }) => {
+    const [opOpen, setOpOpen] = useState(false)
+    const [hoOpen, setHoOpen] = useState(false)
+
     const [open, setOpen] = useState(false)
     const [dialogOpen, setDialogOpen] = useState(false);
     const [loading, setLoading] = useState(false)
@@ -80,6 +82,23 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
         }
     }
 
+    // React Query: Get Teams
+    const getTeams = async () => {
+        return await axios.get(`/api/view/teams-get`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => {
+                console.log(error)
+                return []
+            })
+    }
+
+    const { data: Teams } = useQuery({
+        queryKey: ['teams'],
+        queryFn: getTeams
+    })
+
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
@@ -96,23 +115,45 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="mb-3 space-y-3">
                     <div>
-                        <Select
-                            onValueChange={(selectedValue: string) => setValue('opponent', selectedValue === 'unassigned' ? null : selectedValue)}
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder={!watch().opponent ? 'Opponent Team' : watch().opponent} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value={'unassigned'}>
-                                    Opponent Team
-                                </SelectItem>
-                                {Teams.map((team) => (
-                                    <SelectItem key={team} value={team}>
-                                        {team}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <Popover open={opOpen} onOpenChange={setOpOpen}>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={opOpen}
+                                    className="w-full justify-between bg-white"
+                                >
+                                    {Teams && watch().opponent ?
+                                        Teams.find((team: any) => team.teamId === watch().opponent.toUpperCase()).teamId :
+                                        'Opponent'
+                                    }
+                                    <span className="rotate-90"><GoCode /></span>
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                                <Command>
+                                    <CommandInput placeholder="Opponent Team..." />
+                                    <CommandEmpty>No Team Found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {Teams && Teams.map((team: any) => (
+                                            <CommandItem
+                                                key={team.teamId}
+                                                value={team.teamId}
+                                                onSelect={(currentValue) => {
+                                                    setValue('opponent', currentValue.toUpperCase())
+                                                    setOpOpen(false)
+                                                }}
+                                            >
+                                                {team.teamId}
+                                                <span className={watch().teamA === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                    <GoCheck />
+                                                </span>
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
                     </div>
 
                     <div className="flex gap-3 justify-between">
@@ -171,7 +212,46 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                         </div>
 
                         <div className="w-[50%]">
-                            <Select
+                            <Popover open={hoOpen} onOpenChange={setHoOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        aria-expanded={hoOpen}
+                                        className="w-full justify-between bg-white"
+                                    >
+                                        {Teams && watch().host ?
+                                            Teams.find((team: any) => team.teamId === watch().host.toUpperCase()).teamId :
+                                            'Hosting Country'
+                                        }
+                                        <span className="rotate-90"><GoCode /></span>
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-full p-0">
+                                    <Command>
+                                        <CommandInput placeholder="Hosting Country..." />
+                                        <CommandEmpty>No Team Found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {Teams && Teams.map((team: any) => (
+                                                <CommandItem
+                                                    key={team.teamId}
+                                                    value={team.teamId}
+                                                    onSelect={(currentValue) => {
+                                                        setValue('host', currentValue.toUpperCase())
+                                                        setHoOpen(false)
+                                                    }}
+                                                >
+                                                    {team.teamId}
+                                                    <span className={watch().teamA === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                        <GoCheck />
+                                                    </span>
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
+                            {/* <Select
                                 onValueChange={(selectedValue: string) => setValue('host', selectedValue === 'unassigned' ? null : selectedValue)}
                             >
                                 <SelectTrigger>
@@ -187,7 +267,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
-                            </Select>
+                            </Select> */}
                         </div>
                     </div>
 
