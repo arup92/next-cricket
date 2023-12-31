@@ -130,7 +130,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                     <span className="rotate-90"><GoCode /></span>
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-full p-0">
+                            <PopoverContent side="bottom" className="w-full p-0">
                                 <Command>
                                     <CommandInput placeholder="Opponent Team..." />
                                     <CommandEmpty>No Team Found.</CommandEmpty>
@@ -173,7 +173,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         <span className="rotate-90"><GoCode /></span>
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-full p-0">
+                                <PopoverContent side="bottom" className="w-full p-0">
                                     <Command>
                                         <CommandInput placeholder="Search venue..." />
                                         <CommandEmpty>No venue found.</CommandEmpty>
@@ -227,7 +227,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         <span className="rotate-90"><GoCode /></span>
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-full p-0">
+                                <PopoverContent side="bottom" className="w-full p-0">
                                     <Command>
                                         <CommandInput placeholder="Hosting Country..." />
                                         <CommandEmpty>No Team Found.</CommandEmpty>
@@ -251,23 +251,6 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                     </Command>
                                 </PopoverContent>
                             </Popover>
-                            {/* <Select
-                                onValueChange={(selectedValue: string) => setValue('host', selectedValue === 'unassigned' ? null : selectedValue)}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder={!watch().host ? 'Hosting Country' : watch().host} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value={'unassigned'}>
-                                        Hosting Country
-                                    </SelectItem>
-                                    {Teams.map((team) => (
-                                        <SelectItem key={team} value={team}>
-                                            {team}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select> */}
                         </div>
                     </div>
 
