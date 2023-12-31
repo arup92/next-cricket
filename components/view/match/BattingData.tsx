@@ -8,16 +8,16 @@ interface BattingDataProps {
     data: BattingDataType[]
     score: number
     wickets: number
-    teamId: string
+    teamName: string
     className?: string
 }
 
-const BattingData: React.FC<BattingDataProps> = ({ data: batters, score, teamId, wickets, className }) => {
+const BattingData: React.FC<BattingDataProps> = ({ data: batters, score, teamName, wickets, className }) => {
     return (
         <Card className={`py-3 ${className}`}>
             <CardHeader>
                 <div className="flex justify-between">
-                    <h2 className="text-xl font-bold">{getFullNameByCode(teamId)}</h2>
+                    <h2 className="text-xl font-bold">{teamName}</h2>
                     <p className="text-xl font-bold">{score}/{wickets}</p>
                 </div>
             </CardHeader>

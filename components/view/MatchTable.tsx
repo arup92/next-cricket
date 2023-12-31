@@ -32,7 +32,7 @@ const MatchTable = () => {
                 <BattingData
                     score={data.scores[0].runs}
                     wickets={data.scores[1].wickets}
-                    teamId={data.scores[0].teamId}
+                    teamName={data.scores[0].Team.teamName}
                     data={data.batting.battingA}
                 />
 
@@ -41,7 +41,7 @@ const MatchTable = () => {
                 <BattingData
                     score={data.scores[1].runs}
                     wickets={data.scores[0].wickets}
-                    teamId={data.scores[1].teamId}
+                    teamName={data.scores[1].Team.teamName}
                     data={data.batting.battingB}
                 />
 

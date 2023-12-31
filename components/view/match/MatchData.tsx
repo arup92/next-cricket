@@ -26,19 +26,19 @@ const MatchData: React.FC<MatchDataProps> = ({ data, scores }) => {
             <Separator />
             <CardContent className="py-3 space-y-3">
                 <div className="flex justify-between">
-                    <h2 className="text-xl font-bold">{getFullNameByCode(scores[0].teamId)}</h2>
+                    <h2 className="text-xl font-bold">{scores[0].Team.teamName}</h2>
                     <p className="text-xl font-bold">{scores[0].runs}/{scores[1].wickets}</p>
                 </div>
 
                 <div className="flex justify-between">
-                    <h2 className="text-xl font-bold">{getFullNameByCode(scores[1].teamId)}</h2>
+                    <h2 className="text-xl font-bold">{scores[1].Team.teamName}</h2>
                     <p className="text-xl font-bold">{scores[1].runs}/{scores[0].wickets}</p>
                 </div>
             </CardContent>
             <Separator />
             <CardContent className="py-1 flex justify-between">
-                <p className="text-muted-foreground text-sm">Match Result: <span className="text-emerald-700">{getFullNameByCode(data.result)}</span></p>
-                <p className="text-muted-foreground text-sm">Bat First: <span className="text-emerald-700">{getFullNameByCode(data.batFirst)}</span></p>
+                <p className="text-muted-foreground text-sm">Match Result: <span className="text-emerald-700">{data.resultTeamName}</span></p>
+                <p className="text-muted-foreground text-sm">Bat First: <span className="text-emerald-700">{data.batFirstTeamName}</span></p>
             </CardContent>
         </Card>
     )

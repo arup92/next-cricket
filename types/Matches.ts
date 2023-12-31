@@ -1,4 +1,6 @@
 interface Matches {
+    batFirstTeamName: string
+    resultTeamName: string
     matchFormat: string
     teamAId: string
     teamBId: string
