@@ -227,7 +227,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         <span className="rotate-90"><GoCode /></span>
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent side="bottom" className="w-full p-0">
+                                <PopoverContent side="right" className="w-full p-0">
                                     <Command>
                                         <CommandInput placeholder="Hosting Country..." />
                                         <CommandEmpty>No Team Found.</CommandEmpty>
