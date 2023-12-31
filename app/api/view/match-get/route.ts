@@ -17,7 +17,18 @@ export async function GET(request: Request) {
                 id: parseInt(matchId)
             },
             include: {
-                Scores: true,
+                Scores: {
+                    include: {
+                        Team: {
+                            select: {
+                                teamId: true,
+                                teamName: true,
+                                teamType: true,
+                                active: true
+                            }
+                        }
+                    }
+                },
                 batting: { orderBy: [{ f11points: 'desc' }] },
                 bowling: { orderBy: [{ f11points: 'desc' }] },
                 venue: true
@@ -47,9 +58,11 @@ export async function GET(request: Request) {
             match: {
                 id: match?.id,
                 batFirst: match?.batFirst,
+                batFirstTeamName: match?.Scores.find(item => item.Team.teamId === match?.batFirst)?.Team.teamName,
                 matchDate: match?.matchDate,
                 matchFormat: match?.matchFormat,
                 result: match?.result,
+                resultTeamName: match?.Scores.find(item => item.Team.teamId === match?.result)?.Team.teamName,
                 teamAId: match?.teamAId,
                 teamBId: match?.teamBId,
                 venueId: match?.venueId,
