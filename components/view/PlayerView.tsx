@@ -89,7 +89,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
     return (
         <CenteredArea maxWidthClass="max-w-5xl">
             {data && <>
-                <div className="text-muted-foreground text-right mb-2 text-sm">Displaying Recent Statistics</div>
+                <div className="mb-2 text-sm text-right text-muted-foreground">Displaying Recent Statistics</div>
                 {data.playerData && <PlayerData updateData={updateData} playerData={data.playerData} />}
 
                 {data.batting.length === 0 && data.bowling.length === 0 && <SecNotFound />}
@@ -99,7 +99,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                         <Card className="mb-3">
                             <CardContent className="py-3">
                                 <AccordionTrigger className="p-0 hover:text-blue-700">
-                                    <span className="capitalize inline font-bold text-lg">ODI Career</span>
+                                    <span className="inline text-lg font-bold capitalize">ODI Career</span>
                                 </AccordionTrigger>
                                 <AccordionContent className="mt-4">
                                     {data.batting && <BattingTable
@@ -117,7 +117,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                         <Card className="mb-3">
                             <CardContent className="py-3">
                                 <AccordionTrigger className="p-0 hover:text-blue-700">
-                                    <span className="capitalize inline font-bold text-lg">T20 Career</span>
+                                    <span className="inline text-lg font-bold capitalize">T20I Career</span>
                                 </AccordionTrigger>
                                 <AccordionContent className="mt-4">
                                     {data.batting && <BattingTable
@@ -135,7 +135,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                         <Card className="mb-3">
                             <CardContent className="py-3">
                                 <AccordionTrigger className="p-0 hover:text-blue-700">
-                                    <span className="capitalize inline font-bold text-lg">IPL Career</span>
+                                    <span className="inline text-lg font-bold capitalize">IPL Career</span>
                                 </AccordionTrigger>
                                 <AccordionContent className="mt-4">
                                     {data.batting && <BattingTable

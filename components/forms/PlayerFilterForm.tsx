@@ -110,7 +110,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                     <DialogDescription>
                         View detailed statistics. (Only the recent stats are shown)
                         <br />
-                        <span className="text-emerald-700 font-bold">All Fields are Optional!</span>
+                        <span className="font-bold text-emerald-700">All Fields are Optional!</span>
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="mb-3 space-y-3">
@@ -121,7 +121,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                     variant="outline"
                                     role="combobox"
                                     aria-expanded={opOpen}
-                                    className="w-full justify-between bg-white"
+                                    className="justify-between w-full bg-white"
                                 >
                                     {Teams && watch().opponent ?
                                         Teams.find((team: any) => team.teamId === watch().opponent.toUpperCase()).teamId :
@@ -156,7 +156,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                         </Popover>
                     </div>
 
-                    <div className="flex gap-3 justify-between">
+                    <div className="flex justify-between gap-3">
                         <div className="w-[50%]">
                             <Popover open={open} onOpenChange={setOpen}>
                                 <PopoverTrigger asChild>
@@ -164,7 +164,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         variant="outline"
                                         role="combobox"
                                         aria-expanded={open}
-                                        className="w-full justify-between bg-white"
+                                        className="justify-between w-full bg-white"
                                     >
                                         {venues.data && !!watch().venueId ?
                                             venues.data.find((venue: any) => venue.venueId === watch().venueId)?.venueName :
@@ -173,7 +173,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         <span className="rotate-90"><GoCode /></span>
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent side="left" className="w-full p-0">
+                                <PopoverContent side="bottom" className="w-full p-0">
                                     <Command>
                                         <CommandInput placeholder="Search venue..." />
                                         <CommandEmpty>No venue found.</CommandEmpty>
@@ -218,7 +218,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         variant="outline"
                                         role="combobox"
                                         aria-expanded={hoOpen}
-                                        className="w-full justify-between bg-white"
+                                        className="justify-between w-full bg-white"
                                     >
                                         {Teams && watch().host ?
                                             Teams.find((team: any) => team.teamId === watch().host.toUpperCase()).teamId :
@@ -227,7 +227,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         <span className="rotate-90"><GoCode /></span>
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent side="right" className="w-full p-0">
+                                <PopoverContent side="bottom" className="w-full p-0">
                                     <Command>
                                         <CommandInput placeholder="Hosting Country..." />
                                         <CommandEmpty>No Team Found.</CommandEmpty>
@@ -278,10 +278,10 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                     <DialogFooter>
                         <Button>
                             {loading ? <>
-                                <svg className="absolute animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg className="absolute w-5 h-5 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg> <span className="opacity-0 invisible">Filter</span>
+                                </svg> <span className="invisible opacity-0">Filter</span>
                             </> : 'Filter'}
                         </Button>
                     </DialogFooter>
