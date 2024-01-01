@@ -1,5 +1,7 @@
 export const MatchFormat = [
     'ODI',
     'T20',
-    'IPL'
+    'IPL',
+    'SS',
+    'BBL'
 ] as const
