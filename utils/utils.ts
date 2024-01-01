@@ -356,8 +356,7 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
             }
             break;
 
-        case 'T20':
-        case 'IPL':
+        default:
             if (type === 'bat') {
                 // For every run add 1 point
                 totalFantasyPoints += parseInt(inning.run)
@@ -430,8 +429,6 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                     totalFantasyPoints -= 15
                 }
             }
-            break;
-        default:
             break;
     }
     return totalFantasyPoints
