@@ -1,3 +1,5 @@
+'use client'
+
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { MatchFormat } from "@/types/MatchFormat";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +13,7 @@ import { z } from "zod";
 import { Button } from "../ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const formSchema = z.object({
     matchFormat: z.enum(MatchFormat, {
@@ -24,15 +27,20 @@ const formSchema = z.object({
 })
 
 interface StatsTeamFormV2 {
-    slugs: any[]
+    slugs?: any[]
+    isFetched?: (value: boolean) => void
 }
 
-const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
+const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
     const [open, setOpen] = useState(false)
     const [tAOpen, setTAOpen] = useState(false)
     const [tBOpen, setTBOpen] = useState(false)
 
     const router = useRouter()
+
+    useEffect(() => {
+        isFetched && isFetched(false)
+    }, [])
 
     // React Query: Get Teams
     const getTeams = async () => {
@@ -59,6 +67,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
             && MatchFormat.includes(values.matchFormat)) {
             path = `/${values.teamA}/${values.teamB}/${values.matchFormat}/${values?.venueId}`
             router.push(`/view/create-new-11${path.toLowerCase()}`)
+            isFetched && isFetched(true)
         }
     }
 
@@ -101,157 +110,167 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs }) => {
         queryFn: getVenues
     })
 
-
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex gap-3 mb-8">
-                <div>
-                    <Select
-                        onValueChange={(selectedValue: string) => {
-                            setValue('matchFormat', selectedValue)
-                        }}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder={slugs && slugs[2] ? slugs[2].toUpperCase() : 'Format'} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {MatchFormat.map((format) => (
-                                <SelectItem key={format} value={format}>
-                                    {format}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div>
-                    <Popover open={tAOpen} onOpenChange={setTAOpen}>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={tAOpen}
-                                className="w-[150px] justify-between bg-white"
+            <Card className="mt-3">
+                <CardHeader>
+                    <CardTitle>Create New 11</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="mb-3">
+                            <Select
+                                onValueChange={(selectedValue: string) => {
+                                    setValue('matchFormat', selectedValue)
+                                }}
                             >
-                                {Teams && watch().teamA ?
-                                    Teams.find((team: any) => team.teamId === watch().teamA.toUpperCase()).teamId :
-                                    'Team A'
-                                }
-                                <span className="rotate-90"><GoCode /></span>
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[150px] p-0">
-                            <Command>
-                                <CommandInput placeholder="Search Team..." />
-                                <CommandEmpty>No Team Found.</CommandEmpty>
-                                <CommandGroup>
-                                    {Teams && Teams.map((team: any) => (
-                                        <CommandItem
-                                            key={team.teamId}
-                                            value={team.teamId}
-                                            onSelect={(currentValue) => {
-                                                setValue('teamA', currentValue.toUpperCase())
-                                                setTAOpen(false)
-                                            }}
-                                        >
-                                            {team.teamId}
-                                            <span className={watch().teamA === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
-                                                <GoCheck />
-                                            </span>
-                                        </CommandItem>
+                                <SelectTrigger>
+                                    <SelectValue placeholder={slugs && slugs[2] ? slugs[2].toUpperCase() : 'Format'} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {MatchFormat.map((format) => (
+                                        <SelectItem key={format} value={format}>
+                                            {format}
+                                        </SelectItem>
                                     ))}
-                                </CommandGroup>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
-                </div>
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                <div>
-                    <Popover open={tBOpen} onOpenChange={setTBOpen}>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={tBOpen}
-                                className="w-[150px] justify-between bg-white"
-                            >
-                                {Teams && watch().teamB ?
-                                    Teams.find((team: any) => team.teamId === watch().teamB.toUpperCase()).teamId :
-                                    'Team B'
-                                }
-                                <span className="rotate-90"><GoCode /></span>
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[150px] p-0">
-                            <Command>
-                                <CommandInput placeholder="Search Team..." />
-                                <CommandEmpty>No Team Found.</CommandEmpty>
-                                <CommandGroup>
-                                    {Teams && Teams.map((team: any) => (
-                                        <CommandItem
-                                            key={team.teamId}
-                                            value={team.teamId}
-                                            onSelect={(currentValue) => {
-                                                setValue('teamB', currentValue.toUpperCase())
-                                                setTBOpen(false)
-                                            }}
+                        <div className="flex justify-between gap-2 mb-3">
+                            <div className="w-1/2">
+                                <Popover open={tAOpen} onOpenChange={setTAOpen}>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            aria-expanded={tAOpen}
+                                            className="justify-between w-full bg-white"
                                         >
-                                            {team.teamId}
-                                            <span className={watch().teamB === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
-                                                <GoCheck />
-                                            </span>
-                                        </CommandItem>
-                                    ))}
-                                </CommandGroup>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
-                </div>
+                                            {Teams && watch().teamA ?
+                                                Teams.find((team: any) => team.teamId === watch().teamA.toUpperCase()).teamId :
+                                                'Team A'
+                                            }
+                                            <span className="rotate-90"><GoCode /></span>
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-full p-0">
+                                        <Command>
+                                            <CommandInput placeholder="Search Team..." />
+                                            <CommandEmpty>No Team Found.</CommandEmpty>
+                                            <CommandGroup>
+                                                {Teams && Teams.map((team: any) => (
+                                                    <CommandItem
+                                                        key={team.teamId}
+                                                        value={team.teamId}
+                                                        onSelect={(currentValue) => {
+                                                            setValue('teamA', currentValue.toUpperCase())
+                                                            setTAOpen(false)
+                                                        }}
+                                                    >
+                                                        {team.teamId}
+                                                        <span className={watch().teamA === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                            <GoCheck />
+                                                        </span>
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
 
-                <div>
-                    <Popover open={open} onOpenChange={setOpen}>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={open}
-                                className="w-[150px] justify-between bg-white"
-                            >
-                                {venues.data && watch().venueId ?
-                                    venues.data.find((venue: any) => venue.venueId === watch().venueId)?.venueName :
-                                    'Venue'
-                                }
-                                <span className="rotate-90"><GoCode /></span>
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[150px] p-0">
-                            <Command>
-                                <CommandInput placeholder="Search venue..." />
-                                <CommandEmpty>No venue found.</CommandEmpty>
-                                <CommandGroup>
-                                    {venues.data && venues.data.map((venue: any) => (
-                                        <CommandItem
-                                            key={venue.venueId}
-                                            value={venue.venueId}
-                                            onSelect={(currentValue) => {
-                                                setValue('venueId', currentValue)
-                                                setOpen(false)
-                                            }}
+                            <div className="w-1/2">
+                                <Popover open={tBOpen} onOpenChange={setTBOpen}>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            aria-expanded={tBOpen}
+                                            className="justify-between w-full bg-white"
                                         >
-                                            {venue.venueName}
-                                            <span className={watch().venueId === venue.venueId ? 'ml-auto opacity-100' : 'opacity-0'}>
-                                                <GoCheck />
-                                            </span>
-                                        </CommandItem>
-                                    ))}
-                                </CommandGroup>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
-                </div>
+                                            {Teams && watch().teamB ?
+                                                Teams.find((team: any) => team.teamId === watch().teamB.toUpperCase()).teamId :
+                                                'Team B'
+                                            }
+                                            <span className="rotate-90"><GoCode /></span>
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-full p-0">
+                                        <Command>
+                                            <CommandInput placeholder="Search Team..." />
+                                            <CommandEmpty>No Team Found.</CommandEmpty>
+                                            <CommandGroup>
+                                                {Teams && Teams.map((team: any) => (
+                                                    <CommandItem
+                                                        key={team.teamId}
+                                                        value={team.teamId}
+                                                        onSelect={(currentValue) => {
+                                                            setValue('teamB', currentValue.toUpperCase())
+                                                            setTBOpen(false)
+                                                        }}
+                                                    >
+                                                        {team.teamId}
+                                                        <span className={watch().teamB === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                            <GoCheck />
+                                                        </span>
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                        </div>
 
-                <Button>Submit</Button>
-            </form>
+                        <div className="mb-3">
+                            <Popover open={open} onOpenChange={setOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        aria-expanded={open}
+                                        className="justify-between w-full bg-white"
+                                    >
+                                        {venues.data && watch().venueId ?
+                                            venues.data.find((venue: any) => venue.venueId === watch().venueId)?.venueName :
+                                            'Venue'
+                                        }
+                                        <span className="rotate-90"><GoCode /></span>
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-full p-0">
+                                    <Command>
+                                        <CommandInput placeholder="Search venue..." />
+                                        <CommandEmpty>No venue found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {venues.data && venues.data.map((venue: any) => (
+                                                <CommandItem
+                                                    key={venue.venueId}
+                                                    value={venue.venueId}
+                                                    onSelect={(currentValue) => {
+                                                        setValue('venueId', currentValue)
+                                                        setOpen(false)
+                                                    }}
+                                                >
+                                                    {venue.venueName}
+                                                    <span className={watch().venueId === venue.venueId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                        <GoCheck />
+                                                    </span>
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
+                        <div className="w-full text-center">
+                            <Button>Submit</Button>
+                        </div>
+                    </form>
+                </CardContent>
+            </Card>
 
             {errors.matchFormat && (
                 <p className="mb-5">{errors.matchFormat.message as any}</p>

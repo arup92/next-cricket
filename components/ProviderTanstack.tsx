@@ -23,7 +23,7 @@ const ProvidersTanstack: FC<ProvidersProps> = ({ children }) => {
     return (
         <QueryClientProvider client={queryClient}>
             {children}
-            <ReactQueryDevtools />
+            <ReactQueryDevtools buttonPosition="bottom-left" />
         </QueryClientProvider>
     )
 }

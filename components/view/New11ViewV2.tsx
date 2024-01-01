@@ -49,7 +49,9 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
     })
 
     if (!slugs) {
-        return <StatsTeamFormV2 slugs={slugs} />
+        return <div className="sm:max-w-[425px] mx-auto my-0">
+            <StatsTeamFormV2 slugs={slugs} />
+        </div>
     } else if (!!slugs) {
         // 404
         if (
@@ -58,7 +60,7 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
             || !MatchFormat.includes(slugs[2].toUpperCase())
         ) {
             return <>
-                <StatsTeamFormV2 slugs={slugs} />
+                {/* <StatsTeamFormV2 slugs={slugs} /> */}
                 <NotFound />
             </>
         }
@@ -66,14 +68,14 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
 
     if (isLoading === true)
         return <>
-            <StatsTeamFormV2 slugs={slugs} />
+            {/* <StatsTeamFormV2 slugs={slugs} /> */}
             <Loading />
         </>
 
     return (
         <>
             {data && <>
-                <StatsTeamFormV2 slugs={slugs} />
+                {/* <StatsTeamFormV2 slugs={slugs} /> */}
                 <Head2HeadCard className="mb-4" h2h={data.h2h} />
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <MatchResultsCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
