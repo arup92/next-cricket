@@ -154,7 +154,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
                                             <span className="rotate-90"><GoCode /></span>
                                         </Button>
                                     </PopoverTrigger>
-                                    <PopoverContent side="right" className="w-full p-0">
+                                    <PopoverContent side="bottom" className="w-full p-0">
                                         <Command>
                                             <CommandInput placeholder="Search Team..." />
                                             <CommandEmpty>No Team Found.</CommandEmpty>
@@ -196,7 +196,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
                                             <span className="rotate-90"><GoCode /></span>
                                         </Button>
                                     </PopoverTrigger>
-                                    <PopoverContent side="right" className="w-full p-0">
+                                    <PopoverContent side="bottom" className="w-full p-0">
                                         <Command>
                                             <CommandInput placeholder="Search Team..." />
                                             <CommandEmpty>No Team Found.</CommandEmpty>
@@ -239,7 +239,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
                                         <span className="rotate-90"><GoCode /></span>
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent side="right" className="w-full p-0">
+                                <PopoverContent side="bottom" className="w-full p-0">
                                     <Command>
                                         <CommandInput placeholder="Search venue..." />
                                         <CommandEmpty>No venue found.</CommandEmpty>
