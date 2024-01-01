@@ -31,7 +31,7 @@ export async function GET(request: Request) {
         } else if (team) {
             where = {
                 playerTeams: {
-                    every: {
+                    some: {
                         teamId: team.toUpperCase()
                     }
                 }
