@@ -28,7 +28,7 @@ export async function GET(request: Request) {
             }
         }
 
-        // Update the where clause fot match format
+        // Update the where clause for match format
         if (matchFormat) {
             where = { ...where, matchFormat }
         }

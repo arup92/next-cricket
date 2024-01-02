@@ -12,7 +12,7 @@ import { GoCode, GoCheck } from "react-icons/go";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
 
 const formSchema = z.object({
-    teamA: z.string().min(2),
+    teamA: z.string().min(2).optional(),
     teamB: z.string().min(2).optional(),
     matchFormat: z.enum(MatchFormat).optional(),
 })
