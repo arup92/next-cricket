@@ -53,10 +53,18 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
     // Bat and bowl data on different matchformat
     let ODIBatData: any[] = []
     let ODIBowlData: any[] = []
+
     let T20BatData: any[] = []
     let T20BowlData: any[] = []
+
     let IPLBatData: any[] = []
     let IPLBowlData: any[] = []
+
+    let BBLBatData: any[] = []
+    let BBLBowlData: any[] = []
+
+    let SSBatData: any[] = []
+    let SSBowlData: any[] = []
 
     if (data && data.batting) {
         data.batting.forEach((item: any) => {
@@ -66,6 +74,10 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                 T20BatData.push(item)
             } else if (item.matchFormat === 'IPL') {
                 IPLBatData.push(item)
+            } else if (item.matchFormat === 'BBL') {
+                BBLBatData.push(item)
+            } else if (item.matchFormat === 'SS') {
+                SSBatData.push(item)
             }
         })
     }
@@ -78,6 +90,10 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                 T20BowlData.push(item)
             } else if (item.matchFormat === 'IPL') {
                 IPLBowlData.push(item)
+            } else if (item.matchFormat === 'BBL') {
+                BBLBowlData.push(item)
+            } else if (item.matchFormat === 'SS') {
+                SSBowlData.push(item)
             }
         })
     }
@@ -143,6 +159,42 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                                     />}
                                     {data.bowling && <BowlingTable
                                         bowlData={IPLBowlData}
+                                    />}
+                                </AccordionContent>
+                            </CardContent>
+                        </Card>
+                    </AccordionItem>}
+
+                    {(BBLBatData.length > 0 || BBLBowlData.length > 0) && <AccordionItem value="t20" className="border-b-0">
+                        <Card className="mb-3">
+                            <CardContent className="py-3">
+                                <AccordionTrigger className="p-0 hover:text-blue-700">
+                                    <span className="inline text-lg font-bold capitalize">Big Bash League Career</span>
+                                </AccordionTrigger>
+                                <AccordionContent className="mt-4">
+                                    {data.batting && <BattingTable
+                                        batData={BBLBatData}
+                                    />}
+                                    {data.bowling && <BowlingTable
+                                        bowlData={BBLBowlData}
+                                    />}
+                                </AccordionContent>
+                            </CardContent>
+                        </Card>
+                    </AccordionItem>}
+
+                    {(SSBatData.length > 0 || SSBowlData.length > 0) && <AccordionItem value="t20" className="border-b-0">
+                        <Card className="mb-3">
+                            <CardContent className="py-3">
+                                <AccordionTrigger className="p-0 hover:text-blue-700">
+                                    <span className="inline text-lg font-bold capitalize">Super Smash Career</span>
+                                </AccordionTrigger>
+                                <AccordionContent className="mt-4">
+                                    {data.batting && <BattingTable
+                                        batData={SSBatData}
+                                    />}
+                                    {data.bowling && <BowlingTable
+                                        bowlData={SSBowlData}
                                     />}
                                 </AccordionContent>
                             </CardContent>
