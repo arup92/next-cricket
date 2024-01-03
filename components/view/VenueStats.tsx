@@ -9,15 +9,26 @@ import { GiCricketBat, GiFastArrow, GiFlameSpin } from "react-icons/gi"
 import { HiExternalLink } from 'react-icons/hi'
 import { Card, CardContent } from "../ui/card"
 import VenueSummery from "./venue/VenueSummery"
+import VenueMatchFilterForm from "../forms/VenueMatchFilterForm"
+import { useEffect, useState } from "react"
+import SecNotFound from "@/app/not-found-section"
 
 interface VenueStatsProps {
     venue: string
+    matchFormat?: string
 }
 
-const VenueStats: React.FC<VenueStatsProps> = ({ venue }) => {
+const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
+
+    const [venueStats, setVenueStats] = useState<any>()
 
     const getVenueStats = async () => {
-        return await axios.get(`/api/view/venue-get/${venue}`)
+        let format = ``
+        if (matchFormat) {
+            format = `/${matchFormat}`
+        }
+
+        return await axios.get(`/api/view/venue-get/${venue}${format}`)
             .then((response) => response.data)
             .catch((error) => {
                 console.log(error)
@@ -26,99 +37,130 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue }) => {
     }
 
     const { data, isLoading } = useQuery({
-        queryKey: ['venueStats', venue],
+        queryKey: ['venueStats', venue, matchFormat],
         queryFn: getVenueStats
     })
+
+    useEffect(() => {
+        if (data) {
+            setVenueStats(data)
+        }
+    }, [data])
+
+    const handleFilter = (data: any) => {
+        setVenueStats(data)
+    }
 
     if (isLoading)
         return <Loading />
 
+    if (venueStats && venueStats.matches.length <= 0)
+        return <>
+            <div className="flex justify-between">
+                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue}</span></h2>
+
+                <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
+            </div>
+            <SecNotFound />
+        </>
+
     return (
         <>
-            <h2 className="text-2xl mb-4">Most Recent Performance in <span className="capitalize font-semibold">{venue}</span></h2>
-            {data?.matches.length > 0 && <VenueSummery matchData={data.matches} />}
-            {data?.matches.length > 0 && data.matches.map((match: any, index: any) => {
-                let highestScore: number = 0
-                let highestWickets: number = 0
-                let highestWicketsEco: number = Number.MAX_SAFE_INTEGER
-                let bowlingType: string = ''
+            <div className="flex justify-between">
+                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue}</span></h2>
 
-                return <Card key={index} className="mb-4 relative">
-                    <div className="absolute -top-1 -right-1 lg:-top-3 lg:-right-3 bg-white rounded-sm border shadow-sm px-1">
-                        <Link href={`../match?matchId=${match.id}`}><HiExternalLink className='inline mb-[3px]' /></Link>
-                    </div>
-                    <CardContent className="p-3 flex items-center justify-between">
-                        <div className="block lg:flex lg:items-center lg:justify-between lg:w-[30%]">
-                            <div className="px-5 flex items-center justify-between mb-2 lg:mb-0">
-                                <p className="text-lg mr-2">{match.Scores[0].teamId}</p>
-                                <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
-                                    {match.Scores[0].runs}/{match.Scores[1].wickets}
-                                </p>
-                            </div>
-                            <span className="text-muted-foreground text-sm hidden lg:block">VS</span>
-                            <div className="px-5 flex items-center justify-between flex-row-reverse lg:flex-row">
-                                <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
-                                    {match.Scores[1].runs}/{match.Scores[0].wickets}
-                                </p>
-                                <p className="text-lg mr-2 lg:ml-2">{match.Scores[1].teamId}</p>
-                            </div>
+                <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
+            </div>
+            {venueStats && venueStats?.matches.length > 0 && <VenueSummery matchData={venueStats.matches} />}
+
+            <div className="rounded-md border bg-card text-card-foreground shadow-sm mb-4">
+                {venueStats && venueStats?.matches.length > 0 && venueStats.matches.map((match: any, index: any) => {
+                    let highestScore: number = 0
+                    let highestWickets: number = 0
+                    let highestWicketsEco: number = Number.MAX_SAFE_INTEGER
+                    let bowlingType: string = ''
+
+                    return <div key={index} className="relative border-b">
+                        <div className="absolute -top-1 -right-1 lg:-top-3 lg:-right-3 bg-white rounded-sm border shadow-sm px-1">
+                            <Link href={`../match?matchId=${match.id}`}><HiExternalLink className='inline mb-[3px]' /></Link>
                         </div>
+                        <div className="p-3 flex items-center justify-between">
+                            <div className="block lg:flex lg:items-center lg:justify-between lg:w-[30%]">
+                                <div className="px-5 flex items-center justify-between mb-2 lg:mb-0">
+                                    <p className="text-lg mr-2">{match.Scores[0].teamId}</p>
+                                    <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
+                                        {match.Scores[0].runs}/{match.Scores[1].wickets}
+                                    </p>
+                                </div>
 
-                        <div className="lg:w-[20%] text-center">
-                            <span className="text-muted-foreground text-sm px-1 border-b rounded shadow-sm">
-                                {match.matchFormat} / {formatDateString(match.matchDate)}
-                            </span>
-                        </div>
+                                <span className="text-muted-foreground text-sm hidden lg:block ">
+                                    VS
+                                </span>
 
-                        <div className="lg:w-[20%]">
-                            <div className="flex items-center justify-center">
-                                <GiCricketBat className='inline mr-1 text-gray-800' />
-                                {match.result === match.batFirst ? (
-                                    <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-emerald-600 text-white">W</p>
-                                ) : (
-                                    <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-red-600 text-white">L</p>
-                                )}
+                                <div className="px-5 flex items-center justify-between flex-row-reverse lg:flex-row">
+                                    <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
+                                        {match.Scores[1].runs}/{match.Scores[0].wickets}
+                                    </p>
+                                    <p className="text-lg mr-2 lg:ml-2">{match.Scores[1].teamId}</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="lg:w-[15%]">
-                            <div className="flex items-center justify-center">
-                                <GiCricketBat className='inline mr-1 text-gray-800' />
-                                {match.batting.forEach((bat: any) => {
-                                    if (bat.run > highestScore) {
-                                        highestScore = bat.run
-                                    }
-                                })}
-                                <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">{highestScore}</p>
+                            <div className="lg:w-[20%] text-center">
+                                <span className="text-muted-foreground text-sm px-1 border-b rounded shadow-sm">
+                                    {match.matchFormat} / {formatDateString(match.matchDate)}
+                                </span>
                             </div>
-                        </div>
 
-                        <div className="lg:w-[15%]">
-                            <div className="flex items-center justify-end">
-                                <BiSolidCricketBall className='inline mr-1 text-gray-800' />
-                                {match.bowling.forEach((bowl: any) => {
-                                    if (bowl.wicket >= highestWickets) {
+                            <div className="lg:w-[20%]">
+                                <div className="flex items-center justify-center">
+                                    <GiCricketBat className='inline mr-1 text-gray-800' />
+                                    {match.result === match.batFirst ? (
+                                        <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-emerald-600 text-white">W</p>
+                                    ) : (
+                                        <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-red-600 text-white">L</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="lg:w-[15%]">
+                                <div className="flex items-center justify-center">
+                                    <GiCricketBat className='inline mr-1 text-gray-800' />
+                                    {match.batting.forEach((bat: any) => {
+                                        if (bat.run > highestScore) {
+                                            highestScore = bat.run
+                                        }
+                                    })}
+                                    <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">{highestScore}</p>
+                                </div>
+                            </div>
+
+                            <div className="lg:w-[15%]">
+                                <div className="flex items-center justify-end">
+                                    <BiSolidCricketBall className='inline mr-1 text-gray-800' />
+                                    {match.bowling.forEach((bowl: any) => {
                                         if (bowl.wicket >= highestWickets) {
-                                            if (bowl.wicket > highestWickets) {
-                                                highestWicketsEco = bowl.eco
+                                            if (bowl.wicket >= highestWickets) {
+                                                if (bowl.wicket > highestWickets) {
+                                                    highestWicketsEco = bowl.eco
+                                                    bowlingType = bowl.Player.bowlingType
+                                                }
+                                                highestWickets = bowl.wicket
+                                                highestWicketsEco = bowl.eco < highestWicketsEco ? bowl.eco : highestWicketsEco
                                                 bowlingType = bowl.Player.bowlingType
                                             }
-                                            highestWickets = bowl.wicket
-                                            highestWicketsEco = bowl.eco < highestWicketsEco ? bowl.eco : highestWicketsEco
-                                            bowlingType = bowl.Player.bowlingType
                                         }
-                                    }
-                                })}
-                                <p className="text-muted-foreground text-sm px-1 mr-1 border rounded shadow-sm">
-                                    {highestWickets}/{highestWicketsEco.toFixed(1)}
-                                </p>
-                                {bowlingType === 'Fast' && <GiFastArrow />}
-                                {bowlingType === 'Spin' && <GiFlameSpin />}
+                                    })}
+                                    <p className="text-muted-foreground text-sm px-1 mr-1 border rounded shadow-sm">
+                                        {highestWickets}/{highestWicketsEco.toFixed(1)}
+                                    </p>
+                                    {bowlingType === 'Fast' && <GiFastArrow />}
+                                    {bowlingType === 'Spin' && <GiFlameSpin />}
+                                </div>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
-            })}
+                    </div>
+                })}
+            </div>
         </>
     )
 }

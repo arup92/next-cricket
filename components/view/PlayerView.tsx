@@ -147,7 +147,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                         </Card>
                     </AccordionItem>}
 
-                    {(IPLBatData.length > 0 || IPLBowlData.length > 0) && <AccordionItem value="t20" className="border-b-0">
+                    {(IPLBatData.length > 0 || IPLBowlData.length > 0) && <AccordionItem value="ipl" className="border-b-0">
                         <Card className="mb-3">
                             <CardContent className="py-3">
                                 <AccordionTrigger className="p-0 hover:text-blue-700">
@@ -165,7 +165,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                         </Card>
                     </AccordionItem>}
 
-                    {(BBLBatData.length > 0 || BBLBowlData.length > 0) && <AccordionItem value="t20" className="border-b-0">
+                    {(BBLBatData.length > 0 || BBLBowlData.length > 0) && <AccordionItem value="bbl" className="border-b-0">
                         <Card className="mb-3">
                             <CardContent className="py-3">
                                 <AccordionTrigger className="p-0 hover:text-blue-700">
@@ -183,7 +183,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                         </Card>
                     </AccordionItem>}
 
-                    {(SSBatData.length > 0 || SSBowlData.length > 0) && <AccordionItem value="t20" className="border-b-0">
+                    {(SSBatData.length > 0 || SSBowlData.length > 0) && <AccordionItem value="ss" className="border-b-0">
                         <Card className="mb-3">
                             <CardContent className="py-3">
                                 <AccordionTrigger className="p-0 hover:text-blue-700">
