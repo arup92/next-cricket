@@ -1,9 +1,11 @@
 import prismaClient from "@/libs/prismadb";
 import { ErrorMessage } from "@/responses/messages";
+import { MatchFormat } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { venueid: string } }) {
-    const venueId = params.venueid.toLowerCase()
+export async function GET(request: Request, { params }: { params: { slugs: string } }) {
+    const venueId = params.slugs[0].toLowerCase()
+    const matchFormat = params.slugs[1] ?? 'ODI'
 
     if (!venueId) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
@@ -12,13 +14,16 @@ export async function GET(request: Request, { params }: { params: { venueid: str
     try {
         const venueData = await prismaClient.venue.findUnique({
             where: {
-                venueId
+                venueId,
             },
             select: {
                 venueId: true,
                 venueName: true,
                 venueCountryId: true,
                 matches: {
+                    where: {
+                        matchFormat: matchFormat.toUpperCase() as MatchFormat
+                    },
                     select: {
                         matchFormat: true,
                         teamAId: true,

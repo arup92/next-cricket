@@ -47,6 +47,7 @@ const formSchema = z.object({
 const AddMatchForm = () => {
     const [tAOpen, setTAOpen] = useState(false)
     const [tBOpen, setTBOpen] = useState(false)
+    const [venueCOpen, setVenueCOpen] = useState(false)
 
     const router = useRouter()
 
@@ -178,7 +179,7 @@ const AddMatchForm = () => {
                                                     <span className="rotate-90"><GoCode /></span>
                                                 </Button>
                                             </PopoverTrigger>
-                                            <PopoverContent className="w-full p-0">
+                                            <PopoverContent side="bottom" avoidCollisions={false} className="w-full p-0">
                                                 <Command>
                                                     <CommandInput placeholder="Search Team..." />
                                                     <CommandEmpty>No Team Found.</CommandEmpty>
@@ -221,7 +222,7 @@ const AddMatchForm = () => {
                                                     <span className="rotate-90"><GoCode /></span>
                                                 </Button>
                                             </PopoverTrigger>
-                                            <PopoverContent className="w-full p-0">
+                                            <PopoverContent side="bottom" avoidCollisions={false} className="w-full p-0">
                                                 <Command>
                                                     <CommandInput placeholder="Search Team..." />
                                                     <CommandEmpty>No Team Found.</CommandEmpty>
@@ -301,20 +302,45 @@ const AddMatchForm = () => {
                                     </div>
 
                                     <div>
-                                        <Select
-                                            onValueChange={(selectedValue: string) => setValue('venueCountry', selectedValue)}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Venue Country" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {Teams && Teams.map((team: any) => (
-                                                    <SelectItem key={team.teamId} value={team.teamId}>
-                                                        {team.teamId}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <Popover open={venueCOpen} onOpenChange={setVenueCOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={venueCOpen}
+                                                    className="w-full justify-between bg-white"
+                                                >
+                                                    {Teams && watch().venueCountry ?
+                                                        Teams.find((team: any) => team.teamId === watch().venueCountry.toUpperCase()).teamId :
+                                                        'Venue Country'
+                                                    }
+                                                    <span className="rotate-90"><GoCode /></span>
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent side="bottom" avoidCollisions={false} className="w-full p-0">
+                                                <Command>
+                                                    <CommandInput placeholder="Search Venue Country..." />
+                                                    <CommandEmpty>No Team Found.</CommandEmpty>
+                                                    <CommandGroup>
+                                                        {Teams && Teams.map((team: any) => (
+                                                            <CommandItem
+                                                                key={team.teamId}
+                                                                value={team.teamId}
+                                                                onSelect={(currentValue) => {
+                                                                    setValue('venueCountry', currentValue.toUpperCase())
+                                                                    setVenueCOpen(false)
+                                                                }}
+                                                            >
+                                                                {team.teamId}
+                                                                <span className={watch().teamB === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                                    <GoCheck />
+                                                                </span>
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
 
                                     <div>
