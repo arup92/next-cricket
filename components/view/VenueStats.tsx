@@ -67,7 +67,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
     return (
         <>
             <div className="flex justify-between">
-                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue}</span></h2>
+                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue.replaceAll('-', ' ')}</span></h2>
 
                 <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
             </div>
