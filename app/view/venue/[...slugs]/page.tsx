@@ -4,12 +4,12 @@ import { capitalizeFullName } from "@/utils/style"
 import { Metadata } from "next"
 
 type Props = {
-    params: { venueid: string }
+    params: { slugs: string }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    let title = `${capitalizeFullName(params.venueid)} Most Recent Statstics | ${process.env.APP_NAME}`
-    let description = `${capitalizeFullName(params.venueid)} Most Recent International Cricket Statstics | ${process.env.APP_NAME}`
+    let title = `${capitalizeFullName(params.slugs[0])} Most Recent Statstics | ${process.env.APP_NAME}`
+    let description = `${capitalizeFullName(params.slugs[0])} Most Recent International Cricket Statstics | ${process.env.APP_NAME}`
 
     return {
         title,
@@ -17,10 +17,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 }
 
-const Venue = ({ params }: { params: { venueid: string } }) => {
+const Venue = ({ params }: { params: { slugs: string } }) => {
     return (
         <CenteredArea maxWidthClass="max-w-5xl">
-            <VenueStats venue={params.venueid} />
+            <VenueStats venue={params.slugs[0]} matchFormat={params.slugs[1]} />
         </CenteredArea>
     )
 }

@@ -5,10 +5,18 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: { params: { slugs: string } }) {
     const venueId = params.slugs[0].toLowerCase()
-    const matchFormat = params.slugs[1] ?? 'ODI'
+    const matchFormat = params.slugs[1]
 
     if (!venueId) {
         return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
+    }
+
+    // Construct where clause
+    let where = {}
+    if (!!matchFormat) {
+        where = {
+            matchFormat: matchFormat.toUpperCase() as MatchFormat
+        }
     }
 
     try {
@@ -21,9 +29,7 @@ export async function GET(request: Request, { params }: { params: { slugs: strin
                 venueName: true,
                 venueCountryId: true,
                 matches: {
-                    where: {
-                        matchFormat: matchFormat.toUpperCase() as MatchFormat
-                    },
+                    where,
                     select: {
                         matchFormat: true,
                         teamAId: true,

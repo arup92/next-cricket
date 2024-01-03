@@ -10,15 +10,25 @@ import { HiExternalLink } from 'react-icons/hi'
 import { Card, CardContent } from "../ui/card"
 import VenueSummery from "./venue/VenueSummery"
 import VenueMatchFilterForm from "../forms/VenueMatchFilterForm"
+import { useEffect, useState } from "react"
+import SecNotFound from "@/app/not-found-section"
 
 interface VenueStatsProps {
     venue: string
+    matchFormat?: string
 }
 
-const VenueStats: React.FC<VenueStatsProps> = ({ venue }) => {
+const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
+
+    const [venueStats, setVenueStats] = useState<any>()
 
     const getVenueStats = async () => {
-        return await axios.get(`/api/view/venue-get/${venue}`)
+        let format = ``
+        if (matchFormat) {
+            format = `/${matchFormat}`
+        }
+
+        return await axios.get(`/api/view/venue-get/${venue}${format}`)
             .then((response) => response.data)
             .catch((error) => {
                 console.log(error)
@@ -27,24 +37,44 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue }) => {
     }
 
     const { data, isLoading } = useQuery({
-        queryKey: ['venueStats', venue],
+        queryKey: ['venueStats', venue, matchFormat],
         queryFn: getVenueStats
     })
+
+    useEffect(() => {
+        if (data) {
+            setVenueStats(data)
+        }
+    }, [data])
+
+    const handleFilter = (data: any) => {
+        setVenueStats(data)
+    }
 
     if (isLoading)
         return <Loading />
 
+    if (venueStats && venueStats.matches.length <= 0)
+        return <>
+            <div className="flex justify-between">
+                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue}</span></h2>
+
+                <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
+            </div>
+            <SecNotFound />
+        </>
+
     return (
         <>
             <div className="flex justify-between">
-                <h2 className="text-2xl mb-4">Most Recent Performance in <span className="capitalize font-semibold">{venue}</span></h2>
+                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue}</span></h2>
 
-                <VenueMatchFilterForm venueId={venue} />
+                <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
             </div>
-            {data?.matches.length > 0 && <VenueSummery matchData={data.matches} />}
+            {venueStats && venueStats?.matches.length > 0 && <VenueSummery matchData={venueStats.matches} />}
 
             <div className="rounded-md border bg-card text-card-foreground shadow-sm mb-4">
-                {data?.matches.length > 0 && data.matches.map((match: any, index: any) => {
+                {venueStats && venueStats?.matches.length > 0 && venueStats.matches.map((match: any, index: any) => {
                     let highestScore: number = 0
                     let highestWickets: number = 0
                     let highestWicketsEco: number = Number.MAX_SAFE_INTEGER
