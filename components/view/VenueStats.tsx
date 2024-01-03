@@ -57,7 +57,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
     if (venueStats && venueStats.matches.length <= 0)
         return <>
             <div className="flex justify-between">
-                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue}</span></h2>
+                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue.replaceAll('-', ' ')}</span></h2>
 
                 <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
             </div>
@@ -82,7 +82,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
 
                     return <div key={index} className="relative border-b">
                         <div className="absolute -top-1 -right-1 lg:-top-3 lg:-right-3 bg-white rounded-sm border shadow-sm px-1">
-                            <Link href={`../match?matchId=${match.id}`}><HiExternalLink className='inline mb-[3px]' /></Link>
+                            <Link href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${match.id}`}><HiExternalLink className='inline mb-[3px]' /></Link>
                         </div>
                         <div className="p-3 flex items-center justify-between">
                             <div className="block lg:flex lg:items-center lg:justify-between lg:w-[30%]">

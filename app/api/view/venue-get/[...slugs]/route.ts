@@ -52,9 +52,12 @@ export async function GET(request: Request, { params }: { params: { slugs: strin
                         },
                         Scores: true,
                     },
-                    take: 10
+                    take: 10,
+                    orderBy: {
+                        matchDate: 'desc'
+                    }
                 }
-            }
+            },
         })
 
         return NextResponse.json(venueData, { status: 200 })
