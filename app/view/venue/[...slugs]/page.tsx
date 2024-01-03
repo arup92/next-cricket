@@ -8,8 +8,8 @@ type Props = {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    let title = `${capitalizeFullName(params.slugs[0])} Most Recent Statstics | ${process.env.APP_NAME}`
-    let description = `${capitalizeFullName(params.slugs[0])} Most Recent International Cricket Statstics | ${process.env.APP_NAME}`
+    let title = `${capitalizeFullName(params.slugs[0]).replaceAll('-', ' ')} Most Recent Statstics | ${process.env.APP_NAME}`
+    let description = `${capitalizeFullName(params.slugs[0]).replaceAll('-', ' ')} Most Recent International Cricket Statstics | ${process.env.APP_NAME}`
 
     return {
         title,
