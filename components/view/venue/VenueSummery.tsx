@@ -23,21 +23,21 @@ const VenueSummery: React.FC<VenueSummeryProps> = ({ matchData }) => {
 
     return (
         <Card className="mb-4">
-            <CardContent className="p-3 flex items-center justify-between">
-                <div>
-                    <p>Avg 1st inn runs: {Math.round(total1stInnScore / matchData.length)}</p>
+            <CardContent className="p-3 lg:flex items-center justify-between">
+                <div className="w-1/2 inline-block text-sm lg:text-base">
+                    <p>Avg 1st inns run: {Math.round(total1stInnScore / matchData.length)}</p>
                 </div>
 
-                <div>
-                    <p>Avg 2nd inn runs: {Math.round(total2ndInnScore / matchData.length)}</p>
+                <div className="w-1/2 inline-block text-sm lg:text-base text-right lg:text-left">
+                    <p>Avg 2nd inns run: {Math.round(total2ndInnScore / matchData.length)}</p>
                 </div>
 
-                <div>
-                    <p>Avg 1st inn wickets: {Math.round(total1stInnWickets / matchData.length)}</p>
+                <div className="w-1/2 inline-block text-sm lg:text-base">
+                    <p>Avg 1st inns wicket: {Math.round(total1stInnWickets / matchData.length)}</p>
                 </div>
 
-                <div>
-                    <p>Avg 2nd inn wickets: {Math.round(total2ndInnWickets / matchData.length)}</p>
+                <div className="w-1/2 inline-block  text-sm lg:text-base text-right lg:text-left">
+                    <p>Avg 2nd inns wicket: {Math.round(total2ndInnWickets / matchData.length)}</p>
                 </div>
             </CardContent>
         </Card>
