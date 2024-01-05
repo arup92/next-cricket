@@ -81,7 +81,12 @@ BEGIN
                 WHEN "eco" <= 9 THEN -5
                 WHEN "eco" <= 11 THEN -10
                 ELSE -15
-            END
+            END +
+            (
+                SELECT COUNT(*) * 5
+                FROM unnest(string_to_array("wicketType", ',')) AS wts
+                WHERE wts = 'bowled' OR wts = 'lbw'
+            )
         WHEN "matchFormat" = 'T20' OR "matchFormat" = 'IPL' THEN
             "wicket" * 20 +
             CASE
@@ -103,7 +108,12 @@ BEGIN
                 WHEN "eco" <= 12 THEN -5
                 WHEN "eco" <= 15 THEN -10
                 ELSE -15
-            END
+            END +
+            (
+                SELECT COUNT(*) * 5
+                FROM unnest(string_to_array("wicketType", ',')) AS wts
+                WHERE wts = 'bowled' OR wts = 'lbw'
+            )
         ELSE 0
     END;
 END;

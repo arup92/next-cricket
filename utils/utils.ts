@@ -350,8 +350,19 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                 }
 
                 // Wicket type
-                if (inning.wicketType === 'bowled' || inning.wicketType === 'lbw') {
-                    totalFantasyPoints += 5
+                // if (inning.wicketType === 'bowled' || inning.wicketType === 'lbw') {
+                //     totalFantasyPoints += 5
+                // }
+
+                // Wicket type
+                if (!!inning.wicketType && inning.wicketType !== 'na') {
+                    inning.wicketType.split(',').forEach((item: string) => {
+                        if (item === 'bowled') {
+                            totalFantasyPoints += 5
+                        } else if (item === 'lbw') {
+                            totalFantasyPoints += 5
+                        }
+                    })
                 }
             }
             break;
@@ -428,6 +439,17 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                 } else {
                     totalFantasyPoints -= 15
                 }
+
+                // Wicket type
+                if (!!inning.wicketType && inning.wicketType !== 'na') {
+                    inning.wicketType.split(',').forEach((item: string) => {
+                        if (item === 'bowled') {
+                            totalFantasyPoints += 5
+                        } else if (item === 'lbw') {
+                            totalFantasyPoints += 5
+                        }
+                    })
+                }
             }
             break;
     }
@@ -464,9 +486,17 @@ export const makeExtra = (sessionBat: string[][], sessionBowl: string[][]) => {
     bowlData.forEach((item: string) => {
         if (item.startsWith('b') || item.startsWith('lbw')) {
             if (item.startsWith('b')) {
-                result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string] = 'bowled'
+                if (!!result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string]) {
+                    result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string].push('bowled')
+                } else {
+                    result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string] = ['bowled']
+                }
             } else if (item.startsWith('lbw')) {
-                result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string] = 'lbw'
+                if (!!result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string]) {
+                    result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string].push('lbw')
+                } else {
+                    result[getPlayerIdFromInitials(playerNames, item.split('b ')[1]) as string] = ['lbw']
+                }
             }
         } else {
             return
