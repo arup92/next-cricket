@@ -293,7 +293,7 @@ export async function POST(request: Request) {
         const extraBowlingAData = makeExtra(sessionABat, sessionABowl)
         sessionABowl.forEach(item => {
             if (extraBowlingAData.hasOwnProperty(item[0])) {
-                item.push(extraBowlingAData[item[0]])
+                item.push(extraBowlingAData[item[0]].toString())
             } else {
                 item.push('na')
             }
@@ -326,7 +326,7 @@ export async function POST(request: Request) {
         const extraBowlingBData = makeExtra(sessionBBat, sessionBBowl)
         sessionBBowl.forEach(item => {
             if (extraBowlingBData.hasOwnProperty(item[0])) {
-                item.push(extraBowlingBData[item[0]])
+                item.push(extraBowlingBData[item[0]].toString())
             } else {
                 item.push('na')
             }
