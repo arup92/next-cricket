@@ -12,6 +12,7 @@ import VenueSummery from "./venue/VenueSummery"
 import VenueMatchFilterForm from "../forms/VenueMatchFilterForm"
 import { useEffect, useState } from "react"
 import SecNotFound from "@/app/not-found-section"
+import { Separator } from "@radix-ui/react-select"
 
 interface VenueStatsProps {
     venue: string
@@ -56,38 +57,43 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
 
     if (venueStats && venueStats.matches.length <= 0)
         return <>
-            <div className="flex justify-between">
-                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue.replaceAll('-', ' ')}</span></h2>
+            <Card className=" mb-4">
+                <CardContent className="p-3 flex items-center justify-between">
+                    <h2 className="text-base lg:text-2xl">Most Recent Matches in <span className="capitalize font-semibold">{venue.replaceAll('-', ' ')}</span></h2>
 
-                <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
-            </div>
+                    <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
+                </CardContent>
+            </Card>
             <SecNotFound />
         </>
 
     return (
         <>
-            <div className="flex justify-between">
-                <h2 className="text-2xl mb-4">Most Recent Matches in <span className="capitalize font-semibold">{venue}</span></h2>
+            <Card className=" mb-4">
+                <CardContent className="p-3 flex items-center justify-between">
+                    <h2 className="text-base lg:text-2xl">Most Recent Matches in <span className="capitalize font-semibold">{venue.replaceAll('-', ' ')}</span></h2>
 
-                <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
-            </div>
+                    <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
+                </CardContent>
+            </Card>
+
             {venueStats && venueStats?.matches.length > 0 && <VenueSummery matchData={venueStats.matches} />}
 
-            <div className="rounded-md border bg-card text-card-foreground shadow-sm mb-4">
+            <div className="mb-4">
                 {venueStats && venueStats?.matches.length > 0 && venueStats.matches.map((match: any, index: any) => {
                     let highestScore: number = 0
                     let highestWickets: number = 0
                     let highestWicketsEco: number = Number.MAX_SAFE_INTEGER
                     let bowlingType: string = ''
 
-                    return <div key={index} className="relative border-b">
-                        <div className="absolute -top-1 -right-1 lg:-top-3 lg:-right-3 bg-white rounded-sm border shadow-sm px-1">
+                    return <div key={index} className="relative border-b rounded-md border text-card-foreground shadow-sm  bg-card mb-3">
+                        <div className="absolute bg-card -top-1 -right-1 lg:-top-3 lg:-right-3 rounded-sm border shadow-sm px-1">
                             <Link href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${match.id}`}><HiExternalLink className='inline mb-[3px]' /></Link>
                         </div>
-                        <div className="p-3 flex items-center justify-between">
-                            <div className="block lg:flex lg:items-center lg:justify-between lg:w-[30%]">
-                                <div className="px-5 flex items-center justify-between mb-2 lg:mb-0">
-                                    <p className="text-lg mr-2">{match.Scores[0].teamId}</p>
+                        <div className="lg:p-3 py-2 lg-py-0 lg:flex items-center justify-between">
+                            <div className="pb-1 lg:pb-0 block lg:flex lg:items-center lg:justify-between lg:w-[30%]">
+                                <div className="px-3 flex items-center justify-between mb-2 lg:mb-0">
+                                    <p className="text-base lg:text-lg mr-2">{match.Scores[0].teamId}</p>
                                     <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
                                         {match.Scores[0].runs}/{match.Scores[1].wickets}
                                     </p>
@@ -97,32 +103,31 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
                                     VS
                                 </span>
 
-                                <div className="px-5 flex items-center justify-between flex-row-reverse lg:flex-row">
+                                <div className="px-3 flex items-center justify-between flex-row-reverse lg:flex-row">
                                     <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
                                         {match.Scores[1].runs}/{match.Scores[0].wickets}
                                     </p>
-                                    <p className="text-lg mr-2 lg:ml-2">{match.Scores[1].teamId}</p>
+                                    <p className="text-base lg:text-lg mr-2 lg:ml-2">{match.Scores[1].teamId}</p>
                                 </div>
                             </div>
 
-                            <div className="lg:w-[20%] text-center">
-                                <span className="text-muted-foreground text-sm px-1 border-b rounded shadow-sm">
+                            <div className="px-3 lg:px-0 lg:w-[20%] lg:text-center border-t border-b lg:border-0">
+                                <span className="text-muted-foreground text-sm lg:px-1 lg:border-b lg:rounded lg:shadow-sm">
                                     {match.matchFormat} / {formatDateString(match.matchDate)}
                                 </span>
                             </div>
 
-                            <div className="lg:w-[20%]">
-                                <div className="flex items-center justify-center">
-                                    <GiCricketBat className='inline mr-1 text-gray-800' />
+                            <div className="px-3 lg:px-0 py-1 lg:py-0 lg:w-[50%] flex justify-between">
+                                <div className="flex items-center lg:justify-center">
+                                    <GiCricketBat className='hidden lg:inline mr-1 text-gray-800' />
+                                    <p className="text-sm mr-2 lg:hidden">Bat First:</p>
                                     {match.result === match.batFirst ? (
                                         <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-emerald-600 text-white">W</p>
                                     ) : (
                                         <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-red-600 text-white">L</p>
                                     )}
                                 </div>
-                            </div>
 
-                            <div className="lg:w-[15%]">
                                 <div className="flex items-center justify-center">
                                     <GiCricketBat className='inline mr-1 text-gray-800' />
                                     {match.batting.forEach((bat: any) => {
@@ -132,9 +137,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
                                     })}
                                     <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">{highestScore}</p>
                                 </div>
-                            </div>
 
-                            <div className="lg:w-[15%]">
                                 <div className="flex items-center justify-end">
                                     <BiSolidCricketBall className='inline mr-1 text-gray-800' />
                                     {match.bowling.forEach((bowl: any) => {
