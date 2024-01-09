@@ -111,13 +111,13 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
                                 </div>
                             </div>
 
-                            <div className="px-3 lg:px-0 lg:w-[20%] lg:text-center border-t border-b lg:border-0">
+                            <div className="px-3 lg:px-0 lg:w-[30%] lg:text-center border-t border-b lg:border-0">
                                 <span className="text-muted-foreground text-sm lg:px-1 lg:border-b lg:rounded lg:shadow-sm">
                                     {match.matchFormat} / {formatDateString(match.matchDate)}
                                 </span>
                             </div>
 
-                            <div className="px-3 lg:px-0 py-1 lg:py-0 lg:w-[50%] flex justify-between">
+                            <div className="px-3 lg:px-0 py-1 lg:py-0 lg:w-[40%] flex justify-between">
                                 <div className="flex items-center lg:justify-center">
                                     <GiCricketBat className='hidden lg:inline mr-1 text-gray-800' />
                                     <p className="text-sm mr-2 lg:hidden">Bat First:</p>
