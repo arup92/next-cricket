@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const Venue = ({ params }: { params: { slugs: string } }) => {
     return (
-        <CenteredArea maxWidthClass="max-w-5xl">
+        <CenteredArea maxWidthClass="max-w-6xl">
             <VenueStats venue={params.slugs[0]} matchFormat={params.slugs[1]} />
         </CenteredArea>
     )

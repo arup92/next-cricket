@@ -2,7 +2,6 @@
 
 import Loading from "@/app/loading"
 import { MatchFormat } from "@/types/MatchFormat"
-import { Teams } from "@/types/Teams"
 import { getFullNameByCode } from "@/utils/utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -47,6 +46,7 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
         queryFn: getCustomMatches,
         enabled: slugs ? true : false
     })
+    console.log(data);
 
     if (!slugs) {
         return <div className="sm:max-w-[425px] mx-auto my-0">
@@ -55,12 +55,10 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
     } else if (!!slugs) {
         // 404
         if (
-            !Teams.includes(slugs[0].toUpperCase())
-            || !Teams.includes(slugs[1].toUpperCase())
+            !slugs[0] || !slugs[1]
             || !MatchFormat.includes(slugs[2].toUpperCase())
         ) {
             return <>
-                {/* <StatsTeamFormV2 slugs={slugs} /> */}
                 <NotFound />
             </>
         }
@@ -68,14 +66,12 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
 
     if (isLoading === true)
         return <>
-            {/* <StatsTeamFormV2 slugs={slugs} /> */}
             <Loading />
         </>
 
     return (
         <>
             {data && <>
-                {/* <StatsTeamFormV2 slugs={slugs} /> */}
                 <Head2HeadCard className="mb-4" h2h={data.h2h} />
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <MatchResultsCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
