@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { MatchFormat } from "@/types/MatchFormat"
+import { MatchFormat, MatchType } from "@/types/MatchFormat"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -9,20 +9,20 @@ import { z } from "zod"
 import { Button } from "../ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
 const formSchema = z.object({
-    matchFormat: z.string().min(2),
+    matchType: z.string().optional(),
+    matchFormat: z.string().optional(),
 })
 
 interface VenueMatchFilterFormProps {
     venueId: any
-    handleData: (item: any) => void
 }
 
-const VenueMatchFilterForm: React.FC<VenueMatchFilterFormProps> = ({ venueId, handleData }) => {
+const VenueMatchFilterForm: React.FC<VenueMatchFilterFormProps> = ({ venueId }) => {
     const [open, setOpen] = useState(false)
     const [dialogOpen, setDialogOpen] = useState(false)
-    const [searchData, setSearchData] = useState<string>('')
 
     const router = useRouter()
 
@@ -31,18 +31,34 @@ const VenueMatchFilterForm: React.FC<VenueMatchFilterFormProps> = ({ venueId, ha
         formState: { errors },
         handleSubmit,
         setValue,
-        watch
+        watch,
+        getValues
     } = useForm({
+        defaultValues: {
+            matchType: 'Men',
+            matchFormat: ''
+        },
         mode: 'onChange',
         resolver: zodResolver(formSchema),
     })
 
     const onSubmit = async (values: any) => {
-        if (searchData !== values.matchFormat) {
-            setSearchData(values.matchFormat)
-            router.push(`/view/venue/${venueId}/${values.matchFormat.toLowerCase()}`)
-            setDialogOpen(false)
+        let matchFormat = ''
+        if (values.matchFormat === '') {
+            matchFormat = 'all'
+        } else {
+            matchFormat = values.matchFormat.toLowerCase()
         }
+
+        let matchType = ''
+        if (values.matchType === '') {
+            matchType = 'all'
+        } else {
+            matchType = values.matchType.toLowerCase()
+        }
+
+        router.push(`/view/venue/${venueId}/${matchFormat}/${matchType}`)
+        setDialogOpen(false)
     }
 
     return (
@@ -55,6 +71,26 @@ const VenueMatchFilterForm: React.FC<VenueMatchFilterFormProps> = ({ venueId, ha
                     <DialogTitle>Filter by Match Format</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="mb-3 space-y-3">
+                    <div>
+                        <Select
+                            onValueChange={(selectedValue: string) => {
+                                setValue('matchType', selectedValue)
+                            }}
+                            value={getValues('matchType')}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Match Type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {MatchType.map((type) => (
+                                    <SelectItem key={type} value={type}>
+                                        {type}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
                     <div>
                         <Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger asChild>

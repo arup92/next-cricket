@@ -1,35 +1,34 @@
 'use client'
+
 import Loading from "@/app/loading"
+import SecNotFound from "@/app/not-found-section"
 import { formatDateString } from "@/utils/utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 import { BiSolidCricketBall } from "react-icons/bi"
 import { GiCricketBat, GiFastArrow, GiFlameSpin } from "react-icons/gi"
 import { HiExternalLink } from 'react-icons/hi'
+import VenueMatchFilterForm from "../forms/VenueMatchFilterForm"
 import { Card, CardContent } from "../ui/card"
 import VenueSummery from "./venue/VenueSummery"
-import VenueMatchFilterForm from "../forms/VenueMatchFilterForm"
-import { useEffect, useState } from "react"
-import SecNotFound from "@/app/not-found-section"
-import { Separator } from "@radix-ui/react-select"
 
 interface VenueStatsProps {
     venue: string
+    matchType?: string
     matchFormat?: string
 }
 
-const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
+const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchType, matchFormat }) => {
 
     const [venueStats, setVenueStats] = useState<any>()
 
     const getVenueStats = async () => {
-        let format = ``
-        if (matchFormat) {
-            format = `/${matchFormat}`
-        }
+        let format = matchFormat ? `/${matchFormat}` : ``
+        let type = matchType ? `/${matchType}` : ``
 
-        return await axios.get(`/api/view/venue-get/${venue}${format}`)
+        return await axios.get(`/api/view/venue-get/${venue}${format}${type}`)
             .then((response) => response.data)
             .catch((error) => {
                 console.log(error)
@@ -38,7 +37,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
     }
 
     const { data, isLoading } = useQuery({
-        queryKey: ['venueStats', venue, matchFormat],
+        queryKey: ['venueStats', venue, matchFormat, matchType],
         queryFn: getVenueStats
     })
 
@@ -47,10 +46,6 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
             setVenueStats(data)
         }
     }, [data])
-
-    const handleFilter = (data: any) => {
-        setVenueStats(data)
-    }
 
     if (isLoading)
         return <Loading />
@@ -61,7 +56,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
                 <CardContent className="p-3 flex items-center justify-between">
                     <h2 className="text-base lg:text-2xl">Most Recent Matches in <span className="capitalize font-semibold">{venue.replaceAll('-', ' ')}</span></h2>
 
-                    <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
+                    <VenueMatchFilterForm venueId={venue} />
                 </CardContent>
             </Card>
             <SecNotFound />
@@ -73,7 +68,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
                 <CardContent className="p-3 flex items-center justify-between">
                     <h2 className="text-base lg:text-2xl">Most Recent Matches in <span className="capitalize font-semibold">{venue.replaceAll('-', ' ')}</span></h2>
 
-                    <VenueMatchFilterForm handleData={handleFilter} venueId={venue} />
+                    <VenueMatchFilterForm venueId={venue} />
                 </CardContent>
             </Card>
 
@@ -93,9 +88,9 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
                         <div className="lg:p-3 py-2 lg-py-0 lg:flex items-center justify-between">
                             <div className="pb-1 lg:pb-0 block lg:flex lg:items-center lg:justify-between lg:w-[30%]">
                                 <div className="px-3 flex items-center justify-between mb-2 lg:mb-0">
-                                    <p className="text-base lg:text-lg mr-2">{match.Scores[0].teamId}</p>
+                                    <p className="text-base lg:text-lg mr-2">{match?.Scores[0]?.teamId}</p>
                                     <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
-                                        {match.Scores[0].runs}/{match.Scores[1].wickets}
+                                        {match?.Scores[0]?.runs}/{match?.Scores[1]?.wickets}
                                     </p>
                                 </div>
 
@@ -105,9 +100,9 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchFormat }) => {
 
                                 <div className="px-3 flex items-center justify-between flex-row-reverse lg:flex-row">
                                     <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
-                                        {match.Scores[1].runs}/{match.Scores[0].wickets}
+                                        {match?.Scores[1]?.runs}/{match?.Scores[0]?.wickets}
                                     </p>
-                                    <p className="text-base lg:text-lg mr-2 lg:ml-2">{match.Scores[1].teamId}</p>
+                                    <p className="text-base lg:text-lg mr-2 lg:ml-2">{match?.Scores[1]?.teamId}</p>
                                 </div>
                             </div>
 
