@@ -3,7 +3,7 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ErrorMessage } from "@/responses/messages"
-import { MatchFormat } from "@/types/MatchFormat"
+import { MatchFormat, MatchType } from "@/types/MatchFormat"
 import { cn } from "@/utils/shadcnUtils"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from "@radix-ui/react-icons"
@@ -26,6 +26,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Textarea } from "../ui/textarea"
 
 const formSchema = z.object({
+    matchType: z.enum(MatchType),
     matchFormat: z.enum(MatchFormat),
     teamA: z.string().min(2),
     teamB: z.string().min(2),
@@ -60,6 +61,7 @@ const AddMatchForm = () => {
         setValue,
     } = useForm({
         defaultValues: {
+            matchType: 'Men',
             matchFormat: '',
             teamA: '',
             teamB: '',
@@ -80,7 +82,6 @@ const AddMatchForm = () => {
     })
 
     const [tabIndex, setTabIndex] = useState<string>("0")
-    const [matchFormat, setMatchFormat] = useState<string>()
     const [batFirstValues, setBatFirstValues] = useState({ teamA: '', teamB: '' })
 
     const handleChangeTab = (newTabIndex: string) => {
@@ -146,12 +147,31 @@ const AddMatchForm = () => {
                                     <div>
                                         <Select
                                             onValueChange={(selectedValue: string) => {
-                                                setValue('matchFormat', selectedValue)
-                                                setMatchFormat(selectedValue)
+                                                setValue('matchType', selectedValue)
                                             }}
+                                            value={getValues('matchType')}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Match Type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {MatchType.map((type) => (
+                                                    <SelectItem key={type} value={type}>
+                                                        {type}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div>
+                                        <Select
+                                            onValueChange={(selectedValue: string) => {
+                                                setValue('matchFormat', selectedValue)
+                                            }}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Match Format" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {MatchFormat.map((format) => (

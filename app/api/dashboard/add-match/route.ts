@@ -2,10 +2,11 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import prismaClient from "@/libs/prismadb";
 import { ErrorMessage, Message } from '@/responses/messages';
 import { battingData, bowlingData, makeExtra, sortStringsAlphabetically, summaryData } from '@/utils/utils';
-import { MatchFormat } from "@prisma/client";
+import { MatchFormat, MatchType } from "@prisma/client";
 import { NextResponse } from 'next/server';
 
 interface RequestBody {
+    matchType: MatchType
     matchFormat: MatchFormat
     teamA: string
     teamB: string
@@ -98,6 +99,7 @@ export async function POST(request: Request) {
         if (!match) {
             match = await prismaClient.match.create({
                 data: {
+                    matchType: body.matchType,
                     matchFormat: body.matchFormat,
                     teamAId: teams[0],
                     teamBId: teams[1],

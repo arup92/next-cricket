@@ -100,9 +100,16 @@ enum MatchFormat {
   BBL
 }
 
+enum MatchType {
+  MEN
+  WOMEN
+  U19
+}
+
 model Match {
   id          Int         @id @default(autoincrement())
   matchFormat MatchFormat
+  matchType   MatchType?  @default(MEN)
 
   teamA   Team   @relation("teamA", fields: [teamAId], references: [teamId])
   teamAId String

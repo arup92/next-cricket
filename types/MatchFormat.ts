@@ -5,3 +5,9 @@ export const MatchFormat = [
     'SS',
     'BBL'
 ] as const
+
+export const MatchType = [
+    'Men',
+    'Women',
+    'U19'
+] as const
