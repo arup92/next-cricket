@@ -31,10 +31,16 @@ export async function GET(request: Request, { params }: { params: { slugs: strin
                 batFirst: true,
                 matchDate: true,
                 matchFormat: true,
-                matchResult: true,
+                result: true,
 
                 venue: true,
                 Scores: true,
+                batting: true,
+                bowling: {
+                    include: {
+                        Player: true
+                    }
+                },
             },
         })
 
