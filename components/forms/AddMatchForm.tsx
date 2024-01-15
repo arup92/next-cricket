@@ -61,7 +61,7 @@ const AddMatchForm = () => {
         setValue,
     } = useForm({
         defaultValues: {
-            matchType: 'Men',
+            matchType: 'MEN',
             matchFormat: '',
             teamA: '',
             teamB: '',
