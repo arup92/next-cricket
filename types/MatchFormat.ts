@@ -7,7 +7,7 @@ export const MatchFormat = [
 ] as const
 
 export const MatchType = [
-    'Men',
-    'Women',
+    'MEN',
+    'WOMEN',
     'U19'
 ] as const
