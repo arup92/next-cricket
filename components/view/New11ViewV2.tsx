@@ -83,7 +83,7 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                 <h2 className="mb-4 text-xl font-bold text-center">
                     <Link
                         className="text-blue-700 hover:underline"
-                        href={`/view/team/${data.sTeamA.team.toLowerCase()}/`}
+                        href={`/view/team/${data.sTeamA.team.toLowerCase()}${['odi', 't20'].includes(slugs[2].toLowerCase()) ? `/all/${slugs[2].toLowerCase()}` : ``}`}
                     >
                         {teams[0].teamId.toLowerCase() === data.sTeamA.team.toLowerCase() ?
                             teams[0].teamName
@@ -104,7 +104,7 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                 <h2 className="mb-4 text-xl font-bold text-center">
                     <Link
                         className="text-blue-700 hover:underline"
-                        href={`/view/team/${data.sTeamB.team.toLowerCase()}`}
+                        href={`/view/team/${data.sTeamB.team.toLowerCase()}${['odi', 't20'].includes(slugs[2].toLowerCase()) ? `/all/${slugs[2].toLowerCase()}` : ``}`}
                     >
                         {teams[1].teamId.toLowerCase() === data.sTeamB.team.toLowerCase() ?
                             teams[1].teamName
