@@ -17,9 +17,10 @@ import Link from "next/link"
 
 interface New11ViewV2Props {
     slugs: any
+    teams: any
 }
 
-const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
+const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
     const getCustomMatches = async (): Promise<any> => {
         return await axios.all([
             axios.get(`/api/view/stats-h2h?teamA=${slugs[0]}&teamB=${slugs[1]}&matchFormat=${slugs[2]}&venueId=${slugs[3]}`),
@@ -82,9 +83,13 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
                 <h2 className="mb-4 text-xl font-bold text-center">
                     <Link
                         className="text-blue-700 hover:underline"
-                        href={`/view/team/${data.sTeamA.team.toLowerCase()}`}
+                        href={`/view/team/${data.sTeamA.team.toLowerCase()}/`}
                     >
-                        {getFullNameByCode(data.sTeamA.team)}
+                        {teams[0].teamId.toLowerCase() === data.sTeamA.team.toLowerCase() ?
+                            teams[0].teamName
+                            :
+                            teams[1].teamName
+                        }
                     </Link>
                 </h2>
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
@@ -101,7 +106,11 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
                         className="text-blue-700 hover:underline"
                         href={`/view/team/${data.sTeamB.team.toLowerCase()}`}
                     >
-                        {getFullNameByCode(data.sTeamB.team)}
+                        {teams[1].teamId.toLowerCase() === data.sTeamB.team.toLowerCase() ?
+                            teams[1].teamName
+                            :
+                            teams[0].teamName
+                        }
                     </Link>
                 </h2>
                 <div className="grid grid-cols-1 gap-3 lg:grid-cols-8">
