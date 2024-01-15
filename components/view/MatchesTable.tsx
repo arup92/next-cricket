@@ -2,6 +2,7 @@ import { Card, CardContent } from "../ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { formatDateString } from "@/utils/utils";
 
 interface MatchesTableProps {
     matches: Matches[]
@@ -13,6 +14,9 @@ const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
         router.push(`./view/match?matchId=${matchId}`)
     }
 
+    console.log(matches);
+
+
     return (
         <Card>
             <CardContent className="py-3">
@@ -22,6 +26,7 @@ const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
                             <TableHead className="w-[20%]">Match</TableHead>
                             <TableHead>Format</TableHead>
                             <TableHead>Date</TableHead>
+                            <TableHead>Venue</TableHead>
                             <TableHead>Result</TableHead>
                             <TableHead>Bat First</TableHead>
                             <TableHead>View Details</TableHead>
@@ -38,7 +43,8 @@ const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
                                     <p className="text-sm text-muted-foreground">{match.venue.venueName}, {match.venue?.venueCountryId}</p>
                                 </TableCell>
                                 <TableCell>{match.matchFormat}</TableCell>
-                                <TableCell>{date.toLocaleString('en-IN', options)}</TableCell>
+                                <TableCell>{formatDateString(date.toString())}</TableCell>
+                                <TableCell>{match.venue.venueName}, {match.venue.venueCountryId}</TableCell>
                                 <TableCell>{match.result}</TableCell>
                                 <TableCell>{match.batFirst}</TableCell>
                                 <TableCell>
