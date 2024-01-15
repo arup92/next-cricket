@@ -77,7 +77,7 @@ const TeamMatchFilterForm: React.FC<TeamMatchFilterFormProps> = ({ team }) => {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="default">Filter Format</Button>
+                <Button variant="default">Filter Data</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
