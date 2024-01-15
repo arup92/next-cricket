@@ -26,7 +26,6 @@ const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
                             <TableHead className="w-[20%]">Match</TableHead>
                             <TableHead>Format</TableHead>
                             <TableHead>Date</TableHead>
-                            <TableHead>Venue</TableHead>
                             <TableHead>Result</TableHead>
                             <TableHead>Bat First</TableHead>
                             <TableHead>View Details</TableHead>
@@ -44,7 +43,6 @@ const MatchesTable: React.FC<MatchesTableProps> = ({ matches }) => {
                                 </TableCell>
                                 <TableCell>{match.matchFormat}</TableCell>
                                 <TableCell>{formatDateString(date.toString())}</TableCell>
-                                <TableCell>{match.venue.venueName}, {match.venue.venueCountryId}</TableCell>
                                 <TableCell>{match.result}</TableCell>
                                 <TableCell>{match.batFirst}</TableCell>
                                 <TableCell>
