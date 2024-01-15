@@ -43,23 +43,6 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
         isFetched && isFetched(false)
     }, [])
 
-    // React Query: Get Teams
-    const getTeams = async () => {
-        return await axios.get(`/api/view/teams-get`)
-            .then(response => {
-                return response.data
-            })
-            .catch(error => {
-                console.log(error)
-                return []
-            })
-    }
-
-    const { data: Teams } = useQuery({
-        queryKey: ['teams'],
-        queryFn: getTeams
-    })
-
     const onSubmit = (values: any) => {
         let path = ''
 
@@ -98,6 +81,24 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
     const venues = useQuery({
         queryKey: ['allvenues'],
         queryFn: getVenues
+    })
+
+    // React Query: Get Teams
+    const getTeams = async () => {
+        return await axios.get(`/api/view/teams-get?teamType=${getValues().matchFormat}`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => {
+                console.log(error)
+                return []
+            })
+    }
+
+    const { data: Teams } = useQuery({
+        queryKey: ['teams', getValues().matchFormat],
+        queryFn: getTeams,
+        enabled: !!getValues().matchFormat
     })
 
     return (

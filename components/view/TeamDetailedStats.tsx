@@ -49,9 +49,6 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
         }
     }, [data])
 
-    console.log(teamDetailedStats);
-
-
     if (isLoading)
         return <Loading />
 
