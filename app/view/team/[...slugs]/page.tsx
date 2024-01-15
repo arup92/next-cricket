@@ -1,5 +1,5 @@
 import CenteredArea from "@/components/customUi/CenteredArea"
-import TeamDetailedStats from "@/components/view/TeamStats"
+import TeamDetailedStats from "@/components/view/TeamDetailedStats"
 import prismaClient from "@/libs/prismadb"
 import { capitalizeFullName } from "@/utils/style"
 import { Metadata } from "next"
@@ -23,6 +23,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const team = await getTeam(params)
 
     let title = `${team?.teamName} Most Recent Statstics | ${process.env.APP_NAME}`
+    if (params.slugs[1] && params.slugs[1] !== 'all') {
+        title = `${team?.teamId} vs ${params.slugs[1].toUpperCase()} Most Recent Statstics | ${process.env.APP_NAME}`
+    }
+
     let description = `${team?.teamName} Most Recent International Cricket Statstics | ${process.env.APP_NAME}`
 
     return {
@@ -36,7 +40,12 @@ const Venue = async ({ params }: { params: { slugs: string } }) => {
 
     return (
         <CenteredArea maxWidthClass="max-w-6xl">
-            <TeamDetailedStats teamName={team?.teamName} team={params.slugs[0]} matchFormat={params.slugs[1]} />
+            <TeamDetailedStats
+                team={team}
+                opponent={params.slugs[1]}
+                matchFormat={params.slugs[2]}
+                venueId={params.slugs[3]}
+            />
         </CenteredArea>
     )
 }

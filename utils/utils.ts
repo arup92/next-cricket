@@ -468,6 +468,7 @@ export const formatDateString = (inputDateString: string): string => {
     const date = new Date(inputDateString);
 
     const formattedDate = new Intl.DateTimeFormat('en-US', {
+        day: '2-digit',
         month: 'short',
         year: '2-digit'
     }).format(date);

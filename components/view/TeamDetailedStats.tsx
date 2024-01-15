@@ -1,32 +1,36 @@
 'use client'
 
 import Loading from "@/app/loading"
+import SecNotFound from "@/app/not-found-section"
+import { formatDateString } from "@/utils/utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { useEffect, useState } from "react"
-import { Card, CardContent } from "../ui/card"
-import VenueMatchFilterForm from "../forms/VenueMatchFilterForm"
-import VenueSummery from "./venue/VenueSummery"
 import Link from "next/link"
-import { HiExternalLink } from "react-icons/hi"
-import { formatDateString } from "@/utils/utils"
-import { GiCricketBat, GiFastArrow, GiFlameSpin } from "react-icons/gi"
+import { useEffect, useState } from "react"
 import { BiSolidCricketBall } from "react-icons/bi"
+import { GiCricketBat, GiFastArrow, GiFlameSpin } from "react-icons/gi"
+import { HiExternalLink } from "react-icons/hi"
+import TeamMatchFilterForm from "../forms/TeamMatchFilterForm"
+import { Card, CardContent } from "../ui/card"
+import VenueSummery from "./venue/VenueSummery"
 
 interface TeamDetailedStatsProps {
-    team: string
-    teamName?: string
+    team: any
+    opponent: string
     matchFormat?: string
+    venueId: string
 }
 
-const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, teamName, matchFormat }) => {
+const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, matchFormat, venueId }) => {
 
     const [teamDetailedStats, setTeamDetailedStats] = useState<any>()
 
-    const getVenueStats = async () => {
-        let format = matchFormat ? `/${matchFormat}` : ``
+    const getTeamDetailedStats = async () => {
+        let opponentTeam = opponent ? `/${opponent}` : `/all`
+        let format = matchFormat ? `/${matchFormat}` : `/all`
+        let venue = !!venueId ? `/${venueId}` : ``
 
-        return await axios.get(`/api/view/stats-team-detailed/${team}${format}`)
+        return await axios.get(`/api/view/stats-team-detailed/${team.teamId}${opponentTeam}${format}${venue}`)
             .then((response) => response.data)
             .catch((error) => {
                 console.log(error)
@@ -35,8 +39,8 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, teamName, m
     }
 
     const { data, isLoading } = useQuery({
-        queryKey: ['teamDetailedStats', team, matchFormat],
-        queryFn: getVenueStats
+        queryKey: ['teamDetailedStats', team.teamId, opponent, matchFormat, venueId],
+        queryFn: getTeamDetailedStats
     })
 
     useEffect(() => {
@@ -47,28 +51,45 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, teamName, m
 
     console.log(teamDetailedStats);
 
+
     if (isLoading)
         return <Loading />
 
     if (teamDetailedStats && teamDetailedStats.length <= 0)
         return <>
-            {/* <Card className=" mb-4">
+            <Card className=" mb-4">
                 <CardContent className="p-3 flex items-center justify-between">
-                    <h2 className="text-base lg:text-2xl">Most Recent Matches in <span className="capitalize font-semibold">{venue.replaceAll('-', ' ')}</span></h2>
+                    <div className="flex items-baseline">
+                        {(opponent && opponent !== 'all') ?
+                            <h2 className="text-base lg:text-2xl mr-1"><span className="capitalize font-semibold">{team.teamId} vs {opponent.toUpperCase()}</span> Most Recent Matches</h2>
+                            :
+                            <h2 className="text-base lg:text-2xl mr-1"><span className="capitalize font-semibold">{team.teamName}</span> Most Recent Matches</h2>
+                        }
 
-                    <VenueMatchFilterForm venueId={venue} />
+                        <p className="inline text-muted-foreground text-sm">(Recent 20 Records)</p>
+                    </div>
+
+                    <TeamMatchFilterForm team={team} />
                 </CardContent>
             </Card>
-            <SecNotFound /> */}
+            <SecNotFound />
         </>
 
     return (
         <>
             <Card className=" mb-4">
                 <CardContent className="p-3 flex items-center justify-between">
-                    <h2 className="text-base lg:text-2xl"><span className="capitalize font-semibold">{teamName}</span> Most Recent Matches</h2>
+                    <div className="flex items-baseline">
+                        {(opponent && opponent !== 'all') ?
+                            <h2 className="text-base lg:text-2xl mr-1"><span className="capitalize font-semibold">{team.teamId} vs {opponent.toUpperCase()}</span> Most Recent Matches</h2>
+                            :
+                            <h2 className="text-base lg:text-2xl mr-1"><span className="capitalize font-semibold">{team.teamName}</span> Most Recent Matches</h2>
+                        }
 
-                    {/* <VenueMatchFilterForm venueId={venue} /> */}
+                        <p className="inline text-muted-foreground text-sm">(Recent 10 Records)</p>
+                    </div>
+
+                    <TeamMatchFilterForm team={team} />
                 </CardContent>
             </Card>
 
@@ -82,9 +103,15 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, teamName, m
                         </span>
                     </div>
 
-                    <div className="flex lg:block justify-center items-center px-3 py-1 lg:px-0 lg:w-[30%] lg:text-center border-t border-b lg:border-0">
+                    <div className="flex lg:block justify-center items-center px-3 py-1 lg:px-0 lg:w-[15%] lg:text-center border-t border-b lg:border-0">
                         <span className="text-muted-foreground text-sm">
                             Format / Date
+                        </span>
+                    </div>
+
+                    <div className="flex lg:block justify-center items-center px-3 py-1 lg:px-0 lg:w-[15%] lg:text-center border-t border-b lg:border-0">
+                        <span className="text-muted-foreground text-sm">
+                            Venue
                         </span>
                     </div>
 
@@ -148,9 +175,13 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, teamName, m
                                 </div>
                             </div>
 
-                            <div className="flex lg:block justify-between items-center px-3 py-1 lg:px-0 lg:w-[30%] lg:text-center border-t border-b lg:border-0">
+                            <div className="flex lg:block justify-between items-center px-3 py-1 lg:px-0 lg:w-[15%] lg:text-center border-t border-b lg:border-0">
                                 <span className="leading-none text-muted-foreground text-sm lg:px-1 lg:border-b lg:rounded lg:shadow-sm">
                                     {match.matchFormat} / {formatDateString(match.matchDate)}
+                                </span>
+
+                                <span className="lg:hidden leading-none text-muted-foreground text-sm lg:px-1">
+                                    {match.venue.venueName}, {match.venue.venueCountryId}
                                 </span>
 
                                 <Link
@@ -161,13 +192,26 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, teamName, m
                                 </Link>
                             </div>
 
+                            <div className="hidden lg:block justify-between items-center px-3 py-1 lg:px-0 lg:w-[15%] lg:text-center border-t border-b lg:border-0">
+                                <span className="leading-none text-muted-foreground text-sm lg:px-1">
+                                    {match.venue.venueName}, {match.venue.venueCountryId}
+                                </span>
+                            </div>
+
                             <div className="px-3 lg:px-0 pt-2 lg:py-0 lg:w-[40%] flex justify-between">
-                                <div>
-                                    {match.result === team.toUpperCase() ? (
-                                        <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-emerald-600 text-white">W</p>
-                                    ) : (
-                                        <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-red-600 text-white">L</p>
-                                    )}
+                                <div className="flex">
+                                    <p className="text-sm mr-2 lg:hidden">Result:</p>
+                                    {(opponent && opponent !== 'all') ?
+                                        <div className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
+                                            {match.result}
+                                        </div>
+                                        :
+                                        match.result === team.teamId.toUpperCase() ? (
+                                            <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-emerald-600 text-white">W</p>
+                                        ) : (
+                                            <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-red-600 text-white">L</p>
+                                        )
+                                    }
                                 </div>
 
                                 <div className="flex items-center lg:justify-center">
