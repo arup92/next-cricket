@@ -14,6 +14,7 @@ import { Button } from "../ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { getVenues } from "@/utils/reactQuery";
 
 const formSchema = z.object({
     matchFormat: z.enum(MatchFormat, {
@@ -93,18 +94,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
         }
     }, [])
 
-    // Get Venues
-    const getVenues = async (): Promise<any> => {
-        return await axios.get(`/api/view/venues-get`)
-            .then(response => {
-                return response.data
-            })
-            .catch(error => {
-                console.log(error)
-                return []
-            })
-    }
-
+    // React Query: Get Venues
     const venues = useQuery({
         queryKey: ['allvenues'],
         queryFn: getVenues

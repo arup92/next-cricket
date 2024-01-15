@@ -5,10 +5,17 @@ import { NextResponse } from "next/server";
 export const revalidate = 1
 
 export async function GET(request: Request) {
+    const url = new URL(request.url)
+    const teamType = url.searchParams.get('teamType')?.toString()
 
     try {
+        const where = {
+            ...(!!teamType ? { teamType: teamType.toLowerCase() } : {})
+        }
+
         // Find all teams
         const teams = await prismaClient.team.findMany({
+            where,
             orderBy: {
                 teamId: 'asc'
             },

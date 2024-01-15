@@ -26,12 +26,26 @@ const MatchData: React.FC<MatchDataProps> = ({ data, scores }) => {
             <Separator />
             <CardContent className="py-3 space-y-3">
                 <div className="flex justify-between">
-                    <h2 className="text-xl font-bold">{scores[0].Team.teamName}</h2>
+                    <h2 className="text-xl font-bold">
+                        <Link
+                            className="text-blue-700 hover:underline"
+                            href={`/view/team/${scores[0].Team.teamId.toLowerCase()}`}
+                        >
+                            {scores[0].Team.teamName}
+                        </Link>
+                    </h2>
                     <p className="text-xl font-bold">{scores[0].runs}/{scores[1].wickets}</p>
                 </div>
 
                 <div className="flex justify-between">
-                    <h2 className="text-xl font-bold">{scores[1].Team.teamName}</h2>
+                    <h2 className="text-xl font-bold">
+                        <Link
+                            className="text-blue-700 hover:underline"
+                            href={`/view/team/${scores[1].Team.teamId.toLowerCase()}`}
+                        >
+                            {scores[1].Team.teamName}
+                        </Link>
+                    </h2>
                     <p className="text-xl font-bold">{scores[1].runs}/{scores[0].wickets}</p>
                 </div>
             </CardContent>

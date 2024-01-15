@@ -13,6 +13,7 @@ import PlayerStats from "./New11Card/PlayerStats"
 import TeamScoresCard from "./New11Card/TeamScoresCard"
 import TeamWicketsCard from "./New11Card/TeamWicketsCard"
 import VenueStatsCard from "./New11Card/VenueStatsCard"
+import Link from "next/link"
 
 interface New11ViewV2Props {
     slugs: any
@@ -79,7 +80,14 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
                     <TeamWicketsCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
                     <VenueStatsCard className="col-span-2" venueData={data.sVenue} />
                 </div>
-                <h2 className="mb-4 text-xl font-bold text-center">{getFullNameByCode(data.sTeamA.team)}</h2>
+                <h2 className="mb-4 text-xl font-bold text-center">
+                    <Link
+                        className="text-blue-700 hover:underline"
+                        href={`/view/team/${data.sTeamA.team.toLowerCase()}`}
+                    >
+                        {getFullNameByCode(data.sTeamA.team)}
+                    </Link>
+                </h2>
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <PlayerStats
                         className="col-span-2"
@@ -89,7 +97,14 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
                         matchFormat={slugs[2]}
                     />
                 </div>
-                <h2 className="mb-4 text-xl font-bold text-center">{getFullNameByCode(data.sTeamB.team)}</h2>
+                <h2 className="mb-4 text-xl font-bold text-center">
+                    <Link
+                        className="text-blue-700 hover:underline"
+                        href={`/view/team/${data.sTeamB.team.toLowerCase()}`}
+                    >
+                        {getFullNameByCode(data.sTeamB.team)}
+                    </Link>
+                </h2>
                 <div className="grid grid-cols-1 gap-3 lg:grid-cols-8">
                     <PlayerStats
                         className="col-span-2"
