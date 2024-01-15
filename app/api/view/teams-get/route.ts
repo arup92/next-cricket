@@ -6,7 +6,9 @@ export const revalidate = 1
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
-    const teamType = url.searchParams.get('teamType')?.toString()
+    let teamType = url.searchParams.get('teamType')?.toString().toLowerCase()
+
+    teamType = (teamType === 'odi' || teamType === 't20') ? 'national' : teamType
 
     try {
         const where = {

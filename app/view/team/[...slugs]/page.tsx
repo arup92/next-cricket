@@ -1,7 +1,6 @@
 import CenteredArea from "@/components/customUi/CenteredArea"
 import TeamDetailedStats from "@/components/view/TeamDetailedStats"
 import prismaClient from "@/libs/prismadb"
-import { capitalizeFullName } from "@/utils/style"
 import { Metadata } from "next"
 import { cache } from "react"
 

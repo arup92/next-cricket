@@ -1,21 +1,28 @@
 import New11ViewV2 from "@/components/view/New11ViewV2"
 import prismaClient from "@/libs/prismadb"
 import { Metadata } from "next"
+import { cache } from "react"
 
 type Props = {
     params: { slugs: any }
 }
 
+const getTeam = cache(async (params: any) => {
+    const teams = await prismaClient.team.findMany({
+        where: {
+            teamId: {
+                in: [params.slugs[0].toUpperCase(), params.slugs[1].toUpperCase()]
+            }
+        }
+    })
+
+    return teams
+})
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     let title = `Make new  11 | ${process.env.APP_NAME}`
     if (params && params.slugs?.length > 0) {
-        const teams = await prismaClient.team.findMany({
-            where: {
-                teamId: {
-                    in: [params.slugs[0].toUpperCase(), params.slugs[1].toUpperCase()]
-                }
-            }
-        })
+        const teams = await getTeam(params)
 
         title = `${teams[0].teamName} vs ${teams[1].teamName} Most Recent ${params.slugs[2].toUpperCase()} statistics`
 
@@ -30,9 +37,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 }
 
-const New11 = ({ params }: { params: { slugs: string } }) => {
+const New11 = async ({ params }: { params: { slugs: string } }) => {
+    const teams = await getTeam(params)
+
     return (
-        <New11ViewV2 slugs={params.slugs} />
+        <New11ViewV2 slugs={params.slugs} teams={teams} />
     )
 }
 
