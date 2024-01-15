@@ -38,6 +38,7 @@ export async function GET(request: Request, { params }: { params: { slugs: strin
         const matchData = await prismaClient.match.findMany({
             where,
             select: {
+                id: true,
                 teamAId: true,
                 teamBId: true,
                 batFirst: true,

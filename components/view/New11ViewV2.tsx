@@ -47,7 +47,6 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs }) => {
         queryFn: getCustomMatches,
         enabled: slugs ? true : false
     })
-    console.log(data);
 
     if (!slugs) {
         return <div className="sm:max-w-[425px] mx-auto my-0">
