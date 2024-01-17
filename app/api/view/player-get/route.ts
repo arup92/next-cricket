@@ -88,9 +88,6 @@ export async function GET(request: Request) {
 
         const { batting, bowling, ...playerData } = allPlayerData as any
 
-        console.log(batting);
-
-
         return NextResponse.json({ playerData, batting, bowling }, { status: 200 })
     } catch (error) {
         console.log(error)

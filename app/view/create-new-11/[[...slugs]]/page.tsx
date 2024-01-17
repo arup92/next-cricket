@@ -8,15 +8,19 @@ type Props = {
 }
 
 const getTeam = cache(async (params: any) => {
-    const teams = await prismaClient.team.findMany({
-        where: {
-            teamId: {
-                in: [params.slugs[0].toUpperCase(), params.slugs[1].toUpperCase()]
+    if (params.slugs?.length > 0) {
+        const teams = await prismaClient.team.findMany({
+            where: {
+                teamId: {
+                    in: [params.slugs[0].toUpperCase(), params.slugs[1].toUpperCase()]
+                }
             }
-        }
-    })
+        })
 
-    return teams
+        return teams
+    }
+
+    return null
 })
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -24,10 +28,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (params && params.slugs?.length > 0) {
         const teams = await getTeam(params)
 
-        title = `${teams[0].teamName} vs ${teams[1].teamName} Most Recent ${params.slugs[2].toUpperCase()} statistics`
+        if (teams) {
+            title = `${teams[0].teamName} vs ${teams[1].teamName} Most Recent ${params.slugs[2].toUpperCase()} statistics`
 
-        if (params?.slugs[3]) {
-            title += ` in ${params.slugs[3].charAt(0).toUpperCase() + params.slugs[3].slice(1)}`
+            if (params?.slugs[3]) {
+                title += ` in ${params.slugs[3].charAt(0).toUpperCase() + params.slugs[3].slice(1)}`
+            }
         }
     }
 
