@@ -57,7 +57,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Wickets</TableHead>
+                                    <TableHead className="text-center">W</TableHead>
                                     <TableHead>Pts</TableHead>
                                     <TableHead>M</TableHead>
                                     <TableHead>E</TableHead>
@@ -99,7 +99,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                     }
 
                                     return <TableRow key={index}>
-                                        <TableCell><span className={`p-1 block w-10 h-5 leading-[1] text-center rounded ${bowlingClassName}`}>{item.wicket}</span></TableCell>
+                                        <TableCell><span className={`p-1 my-0 mx-auto block w-10 h-5 leading-[1] text-center rounded ${bowlingClassName}`}>{item.wicket}</span></TableCell>
                                         <TableCell>{item.f11points}</TableCell>
                                         <TableCell>{item.maiden}</TableCell>
                                         <TableCell>{item.eco.toFixed(1)}</TableCell>

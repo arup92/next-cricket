@@ -60,7 +60,7 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Run</TableHead>
+                                    <TableHead className="text-center">R</TableHead>
                                     <TableHead>Pts</TableHead>
                                     <TableHead>6s</TableHead>
                                     <TableHead>4s</TableHead>
@@ -105,7 +105,7 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                     }
 
                                     return <TableRow key={index}>
-                                        <TableCell><span className={`p-1 block w-10 h-5 leading-[1] text-center rounded ${battingClassName}`}>{item.run}</span></TableCell>
+                                        <TableCell><span className={`p-1 my-0 mx-auto block w-10 h-5 leading-[1] text-center rounded ${battingClassName}`}>{item.run}</span></TableCell>
                                         <TableCell>{item.f11points}</TableCell>
                                         <TableCell>{item.six}</TableCell>
                                         <TableCell>{item.four}</TableCell>
