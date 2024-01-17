@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { formatDateString } from "@/utils/utils"
 import Link from "next/link"
 
 interface BowlingTableProps {
@@ -37,7 +38,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                 </span>
                             </p>
                             <p>
-                                F11p: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                F11Points: <span className="text-green-700 font-bold px-1 border rounded-sm">
                                     {Math.round(totalF11p / bowlData.length)}
                                 </span>
                             </p>
@@ -56,12 +57,12 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Wicket</TableHead>
-                                    <TableHead>F11Points</TableHead>
-                                    <TableHead>Maiden</TableHead>
-                                    <TableHead>Economy</TableHead>
-                                    <TableHead>Innings</TableHead>
-                                    <TableHead>Opponent</TableHead>
+                                    <TableHead>Wickets</TableHead>
+                                    <TableHead>Pts</TableHead>
+                                    <TableHead>M</TableHead>
+                                    <TableHead>E</TableHead>
+                                    <TableHead>Inn</TableHead>
+                                    <TableHead>Vs</TableHead>
                                     <TableHead className="hidden lg:table-cell">Result</TableHead>
                                     <TableHead className="hidden lg:table-cell">Venue</TableHead>
                                     <TableHead className="hidden lg:table-cell">Date</TableHead>
@@ -90,11 +91,11 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                     }
 
                                     // Innings
-                                    let innings = '1st'
-                                    let inningsColor = 'bg-gray-300 shadow'
+                                    let innings = '2nd'
+                                    let inningsColor = 'bg-white shadow'
                                     if (item.teamId !== item.Match.batFirst) {
-                                        innings = '2nd'
-                                        inningsColor = 'bg-white shadow'
+                                        innings = '1st'
+                                        inningsColor = 'bg-gray-300 shadow'
                                     }
 
                                     return <TableRow key={index}>
@@ -103,7 +104,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                         <TableCell>{item.maiden}</TableCell>
                                         <TableCell>{item.eco.toFixed(1)}</TableCell>
                                         <TableCell>
-                                            <span className={`px-1.5 py-0.5 rounded-sm w-[36px] text-center inline-block ${inningsColor}`}>
+                                            <span className={`px-1.5 py-0.5 rounded-sm w-[36px] inline-block ${inningsColor}`}>
                                                 {innings}
                                             </span>
                                         </TableCell>
@@ -114,7 +115,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                         <TableCell className="capitalize hidden lg:table-cell text-sm">
                                             <Link className="text-blue-700 hover:underline" href={`/view/venue/${item.venueId.replaceAll('_', ' ')}`}>{item.venueId.replaceAll('_', ' ')}</Link>, {item.venue.venueCountryId}
                                         </TableCell>
-                                        <TableCell className="hidden lg:table-cell">{date.toLocaleString('en-IN', options)}</TableCell>
+                                        <TableCell className="hidden lg:table-cell">{formatDateString(date.toString())}</TableCell>
                                     </TableRow>
                                 })}
                             </TableBody>
