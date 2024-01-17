@@ -34,6 +34,10 @@ export async function GET(request: Request) {
             ...((venueId !== 'null' && venueId !== undefined) ? { venueId } : {}),
         }
 
+        let whereClauseBowl = {
+            ...whereClause
+        }
+
         if (innings !== 'null' && innings !== undefined) {
             if (innings === '2nd') {
                 whereClause.Match = {
@@ -43,10 +47,24 @@ export async function GET(request: Request) {
                         }
                     }
                 }
+
+                whereClauseBowl.Match = {
+                    batFirst: {
+                        in: teamId
+                    }
+                }
             } else {
                 whereClause.Match = {
                     batFirst: {
                         in: teamId
+                    }
+                }
+
+                whereClauseBowl.Match = {
+                    batFirst: {
+                        not: {
+                            in: teamId
+                        }
                     }
                 }
             }
@@ -74,7 +92,7 @@ export async function GET(request: Request) {
                     }
                 },
                 bowling: {
-                    where: whereClause,
+                    where: whereClauseBowl,
                     include: {
                         Match: true,
                         venue: true,
