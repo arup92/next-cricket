@@ -101,10 +101,10 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                                         <span className="inline text-lg font-bold capitalize">{getLeagueName(item)} Career</span>
                                     </AccordionTrigger>
                                     <AccordionContent className="mt-4">
-                                        {data.batting.length > 0 && <BattingTable
+                                        {groupedData.bat.hasOwnProperty(item) && <BattingTable
                                             batData={groupedData?.bat[item].slice(0, 10)}
                                         />}
-                                        {data.bowling.length > 0 && <BowlingTable
+                                        {groupedData.bowl.hasOwnProperty(item) && <BowlingTable
                                             bowlData={groupedData?.bowl[item].slice(0, 10)}
                                         />}
                                     </AccordionContent>
