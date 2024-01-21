@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { formatDateString } from "@/utils/utils";
 import Link from "next/link";
 
 interface BattingTableProps {
@@ -124,7 +125,7 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                         <TableCell className={`capitalize hidden lg:table-cell text-sm`}>
                                             <Link className="text-blue-700 hover:underline" href={`/view/venue/${item.venueId.replaceAll('_', ' ')}`}>{item.venueId.replaceAll('_', ' ')}</Link>, {item.venue.venueCountryId}
                                         </TableCell>
-                                        <TableCell className="hidden lg:table-cell">{date.toLocaleString('en-IN', options)}</TableCell>
+                                        <TableCell className="hidden lg:table-cell">{formatDateString(date.toString())}</TableCell>
                                     </TableRow>
                                 })}
                             </TableBody>

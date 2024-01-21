@@ -79,6 +79,11 @@ export async function GET(request: Request) {
                 playerTeams: {
                     select: {
                         teamId: true,
+                        team: {
+                            select: {
+                                teamType: true
+                            }
+                        }
                     }
                 },
                 batting: {
