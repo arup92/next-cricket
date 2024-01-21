@@ -38,7 +38,7 @@ const Venue = async ({ params }: { params: { slugs: string } }) => {
     const team = await getTeam(params)
 
     return (
-        <CenteredArea maxWidthClass="max-w-6xl">
+        <CenteredArea maxWidthClass="max-w-7xl">
             <TeamDetailedStats
                 team={team}
                 opponent={params.slugs[1]}

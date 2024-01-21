@@ -153,23 +153,39 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                         </div>
                         <div className="lg:p-3 py-2 lg-py-0 lg:flex items-center justify-between">
                             <div className="pb-2 lg:pb-0 block lg:flex lg:items-center lg:justify-between lg:w-[30%]">
-                                <div className="px-3 flex items-center justify-between mb-2 lg:mb-0">
+                                {match.batFirst === match?.Scores[0]?.teamId ? <div className="px-3 flex items-center justify-between mb-2 lg:mb-0">
                                     <p className="text-base lg:text-lg mr-2">{match?.Scores[0]?.teamId}</p>
                                     <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
                                         {match?.Scores[0]?.runs}/{match?.Scores[1]?.wickets}
                                     </p>
                                 </div>
+                                    :
+                                    <div className="px-3 flex items-center justify-between flex-row-reverse lg:flex-row">
+                                        <p className="text-base lg:text-lg mr-2">{match?.Scores[1]?.teamId}</p>
+                                        <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
+                                            {match?.Scores[1]?.runs}/{match?.Scores[0]?.wickets}
+                                        </p>
+                                    </div>
+                                }
 
                                 <span className="text-muted-foreground text-sm hidden lg:block ">
                                     VS
                                 </span>
 
-                                <div className="px-3 flex items-center justify-between flex-row-reverse lg:flex-row">
-                                    <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
-                                        {match?.Scores[1]?.runs}/{match?.Scores[0]?.wickets}
+                                {match.batFirst === match?.Scores[1]?.teamId ? <div className="px-3 flex items-center justify-between mb-2 lg:mb-0">
+                                    <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm mr-2">
+                                        {match?.Scores[0]?.runs}/{match?.Scores[1]?.wickets}
                                     </p>
-                                    <p className="text-base lg:text-lg mr-2 lg:ml-2">{match?.Scores[1]?.teamId}</p>
+                                    <p className="text-base lg:text-lg">{match?.Scores[0]?.teamId}</p>
                                 </div>
+                                    :
+                                    <div className="px-3 flex items-center justify-between flex-row-reverse lg:flex-row">
+                                        <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
+                                            {match?.Scores[1]?.runs}/{match?.Scores[0]?.wickets}
+                                        </p>
+                                        <p className="text-base lg:text-lg lg:ml-2">{match?.Scores[1]?.teamId}</p>
+                                    </div>
+                                }
                             </div>
 
                             <div className="flex lg:block justify-between items-center px-3 py-1 lg:px-0 lg:w-[15%] lg:text-center border-t border-b lg:border-0">
