@@ -7,6 +7,7 @@ import CenteredArea from "../customUi/CenteredArea";
 import { useQuery } from "@tanstack/react-query";
 import SearchTeamsForm from "../forms/SearchTeamsForm";
 import MatchesTable from "./MatchesTable";
+import toast from "react-hot-toast";
 
 const MatchesView = () => {
     const [matches, setMatches] = useState<Matches[]>([])
@@ -35,10 +36,23 @@ const MatchesView = () => {
         setMatches(item)
     }
 
+    const deleteMatch = async (matchId: any) => {
+        await axios.delete(`/api/dashboard/delete-match?matchId=${matchId.toString()}`)
+            .then(response => {
+                toast.success(response.data)
+                setMatches(prevMatches => (
+                    prevMatches.filter(match => match.id !== matchId)
+                ))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
     return (
         <CenteredArea maxWidthClass="max-w-5xl">
             <SearchTeamsForm handleData={handleData} />
-            <MatchesTable matches={matches} />
+            <MatchesTable matches={matches} deleteMatch={deleteMatch} />
         </CenteredArea>
     )
 }

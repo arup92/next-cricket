@@ -20,5 +20,6 @@ export enum Message {
     SUCCESS_REGISTERED = 'Registered successfully! Please verify your email address.',
     MATCH_ADDED = "Match Added",
     TEAM_ADDED = "Team Added",
-    UPDATED = "Updated successfully"
+    UPDATED = "Updated successfully",
+    DELETED = "Deleted successfully"
 }

@@ -83,8 +83,10 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
     }
 
     // React Query: Get Teams
+    const playerTeams = playerData && playerData.playerTeams.map((item: any) => item.team.teamType)
+
     const getTeams = async () => {
-        return await axios.get(`/api/view/teams-get`)
+        return await axios.get(`/api/view/teams-get?playerTeams=${playerTeams.toString()}`)
             .then(response => {
                 return response.data
             })
@@ -95,7 +97,8 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
     }
 
     const { data: Teams } = useQuery({
-        queryKey: ['teams'],
+        queryKey: ['teams', playerTeams.toString()],
+        enabled: !!playerData === true,
         queryFn: getTeams
     })
 
