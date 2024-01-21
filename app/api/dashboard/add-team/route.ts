@@ -23,9 +23,9 @@ export async function POST(request: Request) {
 
     const data = {
         teamName,
-        teamId,
+        teamId: teamId.toUpperCase(),
         userId: userSession.id,
-        ...(!!teamType ? { teamType } : {})
+        ...(!!teamType ? { teamType: teamType.toLowerCase() } : {})
     }
 
     try {

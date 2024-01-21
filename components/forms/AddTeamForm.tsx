@@ -21,7 +21,6 @@ const AddTeamForm = () => {
     })
 
     const onSubmit = async (values: any) => {
-        console.log(values);
         await axios.post('/api/dashboard/add-team', values)
             .then(response => toast.success(response.data))
             .catch(error => toast.error(error.response.data))
@@ -62,7 +61,7 @@ const AddTeamForm = () => {
                     <Input
                         type='text'
                         className='min-w-full'
-                        placeholder='Team Type'
+                        placeholder='national'
                         {...register('teamType')}
                     />
                     {errors.teamType && (
