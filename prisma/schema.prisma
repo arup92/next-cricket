@@ -117,8 +117,8 @@ model Match {
   teamB   Team   @relation("teamB", fields: [teamBId], references: [teamId])
   teamBId String
 
-  matchResult Team   @relation("result", fields: [result], references: [teamId])
-  result      String
+  matchResult Team?   @relation("result", fields: [result], references: [teamId])
+  result      String?
 
   batFirst  String
   matchDate DateTime @db.Date
