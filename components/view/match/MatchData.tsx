@@ -51,7 +51,9 @@ const MatchData: React.FC<MatchDataProps> = ({ data, scores }) => {
             </CardContent>
             <Separator />
             <CardContent className="py-1 flex justify-between">
-                <p className="text-muted-foreground text-sm">Match Result: <span className="text-emerald-700">{data.resultTeamName}</span></p>
+                <p className="text-muted-foreground text-sm">Match Result: <span className="text-emerald-700">
+                    {!!data.resultTeamName ? data.resultTeamName : 'Tie'}
+                </span></p>
                 <p className="text-muted-foreground text-sm">Bat First: <span className="text-emerald-700">{data.batFirstTeamName}</span></p>
             </CardContent>
         </Card>

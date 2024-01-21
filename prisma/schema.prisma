@@ -64,7 +64,6 @@ model Team {
 
   matchesA Match[] @relation("teamA")
   matchesB Match[] @relation("teamB")
-  results  Match[] @relation("result")
 
   User   User?   @relation(fields: [userId], references: [id])
   userId String?
@@ -117,8 +116,7 @@ model Match {
   teamB   Team   @relation("teamB", fields: [teamBId], references: [teamId])
   teamBId String
 
-  matchResult Team?   @relation("result", fields: [result], references: [teamId])
-  result      String?
+  result String?
 
   batFirst  String
   matchDate DateTime @db.Date
