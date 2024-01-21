@@ -6,14 +6,14 @@ export const revalidate = 1
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
-    let teamType = url.searchParams.get('teamType')?.toString().toLowerCase()
+    let teamType: any = url.searchParams.get('teamType')?.toString().toLowerCase()
     let playerTeams = url.searchParams.get('playerTeams')?.toString().toLowerCase().split(',')
 
-    teamType = (teamType === 'odi' || teamType === 't20') ? 'national' : teamType
+    teamType = (teamType === 'odi' || teamType === 't20') ? { in: ['national', 'u19', 'women'] } : teamType?.toLowerCase()
 
     try {
         const where = {
-            ...(!!teamType ? { teamType: teamType.toLowerCase() } : {}),
+            ...(!!teamType ? { teamType } : {}),
             ...(!!playerTeams ? { teamType: { in: playerTeams } } : {})
         }
 
