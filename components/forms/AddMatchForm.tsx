@@ -31,7 +31,7 @@ const formSchema = z.object({
     teamA: z.string().min(2),
     teamB: z.string().min(2),
     batFirst: z.string().min(2),
-    result: z.string().min(2),
+    result: z.string().min(2).optional(),
     venue: z.string().trim().min(3, 'Minimum 3 chars'),
     venueCountry: z.string().min(2).optional(),
     matchDate: z.date().refine((date) => new Date(date).toString() !== 'Invalid Date', {
