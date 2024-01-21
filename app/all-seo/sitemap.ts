@@ -1,6 +1,8 @@
 import prismaClient from '@/libs/prismadb'
 import { MetadataRoute } from 'next'
 
+export const revalidate = 0
+
 interface SiteMapType {
     url: string
     lastModified?: string | Date | undefined
