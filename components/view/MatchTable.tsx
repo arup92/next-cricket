@@ -6,6 +6,7 @@ import CenteredArea from "../customUi/CenteredArea";
 import BattingData from "./match/BattingData";
 import BowlingData from "./match/BowlingData";
 import MatchData from "./match/MatchData";
+import Loading from "@/app/loading";
 
 const MatchTable = () => {
     const searchParams = useSearchParams()
@@ -20,10 +21,16 @@ const MatchTable = () => {
             })
     }
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['match', matchId],
         queryFn: getMatch
     })
+
+    if (isLoading)
+        return (
+            <Loading />
+        )
+
 
     return (
         <CenteredArea maxWidthClass="max-w-5xl">

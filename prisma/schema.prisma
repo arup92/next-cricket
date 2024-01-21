@@ -108,9 +108,9 @@ enum MatchType {
 }
 
 model Match {
-  id          Int        @id @default(autoincrement())
-  matchFormat String?
-  matchType   MatchType? @default(MEN)
+  id          Int         @id @default(autoincrement())
+  matchFormat MatchFormat
+  matchType   MatchType?  @default(MEN)
 
   teamA   Team   @relation("teamA", fields: [teamAId], references: [teamId])
   teamAId String
