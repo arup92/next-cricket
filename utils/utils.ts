@@ -1,6 +1,6 @@
 import { BattingDataType } from "@/types/BattingDataType";
 import { BowlingDataType } from "@/types/BowlingDataType";
-import { TeamFullNames, Teams } from "@/types/Teams";
+import { Leagues } from "@/types/MatchFormat";
 import { MatchFormat } from "@prisma/client";
 
 export const generateRandomHash = (length: number) => {
@@ -456,13 +456,13 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
     return totalFantasyPoints
 }
 
-export const getFullNameByCode = (teamCode: any): string | undefined => {
-    const index = Teams.indexOf(teamCode)
-    if (index !== -1) {
-        return TeamFullNames[index]
-    }
-    return undefined
-}
+// export const getFullNameByCode = (teamCode: any): string | undefined => {
+//     const index = Teams.indexOf(teamCode)
+//     if (index !== -1) {
+//         return TeamFullNames[index]
+//     }
+//     return undefined
+// }
 
 export const formatDateString = (inputDateString: string): string => {
     const date = new Date(inputDateString);
@@ -521,4 +521,21 @@ const getPlayerIdFromInitials = (playerNames: string[], initial: string) => {
             return name
         }
     }
+}
+
+export const moveToFront = (array: any[], element: any): any[] => {
+    if (array.includes(element)) {
+        array = array.filter((item: string) => item !== element)
+        array = [element, ...array]
+    }
+
+    return array
+}
+
+export const getLeagueName = (leagueId: string): string => {
+    if (Leagues.hasOwnProperty(leagueId)) {
+        return Leagues[leagueId]
+    }
+
+    return leagueId
 }
