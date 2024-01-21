@@ -2,9 +2,9 @@
 
 import Loading from "@/app/loading"
 import { MatchFormat } from "@/types/MatchFormat"
-import { getFullNameByCode } from "@/utils/utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
+import Link from "next/link"
 import NotFound from "../NotFound"
 import StatsTeamFormV2 from "../forms/StatsTeamFormV2"
 import Head2HeadCard from "./New11Card/Head2HeadCard"
@@ -13,7 +13,6 @@ import PlayerStats from "./New11Card/PlayerStats"
 import TeamScoresCard from "./New11Card/TeamScoresCard"
 import TeamWicketsCard from "./New11Card/TeamWicketsCard"
 import VenueStatsCard from "./New11Card/VenueStatsCard"
-import Link from "next/link"
 
 interface New11ViewV2Props {
     slugs: any

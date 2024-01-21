@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BattingDataType } from "@/types/BattingDataType"
-import { getFullNameByCode } from "@/utils/utils"
 import Link from "next/link"
 
 interface BattingDataProps {

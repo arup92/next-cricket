@@ -1,6 +1,5 @@
 import { BowlingTypeConst } from '@/types/BowlingDataType';
 import { PlayerTypeConst } from '@/types/Player';
-import { getFullNameByCode } from '@/utils/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import Link from 'next/link';
@@ -93,7 +92,6 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                     </div>
 
                     <div className='w-[25%] text-muted-foreground'>
-                        {/* {getFullNameByCode(player.playerCountryId)} */}
                         {player.playerTeams.map(
                             (item: { teamId: string }) =>
                                 <span className="shadow-sm border px-1 rounded-sm" key={item.teamId}>{item.teamId}</span>
