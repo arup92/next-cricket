@@ -35,7 +35,7 @@ const VenueMatchFilterForm: React.FC<VenueMatchFilterFormProps> = ({ venueId }) 
         getValues
     } = useForm({
         defaultValues: {
-            matchType: 'Men',
+            matchType: 'MEN',
             matchFormat: ''
         },
         mode: 'onChange',

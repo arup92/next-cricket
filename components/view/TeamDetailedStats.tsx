@@ -113,25 +113,25 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                     </div>
 
                     <div className="px-3 lg:px-0 pt-2 lg:py-0 lg:w-[40%] flex justify-between">
-                        <div>
+                        <div className="flex items-center justify-center lg:w-[25%]">
                             <span className="text-muted-foreground text-sm">
                                 Result
                             </span>
                         </div>
 
-                        <div className="flex items-center lg:justify-center">
+                        <div className="flex items-center justify-center lg:w-[25%]">
                             <span className="text-muted-foreground text-sm">
                                 Bat First
                             </span>
                         </div>
 
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center lg:w-[25%]">
                             <span className="text-muted-foreground text-sm">
                                 Top Batting
                             </span>
                         </div>
 
-                        <div className="flex items-center justify-end">
+                        <div className="flex items-center justify-end lg:w-[25%]">
                             <span className="text-muted-foreground text-sm">
                                 Top Bowling
                             </span>
@@ -153,14 +153,14 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                         </div>
                         <div className="lg:p-3 py-2 lg-py-0 lg:flex items-center justify-between">
                             <div className="pb-2 lg:pb-0 block lg:flex lg:items-center lg:justify-between lg:w-[30%]">
-                                {match.batFirst === match?.Scores[0]?.teamId ? <div className="px-3 flex items-center justify-between mb-2 lg:mb-0">
+                                {match.batFirst === match?.Scores[0]?.teamId ? <div className="px-3 flex items-center justify-start mb-2 lg:mb-0">
                                     <p className="text-base lg:text-lg mr-2">{match?.Scores[0]?.teamId}</p>
                                     <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
                                         {match?.Scores[0]?.runs}/{match?.Scores[1]?.wickets}
                                     </p>
                                 </div>
                                     :
-                                    <div className="px-3 flex items-center justify-between flex-row-reverse lg:flex-row">
+                                    <div className="px-3 flex items-center justify-start flex-row-reverse lg:flex-row">
                                         <p className="text-base lg:text-lg mr-2">{match?.Scores[1]?.teamId}</p>
                                         <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
                                             {match?.Scores[1]?.runs}/{match?.Scores[0]?.wickets}
@@ -168,18 +168,18 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                                     </div>
                                 }
 
-                                <span className="text-muted-foreground text-sm hidden lg:block ">
+                                <span className="text-muted-foreground text-sm hidden text-center lg:block">
                                     VS
                                 </span>
 
-                                {match.batFirst === match?.Scores[1]?.teamId ? <div className="px-3 flex items-center justify-between mb-2 lg:mb-0">
+                                {match.batFirst === match?.Scores[1]?.teamId ? <div className="px-3 flex items-center justify-end mb-2 lg:mb-0">
                                     <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm mr-2">
                                         {match?.Scores[0]?.runs}/{match?.Scores[1]?.wickets}
                                     </p>
                                     <p className="text-base lg:text-lg">{match?.Scores[0]?.teamId}</p>
                                 </div>
                                     :
-                                    <div className="px-3 flex items-center justify-between flex-row-reverse lg:flex-row">
+                                    <div className="px-3 flex items-center justify-end flex-row-reverse lg:flex-row">
                                         <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
                                             {match?.Scores[1]?.runs}/{match?.Scores[0]?.wickets}
                                         </p>
@@ -212,7 +212,7 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                             </div>
 
                             <div className="px-3 lg:px-0 pt-2 lg:py-0 lg:w-[40%] flex justify-between">
-                                <div className="flex">
+                                <div className="flex justify-center lg:w-[25%]">
                                     <p className="text-sm mr-2 lg:hidden">Result:</p>
                                     {(opponent && opponent !== 'all') ?
                                         <div className="text-muted-foreground text-sm px-1 border rounded shadow-sm">
@@ -227,8 +227,7 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                                     }
                                 </div>
 
-                                <div className="flex items-center lg:justify-center">
-                                    <GiCricketBat className='hidden lg:inline mr-1 text-gray-800' />
+                                <div className="flex items-center justify-center lg:w-[25%]">
                                     <p className="text-sm mr-2 lg:hidden">Bat First:</p>
                                     {match.result === match.batFirst ? (
                                         <p className="rounded-sm w-[24px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase bg-emerald-600 text-white">W</p>
@@ -237,7 +236,7 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                                     )}
                                 </div>
 
-                                <div className="flex items-center justify-center">
+                                <div className="flex items-center justify-center lg:w-[25%]">
                                     <GiCricketBat className='inline mr-1 text-gray-800' />
                                     {match.batting.forEach((bat: any) => {
                                         if (bat.run > highestScore) {
@@ -247,7 +246,7 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                                     <p className="text-muted-foreground text-sm px-1 border rounded shadow-sm">{highestScore}</p>
                                 </div>
 
-                                <div className="flex items-center justify-end">
+                                <div className="flex items-center justify-end lg:w-[25%]">
                                     <BiSolidCricketBall className='inline mr-1 text-gray-800' />
                                     {match.bowling.forEach((bowl: any) => {
                                         if (bowl.wicket >= highestWickets) {

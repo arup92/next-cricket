@@ -74,7 +74,35 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchType, matchFormat }
 
             {venueStats && venueStats?.matches.length > 0 && <VenueSummery matchData={venueStats.matches} />}
 
+            <div className="relative border-b rounded-md border text-card-foreground shadow-sm bg-card mb-3 hidden lg:block">
+                <div className="lg:px-3 py-1 lg-py-0 lg:flex items-center justify-between">
+                    <div className="pb-2 lg:pb-0 block lg:flex lg:items-center lg:justify-center lg:w-[30%]">
+                        <span className="text-muted-foreground text-sm">
+                            Match
+                        </span>
+                    </div>
 
+                    <div className="flex lg:block justify-center items-center px-3 py-1 lg:px-0 lg:w-[30%] lg:text-center border-t border-b lg:border-0">
+                        <span className="text-muted-foreground text-sm">
+                            Format / Date
+                        </span>
+                    </div>
+
+                    <div className="px-3 lg:px-0 pt-2 lg:py-0 lg:w-[40%] flex justify-between">
+                        <div className="flex items-center lg:justify-center">
+                            <span className="text-muted-foreground text-sm">Bat First</span>
+                        </div>
+
+                        <div className="flex items-center justify-center">
+                            <span className="text-muted-foreground text-sm">H Run</span>
+                        </div>
+
+                        <div className="flex items-center justify-end">
+                            <span className="text-muted-foreground text-sm">H Wickets/Eco</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div className="mb-4">
                 {venueStats && venueStats?.matches.length > 0 && venueStats.matches.map((match: any, index: any) => {
@@ -85,7 +113,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchType, matchFormat }
 
                     return <div key={index} className="relative border-b rounded-md border text-card-foreground shadow-sm  bg-card mb-3">
                         <div className="absolute bg-card -top-1 -right-1 lg:-top-3 lg:-right-3 rounded-sm border shadow-sm px-1">
-                            <Link href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${match.id}`}><HiExternalLink className='inline mb-[3px] hidden lg:block' /></Link>
+                            <Link href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${match.id}`}><HiExternalLink className='mb-[3px] hidden lg:block' /></Link>
                         </div>
                         <div className="lg:p-3 py-2 lg-py-0 lg:flex items-center justify-between">
                             <div className="pb-2 lg:pb-0 block lg:flex lg:items-center lg:justify-between lg:w-[30%]">
@@ -108,7 +136,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({ venue, matchType, matchFormat }
                                 </div>
                             </div>
 
-                            <div className="flex justify-between items-center px-3 py-1 lg:px-0 lg:w-[30%] lg:text-center border-t border-b lg:border-0">
+                            <div className="flex justify-between lg:justify-center items-center px-3 py-1 lg:px-0 lg:w-[30%] lg:text-center border-t border-b lg:border-0">
                                 <span className="leading-none text-muted-foreground text-sm lg:px-1 lg:border-b lg:rounded lg:shadow-sm">
                                     {match.matchFormat} / {formatDateString(match.matchDate)}
                                 </span>

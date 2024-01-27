@@ -28,6 +28,9 @@ const Player = ({ params }: Props) => {
         params.slugs[1] = 't20'
     }
 
+    if (!params?.slugs[1]) {
+        params.slugs[1] = 'odi'
+    }
 
     return (
         <PlayerView playerId={params.slugs[0]} matchFormat={params?.slugs[1].toLowerCase()} />
