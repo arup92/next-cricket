@@ -14,7 +14,7 @@ import PlayerData from "./player/PlayerData"
 
 interface PlayerViewProps {
     playerId: string
-    matchFormat?: string
+    matchFormat: string
 }
 
 const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
@@ -29,10 +29,6 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                 console.log(error)
                 return []
             })
-    }
-
-    if (!matchFormat) {
-        matchFormat = 'odi'
     }
 
     let { data: playerStats, isLoading } = useQuery({

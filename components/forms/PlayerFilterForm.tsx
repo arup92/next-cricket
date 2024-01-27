@@ -102,6 +102,23 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
         queryFn: getTeams
     })
 
+    // React Query: Get Countries
+    const getCountries = async () => {
+        return await axios.get(`/api/view/teams-get?countries=true`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => {
+                console.log(error)
+                return []
+            })
+    }
+
+    const { data: Countries } = useQuery({
+        queryKey: ['countries'],
+        queryFn: getCountries
+    })
+
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
@@ -223,8 +240,8 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         aria-expanded={hoOpen}
                                         className="justify-between w-full bg-white"
                                     >
-                                        {Teams && watch().host ?
-                                            Teams.find((team: any) => team.teamId === watch().host.toUpperCase()).teamId :
+                                        {Countries && watch().host ?
+                                            Countries.find((country: any) => country.teamId === watch().host.toUpperCase()).teamId :
                                             'Hosting Country'
                                         }
                                         <span className="rotate-90"><GoCode /></span>
@@ -235,17 +252,17 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
                                         <CommandInput placeholder="Hosting Country..." />
                                         <CommandEmpty>No Team Found.</CommandEmpty>
                                         <CommandGroup>
-                                            {Teams && Teams.map((team: any) => (
+                                            {Countries && Countries.map((country: any) => (
                                                 <CommandItem
-                                                    key={team.teamId}
-                                                    value={team.teamId}
+                                                    key={country.teamId}
+                                                    value={country.teamId}
                                                     onSelect={(currentValue) => {
                                                         setValue('host', currentValue.toUpperCase())
                                                         setHoOpen(false)
                                                     }}
                                                 >
-                                                    {team.teamId}
-                                                    <span className={watch().teamA === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                    {country.teamId}
+                                                    <span className={watch().teamA === country.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
                                                         <GoCheck />
                                                     </span>
                                                 </CommandItem>
