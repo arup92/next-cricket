@@ -26,7 +26,7 @@ const MatchesView = () => {
     }
 
     // React Query
-    const matchesQueryData = useQuery({
+    useQuery({
         queryKey: ['matches'],
         queryFn: getMatches
     })
