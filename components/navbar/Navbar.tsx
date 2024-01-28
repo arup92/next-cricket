@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { BiSolidCricketBall } from "react-icons/bi";
 import { FaUserEdit } from "react-icons/fa";
 import { IoMdAddCircle, IoMdArrowRoundBack, IoMdLogOut } from "react-icons/io";
@@ -14,9 +14,14 @@ import { MdOutlineSearch } from "react-icons/md";
 const Navbar = () => {
    const [searchDisplay, setSearchDisplay] = useState<string>('hidden')
    const { data: session } = useSession()
+   const inputRef = useRef<any>(null)
 
    const showSearch = () => {
       setSearchDisplay('block')
+      setTimeout(() => {
+         // Focus the input element
+         inputRef.current.focus();
+      }, 0)
    }
 
    const hideSearch = () => {
@@ -33,7 +38,7 @@ const Navbar = () => {
                   <div className="absolute top-0 left-0 w-full h-full z-30 backdrop-blur-md"></div>
                   <div className="absolute flex items-center top-[50%] left-[50%] z-40 -translate-x-1/2 -translate-y-1/2">
                      <IoMdArrowRoundBack onClick={hideSearch} className="cursor-pointer mr-2" />
-                     <SearchForm width="w-[350px]" displayMobile="flex" />
+                     <SearchForm fref={inputRef} width="w-[350px]" displayMobile="flex" />
                   </div>
                </div>
 
