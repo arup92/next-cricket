@@ -17,9 +17,10 @@ export const formSchema = z.object({
 interface FormSchemaProps {
     displayMobile: string
     width?: string
+    fref?: any
 }
 
-const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width }) => {
+const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width, fref }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [searchResults, setSearchResults] = useState<any>()
     const [searchTerm, setSearchTerm] = useState<string>('')
@@ -94,17 +95,28 @@ const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width }) => {
         setSearchResults('')
     }
 
+    // Clear Search Suggestions
+    const clearSearch = () => {
+        setTimeout(() => {
+            setSearchResults('')
+        }, 0)
+    }
+
     return (
         <div className={`relative ${width} lg:w-[400px]`}>
             <form className={`${displayMobile} lg:flex lg:justify-between`} onSubmit={handleSubmit(search)} autoComplete="off">
                 <div className="w-full">
                     <Input
-                        onChange={(e) => searchOnChange(e.target.value)}
                         value={searchTerm}
                         className="rounded-r-none w-full"
                         placeholder="Search"
                         type="text"
+                        ref={fref}
+                        onChange={(e) => searchOnChange(e.target.value)}
+                        onFocus={(e) => searchOnChange(e.target.value)}
+                        onBlur={clearSearch}
                     />
+                    <span className="clear"></span>
                 </div>
 
                 <Button className="rounded-l-none" disabled={isLoading}>
