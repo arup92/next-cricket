@@ -102,6 +102,10 @@ const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width, fref }) =
         }, 0)
     }
 
+    const handleFocus = (e: any) => {
+        e.target.select()
+    }
+
     return (
         <div className={`relative ${width} lg:w-[400px]`}>
             <form className={`${displayMobile} lg:flex lg:justify-between`} onSubmit={handleSubmit(search)} autoComplete="off">
@@ -113,7 +117,7 @@ const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width, fref }) =
                         type="text"
                         ref={fref}
                         onChange={(e) => searchOnChange(e.target.value)}
-                        onFocus={(e) => searchOnChange(e.target.value)}
+                        onFocus={handleFocus}
                         onBlur={clearSearch}
                     />
                     <span className="clear"></span>

@@ -20,7 +20,8 @@ const Navbar = () => {
       setSearchDisplay('block')
       setTimeout(() => {
          // Focus the input element
-         inputRef.current.focus();
+         inputRef.current.focus()
+         inputRef.current.select()
       }, 0)
    }
 
