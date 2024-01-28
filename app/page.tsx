@@ -1,20 +1,7 @@
-import Matches from "./view/matches/page";
+import HomePage from '@/components/HomePage';
 import Script from 'next/script';
 
 export default function Home() {
-
-  // console.log([{
-  //   url: ``,
-  //   lastModified: new Date(),
-  //   changeFrequency: 'monthly',
-  //   priority: 1,
-  // },
-  // {
-  //   url: `/view/create-new-11`,
-  //   lastModified: new Date(),
-  //   changeFrequency: 'monthly',
-  //   priority: 1,
-  // }, ...matchesArray]);
 
   return (
     <>
@@ -29,7 +16,7 @@ export default function Home() {
         `}
       </Script>
 
-      <Matches />
+      <HomePage />
     </>
   )
 }

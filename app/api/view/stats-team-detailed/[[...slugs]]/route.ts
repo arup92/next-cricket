@@ -58,7 +58,7 @@ export async function GET(request: Request, { params }: { params: { slugs: strin
             orderBy: {
                 matchDate: 'desc'
             },
-            take: 20
+            take: 10
         })
 
         return NextResponse.json(matchData, { status: 200 })

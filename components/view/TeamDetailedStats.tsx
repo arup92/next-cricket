@@ -63,7 +63,7 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                             <h2 className="text-base lg:text-2xl mr-1"><span className="capitalize font-semibold">{team.teamName}</span> Most Recent Matches</h2>
                         }
 
-                        <p className="inline text-muted-foreground text-sm">(Recent 20 Records)</p>
+                        <p className="inline text-muted-foreground text-sm">(Recent 10 Records)</p>
                     </div>
 
                     <TeamMatchFilterForm team={team} />
@@ -83,14 +83,14 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                             <h2 className="text-base lg:text-2xl mr-1"><span className="capitalize font-semibold">{team.teamName}</span> Most Recent Matches</h2>
                         }
 
-                        <p className="inline text-muted-foreground text-sm">(Recent 20 Records)</p>
+                        <p className="inline text-muted-foreground text-sm">(Recent 10 Records)</p>
                     </div>
 
                     <TeamMatchFilterForm team={team} />
                 </CardContent>
             </Card>
 
-            {teamDetailedStats && teamDetailedStats?.length > 0 && <VenueSummery matchData={teamDetailedStats} />}
+            {/* {teamDetailedStats && teamDetailedStats?.length > 0 && <VenueSummery matchData={teamDetailedStats} />} */}
 
             <div className="relative border-b rounded-md border text-card-foreground shadow-sm bg-card mb-3 hidden lg:block">
                 <div className="lg:px-3 py-1 lg-py-0 lg:flex items-center justify-between">

@@ -80,6 +80,9 @@ const Navbar = () => {
                                           <NavlinkUi className="flex items-center" linkto="/dashboard/edit-player">
                                              <FaUserEdit /> <span className="ml-[2px]">Player</span>
                                           </NavlinkUi>
+                                          <NavlinkUi className="flex items-center" linkto="/matches">
+                                             Matches
+                                          </NavlinkUi>
                                           <NavlinkUi type="signout" linkto="#"><IoMdLogOut /></NavlinkUi>
                                        </>
                                     ) : (

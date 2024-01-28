@@ -24,12 +24,12 @@ const BattingData: React.FC<BattingDataProps> = ({ data: batters, score, teamNam
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[30%]">Batter</TableHead>
-                            <TableHead>Run</TableHead>
-                            <TableHead>F11Points</TableHead>
-                            <TableHead>Fours</TableHead>
-                            <TableHead>Sixes</TableHead>
-                            <TableHead className="hidden lg:table-cell">Strike Rate</TableHead>
+                            <TableHead className="w-[30%]">Batsman</TableHead>
+                            <TableHead className="text-center">R</TableHead>
+                            <TableHead className="text-center">Pts</TableHead>
+                            <TableHead className="text-center">4s</TableHead>
+                            <TableHead className="text-center">6s</TableHead>
+                            <TableHead className="hidden text-center lg:table-cell">SR</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -54,17 +54,17 @@ const BattingData: React.FC<BattingDataProps> = ({ data: batters, score, teamNam
                                 <TableCell className="capitalize">
                                     <Link href={`/view/player/${batter.playerId}/${batter.matchFormat?.toLowerCase()}`} className="text-blue-700 hover:underline">{batter.playerId.replaceAll('_', ' ')}</Link>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="text-center">
                                     <span
-                                        className={`p-1 block w-10 h-5 leading-[1] text-center rounded ${battingClassName}`}
+                                        className={`px-2 py-0 w-10 h-5 leading-[1] text-center rounded ${battingClassName}`}
                                     >
                                         {batter.run}
                                     </span>
                                 </TableCell>
-                                <TableCell>{batter.f11points}</TableCell>
-                                <TableCell>{batter.four}</TableCell>
-                                <TableCell>{batter.six}</TableCell>
-                                <TableCell className={`capitalize hidden lg:table-cell text-sm`}>
+                                <TableCell className="text-center">{batter.f11points}</TableCell>
+                                <TableCell className="text-center">{batter.four}</TableCell>
+                                <TableCell className="text-center">{batter.six}</TableCell>
+                                <TableCell className={`capitalize hidden text-center lg:table-cell text-sm`}>
                                     <span className={`p-1 rounded leading-[1] ${strikeRateClassName}`}>
                                         {Math.round(batter.strikeRate)}
                                     </span>

@@ -1,7 +1,7 @@
 import prismaClient from "@/libs/prismadb";
 
-export const getLastMatchesBattingSum = async (matchFormat: string, numMatches: number, teamId?: string) => {
-    const result = await prismaClient.$queryRaw`
+export const getLastMatchesBattingSum = async (matchFormat: string, numMatches: number) => {
+  const result = await prismaClient.$queryRaw`
     WITH RankedBatting AS (
       SELECT
           "userId",
@@ -11,15 +11,81 @@ export const getLastMatchesBattingSum = async (matchFormat: string, numMatches: 
           "f11points",
           ROW_NUMBER() OVER (PARTITION BY "playerId" ORDER BY "matchDate" DESC) AS rnk
       FROM "Batting"
-      WHERE "matchFormat" = ${matchFormat}
-      ${teamId ? 'AND "teamId" = ${teamId}' : ''}
+      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat" AND "teamId" NOT iLike '%-u19' AND "teamId" NOT iLike '%-w'
     )
-    SELECT "userId", "playerId", "teamId", "matchFormat", SUM("f11points") AS total_points
-    FROM RankedBatting
+    SELECT pl."playerId", pl."playerName", "teamId", "matchFormat", SUM("f11points")::int AS total_points
+    FROM RankedBatting JOIN public."Player" as pl ON pl."playerId" = RankedBatting."playerId"
     WHERE rnk <= ${numMatches}
-    GROUP BY "userId", "playerId", "teamId", "matchFormat"
-    ORDER BY total_points DESC;
-  `;
+    GROUP BY pl."playerId", "teamId", "matchFormat"
+    ORDER BY total_points DESC limit 10;`
 
-    return result;
+  return result;
+}
+
+export const getLastMatchesTeamBattingSum = async (matchFormat: string, numMatches: number, teamId: string) => {
+  const result = await prismaClient.$queryRaw`
+    WITH RankedBatting AS (
+      SELECT
+          "userId",
+          "playerId",
+          "teamId",
+          "matchFormat",
+          "f11points",
+          ROW_NUMBER() OVER (PARTITION BY "playerId" ORDER BY "matchDate" DESC) AS rnk
+      FROM "Batting"
+      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat"
+      AND "teamId" = ${teamId}
+    )
+    SELECT pl."playerId", pl."playerName", "teamId", "matchFormat", SUM("f11points")::int AS total_points
+    FROM RankedBatting JOIN public."Player" as pl ON pl."playerId" = RankedBatting."playerId"
+    WHERE rnk <= ${numMatches}
+    GROUP BY pl."playerId", "teamId", "matchFormat"
+    ORDER BY total_points DESC limit 10;`
+
+  return result;
+}
+
+export const getLastMatchesBowlingSum = async (matchFormat: string, numMatches: number) => {
+  const result = await prismaClient.$queryRaw`
+    WITH RankedBowling AS (
+      SELECT
+          "userId",
+          "playerId",
+          "teamId",
+          "matchFormat",
+          "f11points",
+          ROW_NUMBER() OVER (PARTITION BY "playerId" ORDER BY "matchDate" DESC) AS rnk
+      FROM "Bowling"
+      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat" AND "teamId" NOT iLike '%-u19' AND "teamId" NOT iLike '%-w'
+    )
+    SELECT pl."playerId", pl."playerName", "teamId", "matchFormat", SUM("f11points")::int AS total_points
+    FROM RankedBowling JOIN public."Player" as pl ON pl."playerId" = RankedBowling."playerId"
+    WHERE rnk <= ${numMatches}
+    GROUP BY pl."playerId", "teamId", "matchFormat"
+    ORDER BY total_points DESC limit 10;`
+
+  return result;
+}
+
+export const getLastMatchesTeamBowlingSum = async (matchFormat: string, numMatches: number, teamId: string) => {
+  const result = await prismaClient.$queryRaw`
+    WITH RankedBowling AS (
+      SELECT
+          "userId",
+          "playerId",
+          "teamId",
+          "matchFormat",
+          "f11points",
+          ROW_NUMBER() OVER (PARTITION BY "playerId" ORDER BY "matchDate" DESC) AS rnk
+      FROM "Bowling"
+      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat"
+      AND "teamId" = ${teamId}
+    )
+    SELECT pl."playerId", pl."playerName", "teamId", "matchFormat", SUM("f11points")::int AS total_points
+    FROM RankedBowling JOIN public."Player" as pl ON pl."playerId" = RankedBowling."playerId"
+    WHERE rnk <= ${numMatches}
+    GROUP BY pl."playerId", "teamId", "matchFormat"
+    ORDER BY total_points DESC limit 10;`
+
+  return result;
 }
