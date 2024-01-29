@@ -126,7 +126,7 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
             <DialogTrigger asChild>
                 <div>
                     <Button variant="default" className="hidden lg:block">Filter Data</Button>
-                    <span className="block rounded-[50px] bg-primary p-1 text-white cursor-pointer lg:hidden"><RiFilter2Fill /></span>
+                    <span className="block rounded-[50px] bg-primary p-1 text-white shadow cursor-pointer lg:hidden"><RiFilter2Fill /></span>
                 </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
