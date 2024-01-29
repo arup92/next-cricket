@@ -99,7 +99,7 @@ const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width, fref }) =
     const clearSearch = () => {
         setTimeout(() => {
             setSearchResults('')
-        }, 0)
+        }, 100)
     }
 
     const handleFocus = (e: any) => {
@@ -112,7 +112,7 @@ const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width, fref }) =
                 <div className="w-full">
                     <Input
                         value={searchTerm}
-                        className="rounded-r-none w-full"
+                        className="w-full rounded-r-none"
                         placeholder="Search"
                         type="text"
                         ref={fref}
@@ -128,7 +128,7 @@ const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width, fref }) =
                 </Button>
             </form>
 
-            {searchResults && <div className="absolute bg-white w-full shadow rounded-sm z-20">
+            {searchResults && <div className="absolute z-20 w-full bg-white rounded-sm shadow">
                 {searchResults.player.length > 0 &&
                     searchResults.player.map((player: any) =>
                         <Link
@@ -136,9 +136,9 @@ const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width, fref }) =
                             href={`/view/player/${player.playerId.toLowerCase()}`}
                             onClick={() => setSearch(player.playerName)}
                         >
-                            <span className="capitalize px-2 py-1 w-full flex justify-between items-center hover:bg-gray-100">
+                            <span className="flex items-center justify-between w-full px-2 py-1 capitalize hover:bg-gray-100">
                                 {player.playerName}
-                                <span className="text-xs shadow text-white px-1 py-0 rounded-sm bg-black">Player</span>
+                                <span className="px-1 py-0 text-xs text-white bg-black rounded-sm shadow">Player</span>
                             </span>
                         </Link>)
                 }
@@ -150,9 +150,9 @@ const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width, fref }) =
                             href={`/view/team/${team.teamId.toLowerCase()}`}
                             onClick={() => setSearch(team.teamName)}
                         >
-                            <span className="capitalize px-2 py-1 w-full flex justify-between items-center hover:bg-gray-100">
+                            <span className="flex items-center justify-between w-full px-2 py-1 capitalize hover:bg-gray-100">
                                 {team.teamName}
-                                <span className="text-xs shadow text-white px-1 py-0 rounded-sm bg-black">Team</span>
+                                <span className="px-1 py-0 text-xs text-white bg-black rounded-sm shadow">Team</span>
                             </span>
                         </Link>)
                 }
@@ -164,9 +164,9 @@ const SearchForm: React.FC<FormSchemaProps> = ({ displayMobile, width, fref }) =
                             href={`/view/venue/${venue.venueId.toLowerCase()}`}
                             onClick={() => setSearch(venue.venueName)}
                         >
-                            <span className="capitalize px-2 py-1 w-full flex justify-between items-center hover:bg-gray-100">
+                            <span className="flex items-center justify-between w-full px-2 py-1 capitalize hover:bg-gray-100">
                                 {venue.venueName}
-                                <span className="text-xs shadow text-white px-1 py-0 rounded-sm bg-black">Venue</span>
+                                <span className="px-1 py-0 text-xs text-white bg-black rounded-sm shadow">Venue</span>
                             </span>
                         </Link>)
                 }
