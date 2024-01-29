@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { BiSolidCricketBall } from 'react-icons/bi'
-import { GiCricketBat } from 'react-icons/gi'
+import { MdSportsCricket } from 'react-icons/md'
 
 interface TeamRankingProps {
     battingRanking: any
@@ -11,11 +11,11 @@ interface TeamRankingProps {
 const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRanking, handle }) => {
     return (
         <div className='lg:flex lg:justify-between lg:gap-5'>
-            <div className="relative lg:w-1/2 border-b rounded-md border text-card-foreground shadow-sm bg-card mb-3 p-5">
-                <h3 className='text-center mb-3 font-bold uppercase flex items-center justify-center'>
-                    <GiCricketBat className='mr-2' />Batting
+            <div className="relative p-5 mb-3 border border-b rounded-md shadow-sm lg:w-1/2 text-card-foreground bg-card">
+                <h3 className='flex items-center justify-center mb-3 font-bold text-center uppercase'>
+                    <MdSportsCricket className='mr-2' />Batting
                 </h3>
-                <div className="px-3 py-1 pb-2 mb-2 lg-py-0 flex items-center justify-between border-b-2 border-b-slate-800">
+                <div className="flex items-center justify-between px-3 py-1 pb-2 mb-2 border-b-2 lg-py-0 border-b-slate-800">
                     <span className="text-muted-foreground text-sm w-[10%]">
                         Pos
                     </span>
@@ -34,7 +34,7 @@ const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRankin
                 </div>
 
                 {battingRanking.map((item: any, index: number) => {
-                    return <div key={item.playerId} className="px-3 py-2 border-b border-b-grey-300 lg-py-0 flex items-center justify-between">
+                    return <div key={item.playerId} className="flex items-center justify-between px-3 py-2 border-b border-b-grey-300 lg-py-0">
                         <span className="w-[10%]">
                             {index + 1}
                         </span>
@@ -59,11 +59,11 @@ const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRankin
                 })}
             </div>
 
-            <div className="relative lg:w-1/2 border-b rounded-md border text-card-foreground shadow-sm bg-card mb-3 p-5">
-                <h3 className='text-center mb-3 font-bold uppercase flex items-center justify-center'>
-                    <GiCricketBat className='mr-2' />Bowling
+            <div className="relative p-5 mb-3 border border-b rounded-md shadow-sm lg:w-1/2 text-card-foreground bg-card">
+                <h3 className='flex items-center justify-center mb-3 font-bold text-center uppercase'>
+                    <BiSolidCricketBall className='mr-2' />Bowling
                 </h3>
-                <div className="px-3 py-1 pb-2 mb-2 lg-py-0 flex items-center justify-between border-b-2 border-b-slate-800">
+                <div className="flex items-center justify-between px-3 py-1 pb-2 mb-2 border-b-2 lg-py-0 border-b-slate-800">
                     <span className="text-muted-foreground text-sm w-[10%]">
                         Pos
                     </span>
@@ -82,7 +82,7 @@ const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRankin
                 </div>
 
                 {bowlingRanking.map((item: any, index: number) => {
-                    return <div key={item.playerId} className="px-3 py-2 border-b border-b-grey-300 lg-py-0 flex items-center justify-between">
+                    return <div key={item.playerId} className="flex items-center justify-between px-3 py-2 border-b border-b-grey-300 lg-py-0">
                         <span className="w-[10%]">
                             {index + 1}
                         </span>
