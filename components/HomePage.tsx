@@ -44,20 +44,20 @@ const HomePage = () => {
 
     return (
         <CenteredArea maxWidthClass="max-w-7xl">
-            <div className="py-3 px-5 mb-5 rounded-md border text-card-foreground shadow-sm bg-card">
-                <h2 className="inline font-bold text-lg lg:text-2xl mr-2">ODI Players Rating</h2>
-                <span className="text-muted-foreground text-xs lg:text-sm">(Recent 10 Matches)</span>
+            <div className="px-5 py-3 mb-5 border rounded-md shadow-sm text-card-foreground bg-card">
+                <h2 className="inline mr-2 text-lg font-bold lg:text-2xl">ODI Players Rating</h2>
+                <span className="text-xs text-muted-foreground lg:text-sm">(Recent 10 Matches)</span>
             </div>
 
             {odiRankings && odiRankings.batting.length > 0 && <TeamRanking
                 battingRanking={odiRankings.batting}
                 bowlingRanking={odiRankings.bowling}
-                handle='t20'
+                handle='odi'
             />}
 
-            <div className="py-3 px-5 mb-5 rounded-md border text-card-foreground shadow-sm bg-card">
-                <h2 className="inline font-bold text-lg lg:text-2xl mr-2">T20 Players Rating</h2>
-                <span className="text-muted-foreground text-xs lg:text-sm">(Recent 10 Matches)</span>
+            <div className="px-5 py-3 mb-5 border rounded-md shadow-sm text-card-foreground bg-card">
+                <h2 className="inline mr-2 text-lg font-bold lg:text-2xl">T20 Players Rating</h2>
+                <span className="text-xs text-muted-foreground lg:text-sm">(Recent 10 Matches)</span>
             </div>
 
             {t20Rankings && t20Rankings.batting.length > 0 && <TeamRanking
