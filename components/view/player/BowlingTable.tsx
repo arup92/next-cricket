@@ -26,29 +26,29 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
             {bowlData.length > 0 &&
                 <Card className="mb-3">
                     <CardContent className="py-3">
-                        <div className="text-center mb-3">
-                            <h2 className="text-center font-bold text-xl inline mr-1">Bowling</h2>
-                            <p className="inline text-muted-foreground text-sm">(Recent 10 Records)</p>
+                        <div className="mb-3 text-center">
+                            <h2 className="inline mr-1 text-xl font-bold text-center">Bowling</h2>
+                            <p className="inline text-sm text-muted-foreground">(Recent 10 Records)</p>
                         </div>
 
                         <div className="flex items-center justify-between mb-3 text-muted-foreground">
                             <p>
-                                Avg W: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                Avg W: <span className="px-1 font-bold text-green-700 border rounded-sm">
                                     {Math.round(totalWickets / bowlData.length)}
                                 </span>
                             </p>
                             <p>
-                                F11Points: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                Pts: <span className="px-1 font-bold text-green-700 border rounded-sm">
                                     {Math.round(totalF11p / bowlData.length)}
                                 </span>
                             </p>
                             <p>
-                                E: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                E: <span className="px-1 font-bold text-green-700 border rounded-sm">
                                     {Math.round(totalEcos / bowlData.length)}
                                 </span>
                             </p>
                             <p>
-                                M: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                M: <span className="px-1 font-bold text-green-700 border rounded-sm">
                                     {Math.round(totalMaidens / bowlData.length)}
                                 </span>
                             </p>
@@ -112,7 +112,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                         <TableCell className="hidden lg:table-cell">
                                             <span className={`px-1.5 py-0.5 rounded-sm text-xs ${resultColor}`}>{result}</span>
                                         </TableCell>
-                                        <TableCell className="capitalize hidden lg:table-cell text-sm">
+                                        <TableCell className="hidden text-sm capitalize lg:table-cell">
                                             <Link className="text-blue-700 hover:underline" href={`/view/venue/${item.venueId.replaceAll('_', ' ')}`}>{item.venueId.replaceAll('_', ' ')}</Link>, {item.venue.venueCountryId}
                                         </TableCell>
                                         <TableCell className="hidden lg:table-cell">{formatDateString(date.toString())}</TableCell>

@@ -10,19 +10,19 @@ const PlayerData: React.FC<PlayerDataProps> = ({ playerData, updateData }) => {
     return (
         <>
             {playerData && <Card className="mb-3">
-                <CardContent className="py-3 flex justify-between items-center">
-                    <div className="flex justify-between items-center">
-                        <h1 className="capitalize inline font-bold text-2xl mr-1">{playerData.playerName}</h1>
-                        <p className="text-muted-foreground text-sm flex">
+                <CardContent className="flex items-center justify-between py-3">
+                    <div className="flex items-center justify-between">
+                        <h1 className="inline mr-2 text-lg font-bold capitalize lg:text-2xl">{playerData.playerName}</h1>
+                        <p className="flex text-sm text-muted-foreground">
                             <span className="flex gap-1">
                                 {playerData.playerTeams.map(
                                     (item: { teamId: string }) =>
-                                        <span className="shadow-sm border px-1 rounded-sm" key={item.teamId}>{item.teamId}</span>
+                                        <span className="px-1 border rounded-sm shadow-sm" key={item.teamId}>{item.teamId}</span>
                                 )}
                             </span>
                         </p>
                     </div>
-                    <div className="text-muted-foreground text-sm">
+                    <div className="text-sm text-muted-foreground">
                         {/* <p>{playerData.playerType} {!playerData.bowlingType || playerData.bowlingType === 'NA' ? '' : `(${playerData.bowlingType})`}</p> */}
                         <PlayerFilterForm handleData={updateData} playerData={playerData} />
                     </div>

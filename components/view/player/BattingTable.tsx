@@ -27,33 +27,33 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
             {batData.length > 0 &&
                 <Card className="mb-3">
                     <CardContent className="py-3">
-                        <div className="text-center mb-3">
-                            <h2 className="text-center font-bold text-xl inline mr-1">Batting</h2>
-                            <p className="inline text-muted-foreground text-sm">(Recent 10 Records)</p>
+                        <div className="mb-3 text-center">
+                            <h2 className="inline mr-1 text-xl font-bold text-center">Batting</h2>
+                            <p className="inline text-sm text-muted-foreground">(Recent 10 Records)</p>
                         </div>
                         <div className="flex items-center justify-between mb-3 text-muted-foreground">
                             <p>
-                                Avg Run: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                Avg R: <span className="px-1 font-bold text-green-700 border rounded-sm">
                                     {Math.round(totalRuns / batData.length)}
                                 </span>
                             </p>
                             <p>
-                                F11Points: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                Pts: <span className="px-1 font-bold text-green-700 border rounded-sm">
                                     {Math.round(totalf11p / batData.length)}
                                 </span>
                             </p>
                             <p>
-                                6: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                6s: <span className="px-1 font-bold text-green-700 border rounded-sm">
                                     {Math.round(totalSixes / batData.length)}
                                 </span>
                             </p>
                             <p>
-                                4: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                4s: <span className="px-1 font-bold text-green-700 border rounded-sm">
                                     {Math.round(totalFours / batData.length)}
                                 </span>
                             </p>
                             <p>
-                                SR: <span className="text-green-700 font-bold px-1 border rounded-sm">
+                                SR: <span className="px-1 font-bold text-green-700 border rounded-sm">
                                     {Math.round(totalSRs / batData.length)}
                                 </span>
                             </p>

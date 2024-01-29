@@ -4,12 +4,14 @@ import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { FaFilter } from "react-icons/fa"
 import { GoCheck, GoCode } from "react-icons/go"
 import { z } from "zod"
 import { Button } from "../ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { RiFilter2Fill } from "react-icons/ri"
 
 const formSchema = z.object({
     opponent: z.string().min(2).nullable().optional(),
@@ -122,7 +124,10 @@ const PlayerFilterForm: React.FC<PlayerFilterFormProps> = ({ playerData, handleD
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="default">Filter Data</Button>
+                <div>
+                    <Button variant="default" className="hidden lg:block">Filter Data</Button>
+                    <span className="block rounded-[50px] bg-primary p-1 text-white cursor-pointer lg:hidden"><RiFilter2Fill /></span>
+                </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
