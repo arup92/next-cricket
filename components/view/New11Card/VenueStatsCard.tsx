@@ -15,7 +15,7 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
         <>
             {venueData.length > 0 && <Card className={className}>
                 <CardHeader>
-                    <CardTitle className="capitalize inline">
+                    <CardTitle className="inline capitalize">
                         In <Link
                             className="text-blue-700 hover:underline"
                             href={`${process.env.NEXT_PUBLIC_APP_URL}/view/venue/${venueData[0].venueId}`}
@@ -25,7 +25,7 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex justify-between mb-2 items-center">
+                    <div className="flex items-center justify-between mb-2">
                         Scores
                         <div>
                             {venueData.map((item: any, index: number) => {
@@ -50,7 +50,7 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
                                                     {item.Scores[0].teamId} vs {item.Scores[1].teamId}
                                                 </div>
                                                 <Separator />
-                                                <div className="flex h-10 items-center space-x-4 text-sm pb-1">
+                                                <div className="flex items-center h-10 pb-1 space-x-4 text-sm">
                                                     <div className="text-center">
                                                         <div className="mb-1">{item.Scores[0].teamId}</div>
                                                         <span className={`rounded-sm px-1 mx-1 inline-block text-center shadow text-sm border`}>{item.Scores[0].runs}/{item.Scores[1].wickets}</span>
@@ -79,7 +79,7 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
                                                     {item.Scores[0].teamId} vs {item.Scores[1].teamId}
                                                 </div>
                                                 <Separator />
-                                                <div className="flex h-10 items-center space-x-4 text-sm pb-1">
+                                                <div className="flex items-center h-10 pb-1 space-x-4 text-sm">
                                                     <div className="text-center">
                                                         <div className="mb-1">{item.Scores[0].teamId}</div>
                                                         <span className={`rounded-sm px-1 mx-1 inline-block text-center shadow text-sm border`}>{item.Scores[0].runs}/{item.Scores[1].wickets}</span>
@@ -101,14 +101,14 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
                             })}
                         </div>
                     </div>
-                    <div className="flex justify-between mb-2 items-center">
+                    <div className="flex items-center justify-between mb-2">
                         Bat First
 
                         <div>
-                            {venueData.map((match: any, index: number) => {
+                            {venueData.map((item: any, index: number) => {
                                 let style: string = ``
                                 let result: string = ''
-                                if (match.batFirst === match.result) {
+                                if (item.batFirst === item.result) {
                                     result = 'w'
                                     style = 'bg-emerald-600 text-white'
                                 } else {
@@ -116,7 +116,68 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
                                     style = 'bg-red-600 text-white'
                                 }
 
-                                return <span key={index} className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm capitalize ${style}`}>{result}</span>
+                                const date = new Date(item.matchDate)
+                                const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
+
+                                return <div className="inline-block" key={index}>
+                                    <Popover>
+                                        <PopoverTrigger className="inline-block lg:hidden">
+                                            <span key={index} className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm capitalize ${style}`}>{result}</span>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="inline-block lg:hidden">
+                                            <div className="space-y-2">
+                                                <div className="text-center">
+                                                    {item.Scores[0].teamId} vs {item.Scores[1].teamId}
+                                                </div>
+                                                <Separator />
+                                                <div className="flex items-center h-10 pb-1 space-x-4 text-sm">
+                                                    <div className="text-center">
+                                                        <div className="mb-1">{item.Scores[0].teamId}</div>
+                                                        <span className={`rounded-sm px-1 mx-1 inline-block text-center shadow text-sm border`}>{item.Scores[0].runs}/{item.Scores[1].wickets}</span>
+                                                    </div>
+                                                    <Separator orientation="vertical" />
+                                                    <div className="text-center">
+                                                        <div className="mb-1">{item.Scores[1].teamId}</div>
+                                                        <span className={`rounded-sm px-1 mx-1 inline-block text-center shadow text-sm border`}>{item.Scores[1].runs}/{item.Scores[0].wickets}</span>
+                                                    </div>
+                                                </div>
+                                                <Separator />
+                                                <div className="text-center">
+                                                    <span className="text-sm text-muted-foreground">{date.toLocaleString('en-IN', options)}</span>
+                                                </div>
+                                            </div>
+                                        </PopoverContent>
+                                    </Popover>
+
+                                    <HoverCard openDelay={300}>
+                                        <HoverCardTrigger className="hidden lg:inline-block">
+                                            <span key={index} className={`rounded-sm px-1 mr-1 w-[36px] inline-block text-center shadow text-sm capitalize ${style}`}>{result}</span>
+                                        </HoverCardTrigger>
+                                        <HoverCardContent className="hidden lg:inline-block">
+                                            <div className="space-y-2">
+                                                <div className="text-center">
+                                                    {item.Scores[0].teamId} vs {item.Scores[1].teamId}
+                                                </div>
+                                                <Separator />
+                                                <div className="flex items-center h-10 pb-1 space-x-4 text-sm">
+                                                    <div className="text-center">
+                                                        <div className="mb-1">{item.Scores[0].teamId}</div>
+                                                        <span className={`rounded-sm px-1 mx-1 inline-block text-center shadow text-sm border`}>{item.Scores[0].runs}/{item.Scores[1].wickets}</span>
+                                                    </div>
+                                                    <Separator orientation="vertical" />
+                                                    <div className="text-center">
+                                                        <div className="mb-1">{item.Scores[1].teamId}</div>
+                                                        <span className={`rounded-sm px-1 mx-1 inline-block text-center shadow text-sm border`}>{item.Scores[1].runs}/{item.Scores[0].wickets}</span>
+                                                    </div>
+                                                </div>
+                                                <Separator />
+                                                <div className="text-center">
+                                                    <span className="text-sm text-muted-foreground">{date.toLocaleString('en-IN', options)}</span>
+                                                </div>
+                                            </div>
+                                        </HoverCardContent>
+                                    </HoverCard>
+                                </div>
                             })}
                         </div>
                     </div>
@@ -129,7 +190,7 @@ const VenueStatsCard: React.FC<VenueStatsCardProps> = ({ venueData, className })
 export default VenueStatsCard
 
 function scoresView(teamStats: any) {
-    return <div className="flex justify-between mb-2 items-center">
+    return <div className="flex items-center justify-between mb-2">
         {teamStats.team}
         <div>
             {teamStats.scores.map((score: any, index: number) => {
