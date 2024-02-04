@@ -24,6 +24,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "
 import { Input } from "../ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Textarea } from "../ui/textarea"
+import Link from "next/link"
 
 const formSchema = z.object({
     matchType: z.enum(MatchType),
@@ -92,8 +93,8 @@ const AddMatchForm = () => {
         axios.post('/api/dashboard/add-match', values)
             .then(response => {
                 if (response.status === 200) {
-                    toast.success(response.data.message)
-                    router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
+                    toast.success(`${response.data.message}! ${<Link target="_blank" href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`}>View Match</Link>}`)
+                    // router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
                 } else {
                     toast.error(ErrorMessage.SOMETHING_WRONG)
                 }
