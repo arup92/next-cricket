@@ -205,26 +205,36 @@ export async function POST(request: Request) {
 
         // Insert Player
         for (const item of playerData) {
-            const player = await prismaClient.player.findUnique({
+            await prismaClient.player.upsert({
                 where: {
                     playerId: item.playerId
-                }
+                },
+                update: {
+                    inactive: 'no'
+                },
+                create: item
             })
 
-            if (!player) {
-                await prismaClient.player.create({
-                    data: item
-                })
-            } else {
-                await prismaClient.player.update({
-                    where: {
-                        playerId: item.playerId
-                    },
-                    data: {
-                        inactive: 'no'
-                    }
-                })
-            }
+            // const player = await prismaClient.player.findUnique({
+            //     where: {
+            //         playerId: item.playerId
+            //     }
+            // })
+
+            // if (!player) {
+            //     await prismaClient.player.create({
+            //         data: item
+            //     })
+            // } else {
+            //     await prismaClient.player.update({
+            //         where: {
+            //             playerId: item.playerId
+            //         },
+            //         data: {
+            //             inactive: 'no'
+            //         }
+            //     })
+            // }
         }
 
         // Insert PlayerTeam
@@ -261,11 +271,16 @@ export async function POST(request: Request) {
             ...constantBattingAData
         }))
 
-        battingADataUpdated.forEach(async (battingData) => {
+        // battingADataUpdated.forEach(async (battingData) => {
+        //     await prismaClient.batting.create({
+        //         data: battingData as any
+        //     })
+        // })
+        await Promise.all(battingADataUpdated.map(async (battingData) => {
             await prismaClient.batting.create({
                 data: battingData as any
             })
-        })
+        }))
 
         // Add Batting: Session B
         const constantBattingBData = {
@@ -283,11 +298,17 @@ export async function POST(request: Request) {
             ...constantBattingBData
         }))
 
-        battingBDataUpdated.forEach(async (battingData) => {
+        // battingBDataUpdated.forEach(async (battingData) => {
+        //     await prismaClient.batting.create({
+        //         data: battingData as any
+        //     })
+        // })
+
+        await Promise.all(battingBDataUpdated.map(async (battingData) => {
             await prismaClient.batting.create({
                 data: battingData as any
             })
-        })
+        }))
 
         // Add Bowling: Session A
 
@@ -316,11 +337,17 @@ export async function POST(request: Request) {
             ...constantBowlingAData
         }))
 
-        bowlingADataUpdated.forEach(async (bowlingData) => {
+        // bowlingADataUpdated.forEach(async (bowlingData) => {
+        //     await prismaClient.bowling.create({
+        //         data: bowlingData as any
+        //     })
+        // })
+
+        await Promise.all(bowlingADataUpdated.map(async (bowlingData) => {
             await prismaClient.bowling.create({
                 data: bowlingData as any
             })
-        })
+        }))
 
         // Add Bowling: Session B
 
@@ -349,11 +376,17 @@ export async function POST(request: Request) {
             ...constantBowlingBData
         }))
 
-        bowlingBDataUpdated.forEach(async (bowlingData) => {
+        // bowlingBDataUpdated.forEach(async (bowlingData) => {
+        //     await prismaClient.bowling.create({
+        //         data: bowlingData as any
+        //     })
+        // })
+
+        await Promise.all(bowlingBDataUpdated.map(async (bowlingData) => {
             await prismaClient.bowling.create({
                 data: bowlingData as any
             })
-        })
+        }))
 
         return NextResponse.json({ message: Message.MATCH_ADDED, matchId: match.id }, { status: 200 })
         // return NextResponse.json({ message: Message.MATCH_ADDED }, { status: 200 })
