@@ -95,8 +95,12 @@ const AddMatchForm = () => {
                 if (response.status === 200) {
                     toast((t) => (
                         <span>
-                            {response.data.message}
-                            <Link target="_blank" href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`}>
+                            <span className="mr-1">{response.data.message}</span>
+                            <Link
+                                className="text-blue-500 underline"
+                                target="_blank"
+                                href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`}
+                            >
                                 View Match
                             </Link>
                         </span>
