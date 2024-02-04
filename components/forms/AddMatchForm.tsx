@@ -125,6 +125,23 @@ const AddMatchForm = () => {
         queryFn: getTeams
     })
 
+    // React Query: Get Countries
+    const getCountries = async () => {
+        return await axios.get(`/api/view/teams-get?countries=true`)
+            .then(response => {
+                return response.data
+            })
+            .catch(error => {
+                console.log(error)
+                return []
+            })
+    }
+
+    const { data: Countries } = useQuery({
+        queryKey: ['countries'],
+        queryFn: getCountries
+    })
+
     return (
         <CenteredArea maxWidthClass="max-w-xl">
             <Tabs value={tabIndex}>
@@ -330,8 +347,8 @@ const AddMatchForm = () => {
                                                     aria-expanded={venueCOpen}
                                                     className="w-full justify-between bg-white"
                                                 >
-                                                    {Teams && watch().venueCountry ?
-                                                        Teams.find((team: any) => team.teamId === watch().venueCountry.toUpperCase()).teamId :
+                                                    {Countries && watch().venueCountry ?
+                                                        Countries.find((country: any) => country.teamId === watch().venueCountry.toUpperCase()).teamId :
                                                         'Venue Country'
                                                     }
                                                     <span className="rotate-90"><GoCode /></span>
@@ -342,17 +359,17 @@ const AddMatchForm = () => {
                                                     <CommandInput placeholder="Search Venue Country..." />
                                                     <CommandEmpty>No Team Found.</CommandEmpty>
                                                     <CommandGroup>
-                                                        {Teams && Teams.map((team: any) => (
+                                                        {Countries && Countries.map((country: any) => (
                                                             <CommandItem
-                                                                key={team.teamId}
-                                                                value={team.teamId}
+                                                                key={country.teamId}
+                                                                value={country.teamId}
                                                                 onSelect={(currentValue) => {
                                                                     setValue('venueCountry', currentValue.toUpperCase())
                                                                     setVenueCOpen(false)
                                                                 }}
                                                             >
-                                                                {team.teamId}
-                                                                <span className={watch().teamB === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                                {country.teamId}
+                                                                <span className={watch().teamB === country.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
                                                                     <GoCheck />
                                                                 </span>
                                                             </CommandItem>
