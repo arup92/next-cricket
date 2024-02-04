@@ -93,7 +93,15 @@ const AddMatchForm = () => {
         axios.post('/api/dashboard/add-match', values)
             .then(response => {
                 if (response.status === 200) {
-                    toast.success(`${response.data.message}! ${<Link target="_blank" href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`}>View Match</Link>}`)
+                    toast((t) => (
+                        <span>
+                            {response.data.message}
+                            <Link target="_blank" href={`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`}>
+                                View Match
+                            </Link>
+                        </span>
+                    ))
+                    // toast.success(response.data.message)
                     // router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
                 } else {
                     toast.error(ErrorMessage.SOMETHING_WRONG)
