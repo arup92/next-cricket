@@ -46,7 +46,7 @@ export const battingData = (summaryData: string[][], matchFormat?: MatchFormat):
 
     for (const summery of summaryData) {
         let summeryItem: BattingDataType = {
-            playerId: summery[0].replaceAll(' ', '_').toLowerCase(),
+            playerId: summery[0].replaceAll(' ', '_').replaceAll('-', '_').toLowerCase(),
             run: parseInt(summery[1]),
             four: parseInt(summery[3]),
             six: parseInt(summery[4]),
@@ -69,7 +69,7 @@ export const bowlingData = (summaryData: string[][], matchFormat?: MatchFormat):
 
     for (const summery of summaryData) {
         let summeryItem: BowlingDataType = {
-            playerId: summery[0].replaceAll(' ', '_').toLowerCase(),
+            playerId: summery[0].replaceAll(' ', '_').replaceAll('-', '_').toLowerCase(),
             maiden: parseInt(summery[2]),
             wicket: parseInt(summery[4]),
             eco: parseFloat(summery[5]),
