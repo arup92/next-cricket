@@ -1,16 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import useSelectCardStore from "@/store/selectCard"
 import useZStore from "@/store/store"
 import { fantasyPointColor } from "@/utils/style"
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
-import { useEffect } from "react"
-import { BiSolidHide, BiSolidShow } from "react-icons/bi"
+import { useEffect, useState } from "react"
+import { BiSolidCricketBall, BiSolidHide, BiSolidShow } from "react-icons/bi"
+import { GiCricketBat } from "react-icons/gi"
+import { MdSportsCricket } from "react-icons/md"
 import PlayerPopUpBat from "./Card/PlayerPopUpBat"
 import PlayerPopUpBowl from "./Card/PlayerPopUpBowl"
-import { MdSportsCricket } from "react-icons/md"
-import { BiSolidCricketBall } from "react-icons/bi"
-import { GiCricketBat } from "react-icons/gi"
+import { FaPlusCircle } from "react-icons/fa"
 
 interface PlayerStatsProps {
     playerData: any
@@ -22,6 +23,9 @@ interface PlayerStatsProps {
 
 const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId, matchFormat }) => {
     const deSelected = useZStore()
+    const pickPlayer = useSelectCardStore()
+    // const [picked, setPicked] = useState<any>()
+
     const pathname = usePathname()
 
     useEffect(() => {
@@ -38,9 +42,20 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
     const handleDeSelected = (index: number) => {
         if (deSelected.cardDeSelected[index]) {
             deSelected.removeCardDeSelected({ index })
-        } else {
-            deSelected.addCardDeSelected({ [index]: true })
+            return
         }
+
+        deSelected.addCardDeSelected({ [index]: true })
+    }
+
+    // Set: Select Player
+    const handlePicked = (playerId: string) => {
+        if (pickPlayer.playerIds[playerId]) {
+            pickPlayer.remove(playerId)
+            return
+        }
+
+        pickPlayer.add(playerId)
     }
 
     return (
@@ -52,10 +67,17 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                 matchFormat = matchFormat.toUpperCase()
 
                 if (playerData[player].teamId === teamId)
-                    return <Card className={`relative ${className}`} key={index}>
+                    return <Card className={`relative ${className} ${pickPlayer.playerIds[player] ? 'shadow-lg border-2 border-b-4 border-emerald-500 box-border' : ''}`} key={index}>
+                        <div
+                            onClick={() => handlePicked(player)}
+                            className={`absolute top-0 right-0 rounded-tr-sm rounded-bl-sm cursor-pointer px-1 py-0.5 z-20 text-white text-xs ${pickPlayer.playerIds[player] ? 'bg-emerald-500' : 'bg-gray-800'}`}
+                        >
+                            {pickPlayer.playerIds[player] ? <FaPlusCircle className="rotate-45 transition-all duration-100" /> : <FaPlusCircle className="transition-all duration-100" />}
+                        </div>
+
                         <div
                             onClick={() => handleDeSelected(index)}
-                            className="absolute top-0 right-0 text-white text-xs bg-gray-800 rounded-tr-sm rounded-bl-sm cursor-pointer px-1 z-20"
+                            className={`absolute top-0 left-0 text-white text-xs rounded-tl-sm rounded-br-sm cursor-pointer px-1 py-0.5 z-20 ${pickPlayer.playerIds[player] ? 'bg-emerald-500' : 'bg-gray-800'}`}
                         >
                             {deSelected.cardDeSelected[index] ? <BiSolidShow /> : <BiSolidHide />}
                         </div>
