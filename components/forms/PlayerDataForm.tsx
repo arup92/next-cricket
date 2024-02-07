@@ -7,11 +7,13 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import { GoCheck, GoCode } from 'react-icons/go'
 import { z } from 'zod'
 import ListPlayersEdit from '../dashboard/ListPlayersEdit'
 import { Button } from '../ui/button'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../ui/command'
 import { Input } from '../ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 const formSchema = z.object({
     playerName: z.string().trim().optional(),
@@ -20,6 +22,7 @@ const formSchema = z.object({
 
 const PlayerDataForm = () => {
     const [playerData, setPlayerData] = useState<any[]>()
+    const [selectOpen, setSelectOpen] = useState(false)
 
     const onSubmit = (values: any) => {
         const params = new URLSearchParams(values).toString()
@@ -38,6 +41,7 @@ const PlayerDataForm = () => {
         formState: { errors },
         handleSubmit,
         setValue,
+        watch,
         register
     } = useForm({
         mode: 'onBlur',
@@ -76,20 +80,45 @@ const PlayerDataForm = () => {
                 <p>OR</p>
 
                 <div>
-                    <Select
-                        onValueChange={(selectedValue: string) => setValue('team', selectedValue)}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Team" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {Teams && Teams.map((team: any) => (
-                                <SelectItem key={team.teamId} value={team.teamId}>
-                                    {team.teamName}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <Popover open={selectOpen} onOpenChange={setSelectOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={selectOpen}
+                                className="w-full justify-between bg-white"
+                            >
+                                {Teams && watch().team ?
+                                    Teams.find((team: any) => team.teamId === watch().team.toUpperCase()).teamId :
+                                    'Team'
+                                }
+                                <span className="rotate-90"><GoCode /></span>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent side="bottom" avoidCollisions={false} className="w-full p-0">
+                            <Command>
+                                <CommandInput placeholder="Search Team..." />
+                                <CommandEmpty>No Team Found.</CommandEmpty>
+                                <CommandGroup>
+                                    {Teams && Teams.map((team: any) => (
+                                        <CommandItem
+                                            key={team.teamId}
+                                            value={team.teamId}
+                                            onSelect={(currentValue) => {
+                                                setValue('team', currentValue.toUpperCase())
+                                                setSelectOpen(false)
+                                            }}
+                                        >
+                                            {team.teamId}
+                                            <span className={watch().team === team.teamId ? 'ml-auto opacity-100' : 'opacity-0'}>
+                                                <GoCheck />
+                                            </span>
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </div>
 
                 <Button>Submit</Button>
