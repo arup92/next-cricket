@@ -2,14 +2,14 @@ import { create } from 'zustand'
 
 type Store = {
     playerIds: any
-    add: (playerId: string) => void
+    add: (playerId: string, teamId: string) => void
     remove: (playerId: string) => void
 }
 
 const useSelectCardStore = create<Store>()((set) => ({
     playerIds: {},
-    add: (playerId: string) => set((state) => ({
-        playerIds: { ...state.playerIds, [playerId]: 1 }
+    add: (playerId: string, teamId: string) => set((state) => ({
+        playerIds: { ...state.playerIds, [playerId]: teamId }
     })),
     remove: (playerId: string) => set((state) => {
         const { [playerId]: _, ...rest } = state.playerIds
