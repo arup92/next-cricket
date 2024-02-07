@@ -13,6 +13,7 @@ import PlayerStats from "./New11Card/PlayerStats"
 import TeamScoresCard from "./New11Card/TeamScoresCard"
 import TeamWicketsCard from "./New11Card/TeamWicketsCard"
 import VenueStatsCard from "./New11Card/VenueStatsCard"
+import { Badge } from "../ui/badge"
 
 interface New11ViewV2Props {
     slugs: any
@@ -72,6 +73,15 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
     return (
         <>
             {data && <>
+                <Badge className="relative rounded-sm">
+                    Badge
+                    <span
+                        className="absolute -top-3 -right-3 text-center text-xs border-2 rounded-full border-white bg-emerald-600 shadow-sm w-5 h-5 grid items-center"
+                    >
+                        8
+                    </span>
+                </Badge>
+
                 <Head2HeadCard className="mb-4" h2h={data.h2h} />
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <MatchResultsCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
