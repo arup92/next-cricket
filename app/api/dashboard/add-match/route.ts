@@ -137,7 +137,7 @@ export async function POST(request: Request) {
         const playerTeam: any[] = []
 
         for (const sessionA of sessionABat) {
-            const playerId = sessionA[0].replaceAll(' ', '_').toLowerCase()
+            const playerId = sessionA[0].replaceAll(' ', '_').replaceAll('-', '_').toLowerCase()
             const currentPlayerData: any = {
                 playerId,
                 playerName: sessionA[0]
@@ -153,7 +153,7 @@ export async function POST(request: Request) {
         }
 
         for (const sessionB of sessionBBat) {
-            const playerId = sessionB[0].replaceAll(' ', '_').toLowerCase()
+            const playerId = sessionB[0].replaceAll(' ', '_').replaceAll('-', '_').toLowerCase()
 
             const currentPlayerData: any = {
                 playerId,
@@ -170,7 +170,7 @@ export async function POST(request: Request) {
         }
 
         for (const sessionAB of sessionABowl) {
-            const playerId = sessionAB[0].replaceAll(' ', '_').toLowerCase()
+            const playerId = sessionAB[0].replaceAll(' ', '_').replaceAll('-', '_').toLowerCase()
 
             const currentPlayerData: any = {
                 playerId,
@@ -187,7 +187,7 @@ export async function POST(request: Request) {
         }
 
         for (const sessionBB of sessionBBowl) {
-            const playerId = sessionBB[0].replaceAll(' ', '_').toLowerCase()
+            const playerId = sessionBB[0].replaceAll(' ', '_').replaceAll('-', '_').toLowerCase()
 
             const currentPlayerData: any = {
                 playerId,

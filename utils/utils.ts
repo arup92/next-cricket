@@ -45,6 +45,7 @@ export const battingData = (summaryData: string[][], matchFormat?: MatchFormat):
     let result: BattingDataType[] = []
 
     for (const summery of summaryData) {
+
         let summeryItem: BattingDataType = {
             playerId: summery[0].replaceAll(' ', '_').replaceAll('-', '_').toLowerCase(),
             run: parseInt(summery[1]),
