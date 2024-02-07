@@ -49,13 +49,13 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
     }
 
     // Set: Select Player
-    const handlePicked = (playerId: string) => {
+    const handlePicked = (playerId: string, teamId: string) => {
         if (pickPlayer.playerIds[playerId]) {
             pickPlayer.remove(playerId)
             return
         }
 
-        pickPlayer.add(playerId)
+        pickPlayer.add(playerId, teamId)
     }
 
     return (
@@ -69,7 +69,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                 if (playerData[player].teamId === teamId)
                     return <Card className={`relative ${className} ${pickPlayer.playerIds[player] ? 'shadow-lg border-2 border-b-4 border-emerald-500 box-border' : ''}`} key={index}>
                         <div
-                            onClick={() => handlePicked(player)}
+                            onClick={() => handlePicked(player, teamId)}
                             className={`absolute top-0 right-0 rounded-tr-sm rounded-bl-sm cursor-pointer px-1 py-0.5 z-20 text-white text-xs ${pickPlayer.playerIds[player] ? 'bg-emerald-500' : 'bg-gray-800'}`}
                         >
                             {pickPlayer.playerIds[player] ? <FaPlusCircle className="rotate-45 transition-all duration-100" /> : <FaPlusCircle className="transition-all duration-100" />}
