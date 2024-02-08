@@ -5,15 +5,16 @@ import { MatchFormat } from "@/types/MatchFormat"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Link from "next/link"
+import { useState } from "react"
 import NotFound from "../NotFound"
 import StatsTeamFormV2 from "../forms/StatsTeamFormV2"
+import { Badge } from "../ui/badge"
 import Head2HeadCard from "./New11Card/Head2HeadCard"
 import MatchResultsCard from "./New11Card/MatchResultsCard"
 import PlayerStats from "./New11Card/PlayerStats"
 import TeamScoresCard from "./New11Card/TeamScoresCard"
 import TeamWicketsCard from "./New11Card/TeamWicketsCard"
 import VenueStatsCard from "./New11Card/VenueStatsCard"
-import { Badge } from "../ui/badge"
 
 interface New11ViewV2Props {
     slugs: any
@@ -21,6 +22,8 @@ interface New11ViewV2Props {
 }
 
 const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
+    const [pickedPlayers, setPickedPlayers] = useState<any>({})
+
     const getCustomMatches = async (): Promise<any> => {
         return await axios.all([
             axios.get(`/api/view/stats-h2h?teamA=${slugs[0]}&teamB=${slugs[1]}&matchFormat=${slugs[2]}&venueId=${slugs[3]}`),
@@ -70,17 +73,30 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
             <Loading />
         </>
 
+    // Handle Picks
+    const handlePicks = (picks: any) => {
+        const _pickedPlayers: any = {}
+        if (Object.keys(picks).length === 0) {
+            setPickedPlayers({})
+            return
+        }
+
+        Object.entries(picks).forEach(item => {
+            const value: string = item[1] as string
+
+            if (_pickedPlayers.hasOwnProperty(value)) {
+                _pickedPlayers[value] = _pickedPlayers[value] + 1
+            } else {
+                _pickedPlayers[value] = 1
+            }
+
+            setPickedPlayers(_pickedPlayers)
+        })
+    }
+
     return (
         <>
             {data && <>
-                {/* <Badge className="relative rounded-sm">
-                    Badge
-                    <span
-                        className="absolute -top-3 -right-3 text-center text-xs border-2 rounded-full border-white bg-emerald-600 shadow-sm w-5 h-5 grid items-center"
-                    >
-                        8
-                    </span>
-                </Badge> */}
 
                 <Head2HeadCard className="mb-4" h2h={data.h2h} />
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
@@ -108,6 +124,7 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                         teamId={data.sTeamA.team}
                         oppCountryId={data.sTeamB.team}
                         matchFormat={slugs[2]}
+                        handleSendPicks={handlePicks}
                     />
                 </div>
                 <h2 className="mb-4 text-xl font-bold text-center">
@@ -129,8 +146,21 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                         teamId={data.sTeamB.team}
                         matchFormat={slugs[2]}
                         oppCountryId={data.sTeamA.team}
+                        handleSendPicks={handlePicks}
                     />
                 </div>
+
+
+                {pickedPlayers && <div className="text-center fixed bottom-3 left-1/2 -translate-x-[50%] z-50">{Object.entries(pickedPlayers).map(item => {
+                    return <Badge key={item[0]} className="relative rounded-sm mr-4">
+                        {item[0]}
+                        <span
+                            className="absolute -top-3 -right-3 text-center text-xs border-2 rounded-full border-white bg-emerald-600 shadow-sm w-5 h-5 grid items-center"
+                        >
+                            {item[1] as string}
+                        </span>
+                    </Badge>
+                })}</div>}
             </>}
         </>
     )

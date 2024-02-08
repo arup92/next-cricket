@@ -1,17 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import useReviewCardStore from "@/store/reviewCard"
 import useSelectCardStore from "@/store/selectCard"
 import useZStore from "@/store/store"
 import { fantasyPointColor } from "@/utils/style"
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { BiSolidCricketBall, BiSolidHide, BiSolidShow } from "react-icons/bi"
+import { FaPlusCircle } from "react-icons/fa"
 import { GiCricketBat } from "react-icons/gi"
+import { IoIosStar } from "react-icons/io"
 import { MdSportsCricket } from "react-icons/md"
 import PlayerPopUpBat from "./Card/PlayerPopUpBat"
 import PlayerPopUpBowl from "./Card/PlayerPopUpBowl"
-import { FaPlusCircle } from "react-icons/fa"
 
 interface PlayerStatsProps {
     playerData: any
@@ -19,12 +21,13 @@ interface PlayerStatsProps {
     teamId: string
     oppCountryId: string
     matchFormat: string
+    handleSendPicks: (picks: any) => void
 }
 
-const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId, matchFormat }) => {
+const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId, matchFormat, handleSendPicks }) => {
     const deSelected = useZStore()
     const pickPlayer = useSelectCardStore()
-    // const [picked, setPicked] = useState<any>()
+    const reviewPlayer = useReviewCardStore()
 
     const pathname = usePathname()
 
@@ -33,6 +36,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
             deSelected.emptyCardDeSelected()
         }
         deSelected.addCurrentPage(pathname.split('create-new-11/')[1])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname])
 
     const playerDataKeys = Object.keys(playerData) // Array of player names
@@ -55,8 +59,25 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
             return
         }
 
+        reviewPlayer.remove(playerId)
         pickPlayer.add(playerId, teamId)
     }
+
+    // Set: Review Player
+    const handleReview = (playerId: string, teamId: string) => {
+        if (reviewPlayer.playerIds[playerId]) {
+            reviewPlayer.remove(playerId)
+            return
+        }
+
+        pickPlayer.remove(playerId)
+        reviewPlayer.add(playerId, teamId)
+    }
+
+    useEffect(() => {
+        handleSendPicks(pickPlayer.playerIds)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pickPlayer.playerIds])
 
     return (
         <>
@@ -65,23 +86,37 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                 let totalFantasyPointsVsTeam: number = 0
                 let totalFantasyPointsInVenue: number = 0
                 matchFormat = matchFormat.toUpperCase()
+                let themeColor = 'bg-gray-800'
+
+                if (pickPlayer.playerIds[player]) {
+                    themeColor = 'bg-emerald-500'
+                } else if (reviewPlayer.playerIds[player]) {
+                    themeColor = 'bg-purple-600'
+                }
 
                 if (playerData[player].teamId === teamId)
-                    return <Card className={`relative ${className} ${pickPlayer.playerIds[player] ? 'shadow-lg border-2 border-b-4 border-emerald-500 box-border' : ''}`} key={index}>
+                    return <Card className={`relative ${className} ${reviewPlayer.playerIds[player] ? 'shadow-lg border-2 border-b-4 border-purple-600 box-border' : ''} ${pickPlayer.playerIds[player] ? 'shadow-lg border-2 border-b-4 border-emerald-500 box-border' : ''}`} key={index}>
+                        <div
+                            onClick={() => handleReview(player, teamId)}
+                            className={`absolute top-0 right-5 rounded-bl-sm cursor-pointer px-1 py-0.5 z-20 text-white text-xs ${themeColor}`}
+                        >
+                            {reviewPlayer.playerIds[player] ? <IoIosStar className="rotate-[70deg] transition-all duration-100" /> : <IoIosStar className="transition-all duration-100" />}
+                        </div>
+
                         <div
                             onClick={() => handlePicked(player, teamId)}
-                            className={`absolute top-0 right-0 rounded-tr-sm rounded-bl-sm cursor-pointer px-1 py-0.5 z-20 text-white text-xs ${pickPlayer.playerIds[player] ? 'bg-emerald-500' : 'bg-gray-800'}`}
+                            className={`absolute top-0 right-0 rounded-tr-sm cursor-pointer px-1 py-0.5 z-20 text-white text-xs ${themeColor}`}
                         >
                             {pickPlayer.playerIds[player] ? <FaPlusCircle className="rotate-45 transition-all duration-100" /> : <FaPlusCircle className="transition-all duration-100" />}
                         </div>
 
                         <div
                             onClick={() => handleDeSelected(index)}
-                            className={`absolute top-0 left-0 text-white text-xs rounded-tl-sm rounded-br-sm cursor-pointer px-1 py-0.5 z-20 ${pickPlayer.playerIds[player] ? 'bg-emerald-500' : 'bg-gray-800'}`}
+                            className={`absolute top-0 left-0 text-white text-xs rounded-tl-sm rounded-br-sm cursor-pointer px-1 py-0.5 z-20 ${themeColor}`}
                         >
                             {deSelected.cardDeSelected[index] ? <BiSolidShow /> : <BiSolidHide />}
                         </div>
-                        <div className={`${deSelected.cardDeSelected[index] ? 'absolute top-0 left-0 w-full h-full bg-white  backdrop-blur bg-opacity-70 rounded-sm z-10' : ''}`}>
+                        <div className={`${deSelected.cardDeSelected[index] ? 'absolute top-0 left-0 w-full h-full bg-white backdrop-blur bg-opacity-70 rounded-sm z-10' : ''}`}>
                         </div>
                         <CardHeader>
                             <CardTitle className="capitalize">
