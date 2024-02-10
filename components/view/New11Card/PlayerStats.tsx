@@ -243,7 +243,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                 <div className="flex justify-between items-center">
                                     <p>Avg Points</p>
                                     <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPoints, matchFormat)}`}>
-                                        {Math.round(totalFantasyPoints / 5)}
+                                        {totalFantasyPoints}
                                     </div>
                                 </div>
 
@@ -252,7 +252,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                     <div className="flex justify-between items-center pt-1">
                                         <p>Vs {oppCountryId}</p>
                                         <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsVsTeam, matchFormat)}`}>
-                                            {Math.round(totalFantasyPointsVsTeam / 5)}
+                                            {totalFantasyPointsVsTeam}
                                         </div>
                                     </div>
                                 </>}
@@ -262,7 +262,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                     <div className="flex justify-between items-center pt-1">
                                         <p>In Venue</p>
                                         <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsInVenue, matchFormat)}`}>
-                                            {Math.round(totalFantasyPointsInVenue / 5)}
+                                            {totalFantasyPointsInVenue}
                                         </div>
                                     </div>
                                 </>}
