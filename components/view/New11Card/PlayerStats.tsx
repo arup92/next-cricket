@@ -174,7 +174,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                 {playerData[player].batInVenue && <>
                                     <Separator className="mt-1" />
                                     <div className="flex justify-between items-center pt-1">
-                                        <p>In {venueName = playerData[player].batInVenue[0].venueName}</p>
+                                        <p>In Venue</p>
                                         <div>
                                             {playerData[player].batInVenue.map((inning: any, index: number) => {
                                                 let battingClassName = highlightColor(inning, matchFormat, 'batting')
@@ -224,7 +224,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                 {playerData[player].bowlInVenue && <>
                                     <Separator className="mt-1" />
                                     <div className="flex justify-between pt-1">
-                                        <p>In {venueName = playerData[player].bowlInVenue[0].venueName}</p>
+                                        <p>In Venue</p>
                                         <div>
                                             {playerData[player].bowlInVenue.map((inning: any, index: number) => {
                                                 let bowlingClassName = highlightColor(inning, matchFormat, 'bowling')
@@ -241,9 +241,9 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
 
                             {totalFantasyPoints && <div className="border border-gray-400 px-2 py-1 rounded-sm">
                                 <div className="flex justify-between items-center">
-                                    <p>Fantasy Points</p>
+                                    <p>Avg Points</p>
                                     <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPoints, matchFormat)}`}>
-                                        {totalFantasyPoints}
+                                        {Math.round(totalFantasyPoints / 5)}
                                     </div>
                                 </div>
 
@@ -252,7 +252,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                     <div className="flex justify-between items-center pt-1">
                                         <p>Vs {oppCountryId}</p>
                                         <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsVsTeam, matchFormat)}`}>
-                                            {totalFantasyPointsVsTeam}
+                                            {Math.round(totalFantasyPointsVsTeam / 5)}
                                         </div>
                                     </div>
                                 </>}
@@ -260,9 +260,9 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                 {totalFantasyPointsInVenue > 0 && <>
                                     <Separator className="mt-1" />
                                     <div className="flex justify-between items-center pt-1">
-                                        <p>In {venueName}</p>
+                                        <p>In Venue</p>
                                         <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsInVenue, matchFormat)}`}>
-                                            {totalFantasyPointsInVenue}
+                                            {Math.round(totalFantasyPointsInVenue / 5)}
                                         </div>
                                     </div>
                                 </>}
@@ -300,7 +300,7 @@ function highlightColor(inning: any, matchFormat: string, type: 'batting' | 'bow
                 className = 'bg-gray-200 text-emerald-700 shadow'
             }
         }
-    } else if (matchFormat === 'T20' || matchFormat === 'IPL') {
+    } else {
         if (type === 'batting') {
             if (inning.run >= 100) {
                 className = 'bg-emerald-700 text-white shadow'
