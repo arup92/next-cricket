@@ -40,7 +40,6 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
     }, [pathname])
 
     const playerDataKeys = Object.keys(playerData) // Array of player names
-    let venueName: string = ''
 
     // Set: Show Hide Card
     const handleDeSelected = (index: number) => {
@@ -241,7 +240,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
 
                             {totalFantasyPoints && <div className="border border-gray-400 px-2 py-1 rounded-sm">
                                 <div className="flex justify-between items-center">
-                                    <p>Avg Points</p>
+                                    <p>Fantasy Points</p>
                                     <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPoints, matchFormat)}`}>
                                         {totalFantasyPoints}
                                     </div>
