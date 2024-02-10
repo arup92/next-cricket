@@ -152,8 +152,8 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                 </div>
 
 
-                {pickedPlayers && <div className="bg-secondary shadow-sm px-2 rounded py-1 text-center fixed bottom-3 left-1/2 -translate-x-[50%] z-50">{Object.entries(pickedPlayers).map(item => {
-                    return <Badge key={item[0]} className="relative rounded-sm mr-4 px-3 py-1 bg-white text-slate-900 hover:bg-white">
+                {pickedPlayers && <div className="bg-secondary flex gap-4 shadow-sm px-2 rounded py-1 text-center fixed bottom-3 left-1/2 -translate-x-[50%] z-50">{Object.entries(pickedPlayers).map(item => {
+                    return <Badge key={item[0]} className="relative rounded-sm px-3 py-1 bg-white text-slate-900 hover:bg-white">
                         {item[0]}
                         <span
                             className={`absolute -top-3 -right-3 text-center text-xs border-2 rounded-full text-white border-white ${parseInt(item[1] as string) <= 7 ? 'bg-emerald-600' : 'bg-red-500'} shadow-md w-5 h-5 grid items-center`}
@@ -162,9 +162,9 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                         </span>
                     </Badge>
                 })}
-                    <Badge className="relative rounded-sm px-3 py-1 cursor-pointer">
+                    {/* <Badge className="relative rounded-sm px-3 py-1 cursor-pointer">
                         Save
-                    </Badge>
+                    </Badge> */}
                 </div>}
             </>}
         </>
