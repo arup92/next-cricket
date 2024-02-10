@@ -14,6 +14,8 @@ import { Card, CardContent } from '../ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import SwitchInactive from './SwitchInactive';
+
 
 interface ListPlayersEditProps {
     playerData: any[]
@@ -76,8 +78,53 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
         resolver: zodResolver(formSchema)
     })
 
+    // Switch Button
+    const handleSwitchChange = async (checked: boolean, id: string) => {
+        const postBody = {
+            playerId: id,
+            inactive: checked ? 'yes' : 'no'
+        }
+
+        await axios.patch('/api/dashboard/edit-player', postBody)
+            .then(response => {
+                if (response.status === 200) {
+                    toast.success(response.data)
+                } else {
+                    toast.error(response.data)
+                }
+            })
+            .catch(err => {
+                toast.error(err.message)
+            })
+    }
+
     return (
         <>
+            <div className='flex items-center px-4 py-2 mb-2'>
+                <div className='w-[25%]'>
+                    Player
+                </div>
+
+                <div className='w-[25%] text-muted-foreground'>
+                    Teams
+                </div>
+
+                <div className='w-[25%] text-muted-foreground'>
+                    Type
+                </div>
+
+                <div className='w-[15%] text-muted-foreground'>
+                    Bowling
+                </div>
+
+                <div className='w-[15%] text-muted-foreground capitalize'>
+                    Active
+                </div>
+
+                <div className='w-[10%]'>
+                    Edit
+                </div>
+            </div>
             {playerData.length > 0 && playerData.map((player: any, index: number) => <Card key={index} className='mb-4'>
                 <CardContent className='flex items-center px-4 py-2'>
                     <div className='w-[25%]'>
@@ -111,9 +158,14 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                     </div>
 
                     <div className='w-[15%] text-muted-foreground capitalize'>
-                        {player.inactive ? player.inactive : (
+                        <SwitchInactive
+                            id={player.playerId}
+                            checked={player?.inactive === 'yes' ? true : false}
+                            handleChange={handleSwitchChange}
+                        />
+                        {/* {player.inactive ? player.inactive : (
                             <span className='text-sm'>NA</span>
-                        )}
+                        )} */}
                     </div>
 
                     <div className='w-[10%]'>
