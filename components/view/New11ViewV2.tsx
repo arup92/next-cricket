@@ -1,11 +1,12 @@
 'use client'
 
 import Loading from "@/app/loading"
+import useSelectCardStore from "@/store/selectCard"
 import { MatchFormat } from "@/types/MatchFormat"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import NotFound from "../NotFound"
 import StatsTeamFormV2 from "../forms/StatsTeamFormV2"
 import { Badge } from "../ui/badge"
@@ -23,6 +24,14 @@ interface New11ViewV2Props {
 
 const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
     const [pickedPlayers, setPickedPlayers] = useState<any>({})
+    const pickPlayer = useSelectCardStore()
+
+    // Clear State on different calls
+    useEffect(() => {
+        if (!(pickedPlayers.hasOwnProperty(teams?.[0].teamId) && pickedPlayers.hasOwnProperty(teams?.[1].teamId))) {
+            pickPlayer.clear()
+        }
+    }, [])
 
     const getCustomMatches = async (): Promise<any> => {
         return await axios.all([

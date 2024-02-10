@@ -139,7 +139,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
                                             className="justify-between w-full bg-white"
                                         >
                                             {Teams && watch().teamA ?
-                                                Teams.find((team: any) => team.teamId === watch().teamA.toUpperCase()).teamId :
+                                                Teams.find((team: any) => team?.teamId === watch()?.teamA?.toUpperCase())?.teamId :
                                                 'Team A'
                                             }
                                             <span className="rotate-90"><GoCode /></span>
@@ -181,7 +181,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
                                             className="justify-between w-full bg-white"
                                         >
                                             {Teams && watch().teamB ?
-                                                Teams.find((team: any) => team.teamId === watch().teamB.toUpperCase()).teamId :
+                                                Teams.find((team: any) => team?.teamId === watch()?.teamB?.toUpperCase())?.teamId :
                                                 'Team B'
                                             }
                                             <span className="rotate-90"><GoCode /></span>

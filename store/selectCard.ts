@@ -4,6 +4,7 @@ type Store = {
     playerIds: any
     add: (playerId: string, teamId: string) => void
     remove: (playerId: string) => void
+    clear: () => void
 }
 
 const useSelectCardStore = create<Store>()((set) => ({
@@ -16,6 +17,9 @@ const useSelectCardStore = create<Store>()((set) => ({
         return {
             playerIds: rest
         }
+    }),
+    clear: () => set((state) => {
+        return { playerIds: {} }
     }),
 }))
 
