@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch } from '../ui/switch'
 
 interface SwitchInactiveProps {
@@ -15,11 +15,17 @@ const SwitchInactive: React.FC<SwitchInactiveProps> = ({ id, checked, handleChan
         handleChange(checked, id)
     }
 
+    useEffect(() => {
+        setIsChecked(checked)
+    }, [checked])
+
     return (
-        <Switch
-            checked={isChecked}
-            onCheckedChange={handleCheckedChange}
-        />
+        <>
+            <Switch
+                checked={isChecked}
+                onCheckedChange={handleCheckedChange}
+            />
+        </>
     )
 }
 
