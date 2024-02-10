@@ -82,7 +82,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
     const handleSwitchChange = async (checked: boolean, id: string) => {
         const postBody = {
             playerId: id,
-            inactive: checked ? 'yes' : 'no'
+            inactive: checked ? 'no' : 'yes'
         }
 
         await axios.patch('/api/dashboard/edit-player', postBody)
