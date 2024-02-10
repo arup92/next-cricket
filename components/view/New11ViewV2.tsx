@@ -15,7 +15,6 @@ import PlayerStats from "./New11Card/PlayerStats"
 import TeamScoresCard from "./New11Card/TeamScoresCard"
 import TeamWicketsCard from "./New11Card/TeamWicketsCard"
 import VenueStatsCard from "./New11Card/VenueStatsCard"
-import { Button } from "../ui/button"
 
 interface New11ViewV2Props {
     slugs: any
