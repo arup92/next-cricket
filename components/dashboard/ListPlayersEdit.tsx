@@ -163,9 +163,6 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                             checked={player?.inactive === 'yes' ? true : false}
                             handleChange={handleSwitchChange}
                         />
-                        {/* {player.inactive ? player.inactive : (
-                            <span className='text-sm'>NA</span>
-                        )} */}
                     </div>
 
                     <div className='w-[10%]'>

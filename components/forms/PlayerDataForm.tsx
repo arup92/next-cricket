@@ -23,11 +23,13 @@ const formSchema = z.object({
 const PlayerDataForm = () => {
     const [playerData, setPlayerData] = useState<any[]>()
     const [selectOpen, setSelectOpen] = useState(false)
+    const [team, setTeam] = useState<string>('')
 
     const onSubmit = (values: any) => {
-        const params = new URLSearchParams(values).toString()
+        const params = new URLSearchParams(values)
+        setTeam(params.get('team') || '')
 
-        axios.get(`/api/dashboard/get-players?${params}`)
+        axios.get(`/api/dashboard/get-players?${params.toString()}`)
             .then(response => {
                 setPlayerData(response.data)
             })
@@ -64,6 +66,26 @@ const PlayerDataForm = () => {
         queryKey: ['teams',],
         queryFn: getTeams
     })
+
+    // Reset all Active players
+    const handleReset = async (teamId: string) => {
+        const postBody = {
+            teamId: teamId
+        }
+
+        await axios.patch('/api/dashboard/edit-player/resetActives', postBody)
+            .then(response => {
+                if (response.status === 200) {
+                    toast.success(response.data)
+                    window.location.reload()
+                } else {
+                    toast.error(response.data)
+                }
+            })
+            .catch(err => {
+                toast.error(err.message)
+            })
+    }
 
     return (
         <>
@@ -123,6 +145,8 @@ const PlayerDataForm = () => {
 
                 <Button>Submit</Button>
             </form>
+
+            {team && <div className='flex justify-end mb-3'><Button onClick={() => { handleReset(team) }}>Reset Active Players</Button></div>}
 
             {playerData && (playerData.length > 0 ? <ListPlayersEdit playerData={playerData} /> : <SecNotFound />)}
         </>
