@@ -82,7 +82,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
     const handleSwitchChange = async (checked: boolean, id: string) => {
         const postBody = {
             playerId: id,
-            inactive: checked ? 'no' : 'yes'
+            inactive: checked ? 'yes' : 'no'
         }
 
         await axios.patch('/api/dashboard/edit-player', postBody)
@@ -118,7 +118,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                 </div>
 
                 <div className='w-[15%] text-muted-foreground capitalize'>
-                    Active
+                    Inactive
                 </div>
 
                 <div className='w-[10%]'>

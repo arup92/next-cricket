@@ -271,6 +271,9 @@ export async function POST(request: Request) {
             ...constantBattingAData
         }))
 
+        console.log(battingADataUpdated);
+
+
         // battingADataUpdated.forEach(async (battingData) => {
         //     await prismaClient.batting.create({
         //         data: battingData as any
