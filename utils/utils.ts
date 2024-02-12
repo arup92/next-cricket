@@ -540,3 +540,25 @@ export const getLeagueName = (leagueId: string): string => {
 
     return leagueId
 }
+
+export const mergeNSortPoints = (array1: any[], array2: any[]) => {
+    const playerObj: any = {}
+    let shiftIndex = 0
+
+    array1.forEach((item, index) => {
+        playerObj[item.playerId] = index
+    })
+
+    array2.forEach(item => {
+        if (playerObj.hasOwnProperty(item.playerId)) {
+            item.f11points += array1[playerObj[item.playerId] - shiftIndex].f11points
+            array1.splice((playerObj[item.playerId] - shiftIndex), 1)
+
+            shiftIndex++
+
+        }
+        array1.push(item)
+    })
+
+    return array1.sort((a, b) => b.f11points - a.f11points)
+}
