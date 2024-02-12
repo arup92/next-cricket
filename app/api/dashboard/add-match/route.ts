@@ -214,27 +214,6 @@ export async function POST(request: Request) {
                 },
                 create: item
             })
-
-            // const player = await prismaClient.player.findUnique({
-            //     where: {
-            //         playerId: item.playerId
-            //     }
-            // })
-
-            // if (!player) {
-            //     await prismaClient.player.create({
-            //         data: item
-            //     })
-            // } else {
-            //     await prismaClient.player.update({
-            //         where: {
-            //             playerId: item.playerId
-            //         },
-            //         data: {
-            //             inactive: 'no'
-            //         }
-            //     })
-            // }
         }
 
         // Insert PlayerTeam

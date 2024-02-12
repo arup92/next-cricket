@@ -541,11 +541,13 @@ export const getLeagueName = (leagueId: string): string => {
     return leagueId
 }
 
-export const mergeNSortPoints = (array1: any[], array2: any[]) => {
+// Make Rank Table data
+export const mergeNSortPointsWRank = (array1: any[], array2: any[]) => {
     const playerObj: any = {}
     let shiftIndex = 0
+    const result: any[] = []
 
-    array1.forEach((item, index) => {
+    array1.forEach((item: any, index: number) => {
         playerObj[item.playerId] = index
     })
 
@@ -555,10 +557,21 @@ export const mergeNSortPoints = (array1: any[], array2: any[]) => {
             array1.splice((playerObj[item.playerId] - shiftIndex), 1)
 
             shiftIndex++
-
         }
         array1.push(item)
     })
 
-    return array1.sort((a, b) => b.f11points - a.f11points)
+    // Make Array of Objects for batch Insert with Rank
+    const sortedArray = array1.sort((a, b) => b.f11points - a.f11points)
+    sortedArray.forEach((item: any, index: number) => {
+        const object = {
+            playerId: item.playerId,
+            f11points: item.f11points,
+            rank: index + 1
+        }
+
+        result.push(object)
+    })
+
+    return result
 }
