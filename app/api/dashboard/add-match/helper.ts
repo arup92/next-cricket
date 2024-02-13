@@ -1,6 +1,5 @@
-
 // Make Rank Table data
-export const mergeNSortPointsWRank = (array1: any[], array2: any[]) => {
+export const mergeNSortPointsWRank = (array1: any[], array2: any[], matchId: number) => {
     const mergerd: any = {}
 
     // Construct merged object based on first array
@@ -35,13 +34,14 @@ export const mergeNSortPointsWRank = (array1: any[], array2: any[]) => {
 
     // Sort and Make Array of Objects for batch Insert with Rank
     const sortedArray = mergedArray.sort((a, b) => b.f11points - a.f11points)
-    const result = sortedArray.map((item: any, index: number) => {
-        return {
+    const result = sortedArray.map((item: any, index: number) => (
+        {
             playerId: item.playerId,
             f11points: item.f11points,
-            rank: index + 1
+            rank: index + 1,
+            matchId
         }
-    })
+    ))
 
     return result
 }

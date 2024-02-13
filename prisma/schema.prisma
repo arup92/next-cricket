@@ -254,6 +254,6 @@ model Rank {
 
   Player   Player @relation(fields: [playerId], references: [playerId])
   playerId String
-  Match    Match? @relation(fields: [matchId], references: [id])
-  matchId  Int?
+  Match    Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  matchId  Int
 }
