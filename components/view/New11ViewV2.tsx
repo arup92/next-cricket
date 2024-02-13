@@ -129,7 +129,8 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <PlayerStats
                         className="col-span-2"
-                        playerData={data.new11}
+                        ranks={data.new11.ranks}
+                        playerData={data.new11.stats}
                         teamId={data.sTeamA.team}
                         oppCountryId={data.sTeamB.team}
                         matchFormat={slugs[2]}
@@ -151,7 +152,8 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                 <div className="grid grid-cols-1 gap-3 lg:grid-cols-8">
                     <PlayerStats
                         className="col-span-2"
-                        playerData={data.new11}
+                        ranks={data.new11.ranks}
+                        playerData={data.new11.stats}
                         teamId={data.sTeamB.team}
                         matchFormat={slugs[2]}
                         oppCountryId={data.sTeamA.team}

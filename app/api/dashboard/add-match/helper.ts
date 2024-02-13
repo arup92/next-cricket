@@ -4,24 +4,26 @@ export const mergeNSortPointsWRank = (array1: any[], array2: any[], matchId: num
 
     // Construct merged object based on first array
     array1.forEach(item => {
-        const { playerId, f11points } = item
+        const { playerId, f11points, teamId } = item
 
         mergerd[playerId] = {
             playerId,
-            f11points
+            f11points,
+            teamId
         }
     })
 
     // Construct & update merged object based on second array
     array2.forEach(item => {
-        const { playerId, f11points } = item
+        const { playerId, f11points, teamId } = item
 
         if (mergerd[playerId]) {
             mergerd[playerId].f11points += item.f11points
         } else {
             mergerd[playerId] = {
                 playerId,
-                f11points
+                f11points,
+                teamId
             }
         }
     })
@@ -29,7 +31,8 @@ export const mergeNSortPointsWRank = (array1: any[], array2: any[], matchId: num
     // Make the merged array from merged object
     const mergedArray = Object.keys(mergerd).map((playerId: string) => ({
         playerId,
-        f11points: mergerd[playerId].f11points
+        f11points: mergerd[playerId].f11points,
+        teamId: mergerd[playerId].teamId,
     }))
 
     // Sort and Make Array of Objects for batch Insert with Rank
@@ -38,6 +41,7 @@ export const mergeNSortPointsWRank = (array1: any[], array2: any[], matchId: num
         {
             playerId: item.playerId,
             f11points: item.f11points,
+            teamId: item.teamId,
             rank: index + 1,
             matchId
         }

@@ -351,8 +351,8 @@ export async function POST(request: Request) {
 
         /*********************************************************************************************************/
         // Insert into Rank table
-        const allBattingData: any = { ...battingADataUpdated, ...battingBDataUpdated }
-        const allBowlingData: any = { ...bowlingADataUpdated, ...bowlingBDataUpdated }
+        const allBattingData: any = [...battingADataUpdated, ...battingBDataUpdated]
+        const allBowlingData: any = [...bowlingADataUpdated, ...bowlingBDataUpdated]
 
         const rankData = mergeNSortPointsWRank(allBattingData, allBowlingData, match.id)
 

@@ -72,6 +72,7 @@ model Team {
   bowling     Bowling[]
   Scores      Scores[]
   playerTeams PlayerTeam[]
+  rank        Rank[]
 }
 
 model Venue {
@@ -256,4 +257,6 @@ model Rank {
   playerId String
   Match    Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
   matchId  Int
+  Team     Team   @relation(fields: [teamId], references: [teamId])
+  teamId   String
 }

@@ -14,9 +14,11 @@ import { IoIosStar } from "react-icons/io"
 import { MdSportsCricket } from "react-icons/md"
 import PlayerPopUpBat from "./Card/PlayerPopUpBat"
 import PlayerPopUpBowl from "./Card/PlayerPopUpBowl"
+import { makeRankArrayObject } from "@/utils/utils"
 
 interface PlayerStatsProps {
     playerData: any
+    ranks: any[]
     className?: string
     teamId: string
     oppCountryId: string
@@ -24,10 +26,11 @@ interface PlayerStatsProps {
     handleSendPicks: (picks: any) => void
 }
 
-const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId, oppCountryId, matchFormat, handleSendPicks }) => {
+const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className, teamId, oppCountryId, matchFormat, handleSendPicks }) => {
     const deSelected = useZStore()
     const pickPlayer = useSelectCardStore()
     const reviewPlayer = useReviewCardStore()
+    const playerRank = makeRankArrayObject(ranks)
 
     const pathname = usePathname()
 
@@ -236,6 +239,24 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ playerData, className, teamId
                                         </div>
                                     </div>
                                 </>}
+                            </div>}
+
+                            {playerRank[player] && <div className="border border-gray-400 px-2 py-1 rounded-sm mb-3">
+                                <div className="flex justify-between items-center">
+                                    <p>Ranks</p>
+                                    <div>
+                                        {playerRank[player]?.map((item: any, index: number) => {
+                                            let bgColor = ''
+                                            if (item <= 2) {
+                                                bgColor = 'bg-gradient-to-r from-amber-200 to-yellow-500 text-white'
+                                            } else if (item <= 11) {
+                                                bgColor = 'bg-emerald-500 text-white'
+                                            }
+
+                                            return <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${bgColor}`} key={index}>{item}</div>
+                                        })}
+                                    </div>
+                                </div>
                             </div>}
 
                             {totalFantasyPoints && <div className="border border-gray-400 px-2 py-1 rounded-sm">
