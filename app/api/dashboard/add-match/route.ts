@@ -4,6 +4,7 @@ import { ErrorMessage, Message } from '@/responses/messages';
 import { battingData, bowlingData, makeExtra, sortStringsAlphabetically, summaryData } from '@/utils/utils';
 import { MatchFormat, MatchType } from "@prisma/client";
 import { NextResponse } from 'next/server';
+import { mergeNSortPointsWRank } from "./helper";
 
 interface RequestBody {
     matchType: MatchType
@@ -43,18 +44,12 @@ export async function POST(request: Request) {
 
     // Scores
     let sessionAScore = body.sessionAbat
-        .substring(0, SAIndexToSplit)
-        .split('\n')
-        .filter(item => item !== '')[1]
-        .split(' ')[0]
-        .split('/')
+        .substring(0, SAIndexToSplit).split('\n')
+        .filter(item => item !== '')[1].split(' ')[0].split('/')
 
     let sessionBScore = body.sessionBbat
-        .substring(0, SBIndexToSplit)
-        .split('\n')
-        .filter(item => item !== '')[1]
-        .split(' ')[0]
-        .split('/')
+        .substring(0, SBIndexToSplit).split('\n')
+        .filter(item => item !== '')[1].split(' ')[0].split('/')
 
     // Validate venue
     const pattern = /^[a-zA-Z\s]*$/
@@ -68,6 +63,7 @@ export async function POST(request: Request) {
     }
 
     try {
+        /*********************************************************************************************************/
         // Create venue
         let venue = await prismaClient.venue.findUnique({
             where: {
@@ -86,6 +82,8 @@ export async function POST(request: Request) {
             })
         }
 
+
+        /*********************************************************************************************************/
         // Create Match
         const teams: string[] = sortStringsAlphabetically(body.teamA, body.teamB)
 
@@ -114,6 +112,8 @@ export async function POST(request: Request) {
             return new NextResponse(ErrorMessage.MATCH_EXISTS, { status: 401 })
         }
 
+
+        /*********************************************************************************************************/
         // Create Score
         const score = await prismaClient.scores.createMany({
             data: [{
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
             }]
         })
 
-
+        /*********************************************************************************************************/
         // Make Player array
         const playerData: any[] = []
         const playerTeam: any[] = []
@@ -203,6 +203,8 @@ export async function POST(request: Request) {
             playerTeam.push(currentPlayerTeam)
         }
 
+
+        /*********************************************************************************************************/
         // Insert Player
         for (const item of playerData) {
             await prismaClient.player.upsert({
@@ -214,29 +216,9 @@ export async function POST(request: Request) {
                 },
                 create: item
             })
-
-            // const player = await prismaClient.player.findUnique({
-            //     where: {
-            //         playerId: item.playerId
-            //     }
-            // })
-
-            // if (!player) {
-            //     await prismaClient.player.create({
-            //         data: item
-            //     })
-            // } else {
-            //     await prismaClient.player.update({
-            //         where: {
-            //             playerId: item.playerId
-            //         },
-            //         data: {
-            //             inactive: 'no'
-            //         }
-            //     })
-            // }
         }
 
+        /*********************************************************************************************************/
         // Insert PlayerTeam
         for (const item of playerTeam) {
             const playerTeamData = await prismaClient.playerTeam.findUnique({
@@ -255,6 +237,8 @@ export async function POST(request: Request) {
             }
         }
 
+
+        /*********************************************************************************************************/
         // Add Batting: Session A
         const constantBattingAData = {
             matchFormat: body.matchFormat,
@@ -271,14 +255,6 @@ export async function POST(request: Request) {
             ...constantBattingAData
         }))
 
-        console.log(battingADataUpdated);
-
-
-        // battingADataUpdated.forEach(async (battingData) => {
-        //     await prismaClient.batting.create({
-        //         data: battingData as any
-        //     })
-        // })
         await Promise.all(battingADataUpdated.map(async (battingData) => {
             await prismaClient.batting.create({
                 data: battingData as any
@@ -300,12 +276,6 @@ export async function POST(request: Request) {
             ...battingData,
             ...constantBattingBData
         }))
-
-        // battingBDataUpdated.forEach(async (battingData) => {
-        //     await prismaClient.batting.create({
-        //         data: battingData as any
-        //     })
-        // })
 
         await Promise.all(battingBDataUpdated.map(async (battingData) => {
             await prismaClient.batting.create({
@@ -340,12 +310,6 @@ export async function POST(request: Request) {
             ...constantBowlingAData
         }))
 
-        // bowlingADataUpdated.forEach(async (bowlingData) => {
-        //     await prismaClient.bowling.create({
-        //         data: bowlingData as any
-        //     })
-        // })
-
         await Promise.all(bowlingADataUpdated.map(async (bowlingData) => {
             await prismaClient.bowling.create({
                 data: bowlingData as any
@@ -379,20 +343,24 @@ export async function POST(request: Request) {
             ...constantBowlingBData
         }))
 
-        // bowlingBDataUpdated.forEach(async (bowlingData) => {
-        //     await prismaClient.bowling.create({
-        //         data: bowlingData as any
-        //     })
-        // })
-
         await Promise.all(bowlingBDataUpdated.map(async (bowlingData) => {
             await prismaClient.bowling.create({
                 data: bowlingData as any
             })
         }))
 
+        /*********************************************************************************************************/
+        // Insert into Rank table
+        const allBattingData: any = [...battingADataUpdated, ...battingBDataUpdated]
+        const allBowlingData: any = [...bowlingADataUpdated, ...bowlingBDataUpdated]
+
+        const rankData = mergeNSortPointsWRank(allBattingData, allBowlingData, match.id)
+
+        await prismaClient.rank.createMany({
+            data: rankData
+        })
+
         return NextResponse.json({ message: Message.MATCH_ADDED, matchId: match.id }, { status: 200 })
-        // return NextResponse.json({ message: Message.MATCH_ADDED }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })

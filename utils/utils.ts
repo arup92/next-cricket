@@ -540,3 +540,17 @@ export const getLeagueName = (leagueId: string): string => {
 
     return leagueId
 }
+
+export const makeRankArrayObject = (rankArray: any[]) => {
+    const playerRanks: any = {}
+
+    rankArray.forEach(item => {
+        if (!playerRanks[item.playerId]) {
+            playerRanks[item.playerId] = []
+        }
+
+        playerRanks[item.playerId].push(item.rank)
+    })
+
+    return playerRanks
+}

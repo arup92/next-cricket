@@ -310,9 +310,32 @@ export async function GET(request: Request) {
             })
         }
 
-        const response = getPlayerStats({ teamBat, teamBowl, teamBatVsTeam, teamBowlVsTeam, teamBatInVenue, teamBowlInVenue })
+        // Get ranks
+        const ranks = await prismaClient.rank.findMany({
+            where: {
+                Player: {
+                    inactive: 'no',
+                },
+                OR: [
+                    { teamId: teamA },
+                    { teamId: teamB }
+                ],
+            },
+            select: {
+                rank: true,
+                playerId: true,
+            },
+            orderBy: {
+                Match: {
+                    matchDate: 'desc'
+                }
+            },
+            take: 200
+        })
 
-        return NextResponse.json(response, { status: 200 })
+        const stats = getPlayerStats({ teamBat, teamBowl, teamBatVsTeam, teamBowlVsTeam, teamBatInVenue, teamBowlInVenue })
+
+        return NextResponse.json({ stats, ranks }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })

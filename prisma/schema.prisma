@@ -72,6 +72,7 @@ model Team {
   bowling     Bowling[]
   Scores      Scores[]
   playerTeams PlayerTeam[]
+  rank        Rank[]
 }
 
 model Venue {
@@ -135,6 +136,7 @@ model Match {
   batting Batting[]
   bowling Bowling[]
   Scores  Scores[]
+  rank    Rank[]
 }
 
 enum PlayerType {
@@ -164,6 +166,7 @@ model Player {
 
   batting Batting[]
   bowling Bowling[]
+  rank    Rank[]
 }
 
 // Many-to-Many
@@ -242,4 +245,18 @@ model Bowling {
   teamId String
 
   wicketType String?
+}
+
+model Rank {
+  id Int @id @default(autoincrement())
+
+  f11points Int
+  rank      Int
+
+  Player   Player @relation(fields: [playerId], references: [playerId])
+  playerId String
+  Match    Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  matchId  Int
+  Team     Team   @relation(fields: [teamId], references: [teamId])
+  teamId   String
 }
