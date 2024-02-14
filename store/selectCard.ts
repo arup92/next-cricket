@@ -1,7 +1,9 @@
 import { create } from 'zustand'
 
 type Store = {
+    teams: string[]
     playerIds: any
+    setTeam: (teams: string[]) => void
     add: (playerId: string, teamId: string) => void
     remove: (playerId: string) => void
     clear: () => void
@@ -9,6 +11,19 @@ type Store = {
 
 const useSelectCardStore = create<Store>()((set) => ({
     playerIds: {},
+    teams: [],
+    setTeam: (teams: string[]) => set((state) => {
+        teams.forEach(team => {
+            if (!state.teams.includes(team)) {
+                state.clear()
+                return
+            }
+        })
+
+        return {
+            teams
+        }
+    }),
     add: (playerId: string, teamId: string) => set((state) => ({
         playerIds: { ...state.playerIds, [playerId]: teamId }
     })),
@@ -19,7 +34,10 @@ const useSelectCardStore = create<Store>()((set) => ({
         }
     }),
     clear: () => set((state) => {
-        return { playerIds: {} }
+        return {
+            playerIds: {},
+            teams: []
+        }
     }),
 }))
 
