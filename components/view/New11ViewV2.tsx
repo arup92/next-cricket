@@ -28,9 +28,11 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
 
     // Clear State on different calls
     useEffect(() => {
-        if (!(pickedPlayers.hasOwnProperty(teams?.[0].teamId) && pickedPlayers.hasOwnProperty(teams?.[1].teamId))) {
-            pickPlayer.clear()
-        }
+        // console.log(pickPlayer);
+
+        // if (!(pickPlayer.playerIds.hasOwnProperty(teams?.[0].teamId) && pickPlayer.playerIds.hasOwnProperty(teams?.[1].teamId))) {
+        //     pickPlayer.clear()
+        // }
     }, [])
 
     const getCustomMatches = async (): Promise<any> => {
