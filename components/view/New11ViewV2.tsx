@@ -1,7 +1,6 @@
 'use client'
 
 import Loading from "@/app/loading"
-import useSelectCardStore from "@/store/selectCard"
 import { MatchFormat } from "@/types/MatchFormat"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -16,6 +15,7 @@ import PlayerStats from "./New11Card/PlayerStats"
 import TeamScoresCard from "./New11Card/TeamScoresCard"
 import TeamWicketsCard from "./New11Card/TeamWicketsCard"
 import VenueStatsCard from "./New11Card/VenueStatsCard"
+import useSelectCardStore from "@/store/selectCard"
 
 interface New11ViewV2Props {
     slugs: any
@@ -25,14 +25,13 @@ interface New11ViewV2Props {
 const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
     const [pickedPlayers, setPickedPlayers] = useState<any>({})
     const pickPlayer = useSelectCardStore()
+    const pickedPlayersArray = Object.entries(pickedPlayers)
 
     // Clear State on different calls
     useEffect(() => {
-        // console.log(pickPlayer);
-
-        // if (!(pickPlayer.playerIds.hasOwnProperty(teams?.[0].teamId) && pickPlayer.playerIds.hasOwnProperty(teams?.[1].teamId))) {
-        //     pickPlayer.clear()
-        // }
+        if (teams) {
+            pickPlayer.setTeam(teams.map((team: any) => team.teamId))
+        }
     }, [])
 
     const getCustomMatches = async (): Promise<any> => {
@@ -164,7 +163,7 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                 </div>
 
 
-                {pickedPlayers && <div className="bg-secondary flex gap-4 shadow-sm px-2 rounded py-1 text-center fixed bottom-3 left-1/2 -translate-x-[50%] z-50">{Object.entries(pickedPlayers).map(item => {
+                {pickedPlayersArray.length > 0 && <div className="bg-secondary flex gap-4 shadow-sm px-2 rounded py-1 text-center fixed bottom-3 left-1/2 -translate-x-[50%] z-50">{pickedPlayersArray.map(item => {
                     return <Badge key={item[0]} className="relative rounded-sm px-3 py-1 bg-white text-slate-900 hover:bg-white">
                         {item[0]}
                         <span
