@@ -121,6 +121,42 @@ $$ LANGUAGE plpgsql;
 
 select bowlingFpCount()
 
+===============================================================================================1
+-- Update Rank
+
+CREATE OR REPLACE FUNCTION calculate_and_insert_rank()
+RETURNS void AS
+$$
+BEGIN
+    WITH combined_points AS (
+        SELECT 
+            COALESCE(b.f11points, 0) + COALESCE(a.f11points, 0) AS total_points,
+            COALESCE(b."playerId", a."playerId") AS "playerId",
+            COALESCE(b."matchId", a."matchId") AS "matchId",
+            COALESCE(b."teamId", a."teamId") AS "teamId"
+        FROM (
+            SELECT "playerId", "matchId", "teamId", SUM(f11points) AS f11points
+            FROM public."Batting"
+            GROUP BY "playerId", "matchId", "teamId"
+        ) b
+        FULL OUTER JOIN (
+            SELECT "playerId", "matchId", "teamId", SUM(f11points) AS f11points
+            FROM public."Bowling"
+            GROUP BY "playerId", "matchId", "teamId"
+        ) a
+        ON a."playerId" = b."playerId" AND a."matchId" = b."matchId" AND a."teamId" = b."teamId"
+    )
+    INSERT INTO public."Rank" ("f11points", "playerId", "matchId", "teamId", "rank")
+    SELECT 
+        total_points,
+        "playerId",
+        "matchId",
+        "teamId",
+        RANK() OVER (PARTITION BY "matchId" ORDER BY total_points DESC) AS "rank"
+    FROM combined_points;
+END;
+$$
+LANGUAGE plpgsql;
 
 ===============================================================================================
 SELECT setval('public."Venue_id_seq"', (SELECT MAX(id) FROM public."Venue")+1);
