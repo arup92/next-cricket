@@ -31,7 +31,6 @@ const MatchTable = () => {
             <Loading />
         )
 
-
     return (
         <CenteredArea maxWidthClass="max-w-5xl">
             {data && <div className="space-y-5">
