@@ -66,6 +66,7 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                     <TableHead>6s</TableHead>
                                     <TableHead>4s</TableHead>
                                     <TableHead className="hidden lg:table-cell">SR</TableHead>
+                                    <TableHead>Rank</TableHead>
                                     <TableHead>Inn</TableHead>
                                     <TableHead>Vs</TableHead>
                                     <TableHead className="hidden lg:table-cell">Result</TableHead>
@@ -78,6 +79,7 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                     const date = new Date(item.matchDate)
                                     const options: any = { year: 'numeric', month: 'long', day: 'numeric' }
 
+                                    // Run Colors
                                     let battingClassName = ``
                                     if (item.run >= 100) {
                                         battingClassName = 'bg-emerald-700 text-white shadow'
@@ -89,7 +91,7 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                         battingClassName = 'bg-emerald-50 text-emerald-700 shadow'
                                     }
 
-                                    // Results
+                                    // Results Colors
                                     let result = 'Win'
                                     let resultColor = 'bg-emerald-700 text-white shadow'
                                     if (item.teamId !== item.Match.result) {
@@ -97,12 +99,20 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                         resultColor = 'bg-red-500 text-white shadow'
                                     }
 
-                                    // Innings
+                                    // Innings Colors
                                     let innings = '1st'
                                     let inningsColor = 'bg-gray-300 shadow'
                                     if (item.teamId !== item.Match.batFirst) {
                                         innings = '2nd'
                                         inningsColor = 'bg-white shadow'
+                                    }
+
+                                    // Rank Colors
+                                    let rankColor = ''
+                                    if (item.rank <= 2) {
+                                        rankColor = 'bg-gradient-to-r from-amber-200 to-yellow-500 text-white'
+                                    } else if (item.rank <= 11) {
+                                        rankColor = 'bg-emerald-500 text-white'
                                     }
 
                                     return <TableRow key={index}>
@@ -111,6 +121,9 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                         <TableCell>{item.six}</TableCell>
                                         <TableCell>{item.four}</TableCell>
                                         <TableCell className={`hidden lg:table-cell`}>{Math.round(item.strikeRate)}</TableCell>
+                                        <TableCell>
+                                            <span className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm ${rankColor}`}>{item.rank}</span>
+                                        </TableCell>
                                         <TableCell>
                                             <span className={`px-1.5 py-0.5 rounded-sm w-[36px] text-center inline-block ${inningsColor}`}>
                                                 {innings}
