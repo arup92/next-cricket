@@ -320,6 +320,9 @@ export async function GET(request: Request) {
                     { teamId: teamA },
                     { teamId: teamB }
                 ],
+                Match: {
+                    matchFormat
+                }
             },
             select: {
                 rank: true,
