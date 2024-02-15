@@ -549,7 +549,9 @@ export const makeRankArrayObject = (rankArray: any[]) => {
             playerRanks[item.playerId] = []
         }
 
-        playerRanks[item.playerId].push(item.rank)
+        if (playerRanks[item.playerId].length < 5) {
+            playerRanks[item.playerId].push(item.rank)
+        }
     })
 
     return playerRanks
