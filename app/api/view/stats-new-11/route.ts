@@ -320,17 +320,22 @@ export async function GET(request: Request) {
                     { teamId: teamA },
                     { teamId: teamB }
                 ],
+                Match: {
+                    matchFormat
+                }
             },
             select: {
                 rank: true,
                 playerId: true,
+                matchId: true,
+                teamId: true,
             },
             orderBy: {
                 Match: {
                     matchDate: 'desc'
                 }
             },
-            take: 200
+            take: 440
         })
 
         const stats = getPlayerStats({ teamBat, teamBowl, teamBatVsTeam, teamBowlVsTeam, teamBatInVenue, teamBowlInVenue })
