@@ -62,7 +62,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                     <TableHead>M</TableHead>
                                     <TableHead>E</TableHead>
                                     <TableHead>Rank</TableHead>
-                                    <TableHead>Inn</TableHead>
+                                    <TableHead className="hidden lg:table-cell">Inn</TableHead>
                                     <TableHead>Vs</TableHead>
                                     <TableHead className="hidden lg:table-cell">Result</TableHead>
                                     <TableHead className="hidden lg:table-cell">Venue</TableHead>
@@ -115,7 +115,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                         <TableCell>
                                             <span className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm ${rankColor}`}>{item.rank}</span>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="hidden lg:table-cell">
                                             <span className={`px-1.5 py-0.5 rounded-sm w-[36px] inline-block ${inningsColor}`}>
                                                 {innings}
                                             </span>
