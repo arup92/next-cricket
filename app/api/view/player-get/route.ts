@@ -73,9 +73,14 @@ export async function GET(request: Request) {
         // Player Table
         const allPlayerData = await prismaClient.player.findUnique({
             where: {
-                playerId
+                playerId,
             },
             include: {
+                rank: {
+                    orderBy: {
+                        matchId: 'desc'
+                    }
+                },
                 playerTeams: {
                     select: {
                         teamId: true,
@@ -109,9 +114,9 @@ export async function GET(request: Request) {
             },
         })
 
-        const { batting, bowling, ...playerData } = allPlayerData as any
+        const { batting, bowling, rank, ...playerData } = allPlayerData as any
 
-        return NextResponse.json({ playerData, batting, bowling }, { status: 200 })
+        return NextResponse.json({ playerData, batting, bowling, rank }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })

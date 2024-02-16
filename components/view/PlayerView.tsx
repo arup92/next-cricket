@@ -55,9 +55,19 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
     // Bat and bowl data on different matchformat
     let groupedData: any = {}
     let matchFormats: any = new Set()
+    let rankObject: any = {}
+
+    if (data && data.rank) {
+        data.rank.forEach((item: any) => {
+            rankObject[item.matchId] = item.rank
+        })
+    }
 
     if (data && data.batting) {
         data.batting.forEach((item: any) => {
+            // Add the rank
+            item.rank = rankObject[item.matchId]
+
             matchFormats.add(item.matchFormat)
             groupedData.bat ??= {}
             groupedData.bat[item.matchFormat] ??= []
@@ -67,6 +77,9 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
 
     if (data && data.bowling) {
         data.bowling.forEach((item: any) => {
+            // Add the rank
+            item.rank = rankObject[item.matchId]
+
             matchFormats.add(item.matchFormat)
             groupedData.bowl ??= {}
             groupedData.bowl[item.matchFormat] ??= []

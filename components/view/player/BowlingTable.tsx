@@ -61,7 +61,8 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                     <TableHead>Pts</TableHead>
                                     <TableHead>M</TableHead>
                                     <TableHead>E</TableHead>
-                                    <TableHead>Inn</TableHead>
+                                    <TableHead>Rank</TableHead>
+                                    <TableHead className="hidden lg:table-cell">Inn</TableHead>
                                     <TableHead>Vs</TableHead>
                                     <TableHead className="hidden lg:table-cell">Result</TableHead>
                                     <TableHead className="hidden lg:table-cell">Venue</TableHead>
@@ -82,7 +83,7 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                         bowlingClassName = 'bg-emerald-50 text-emerald-700 shadow'
                                     }
 
-                                    // Results
+                                    // Results Colors
                                     let result = 'Win'
                                     let resultColor = 'bg-emerald-700 text-white shadow'
                                     if (item.teamId !== item.Match.result) {
@@ -90,12 +91,20 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                         resultColor = 'bg-red-500 text-white shadow'
                                     }
 
-                                    // Innings
+                                    // Innings Colors
                                     let innings = '2nd'
                                     let inningsColor = 'bg-white shadow'
                                     if (item.teamId !== item.Match.batFirst) {
                                         innings = '1st'
                                         inningsColor = 'bg-gray-300 shadow'
+                                    }
+
+                                    // Rank Colors
+                                    let rankColor = ''
+                                    if (item.rank <= 2) {
+                                        rankColor = 'bg-gradient-to-r from-amber-200 to-yellow-500 text-white'
+                                    } else if (item.rank <= 11) {
+                                        rankColor = 'bg-emerald-500 text-white'
                                     }
 
                                     return <TableRow key={index}>
@@ -104,6 +113,9 @@ const BowlingTable: React.FC<BowlingTableProps> = ({ bowlData }) => {
                                         <TableCell>{item.maiden}</TableCell>
                                         <TableCell>{item.eco.toFixed(1)}</TableCell>
                                         <TableCell>
+                                            <span className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm ${rankColor}`}>{item.rank}</span>
+                                        </TableCell>
+                                        <TableCell className="hidden lg:table-cell">
                                             <span className={`px-1.5 py-0.5 rounded-sm w-[36px] inline-block ${inningsColor}`}>
                                                 {innings}
                                             </span>

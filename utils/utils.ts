@@ -114,6 +114,7 @@ export const getPlayerStats = (playerData: any): any => {
 
             if (player[item.playerId].bat.length < 5) {
                 const playerBat = {
+                    match: item.Match.id,
                     run: item.run,
                     four: item.four,
                     six: item.six,
@@ -143,6 +144,7 @@ export const getPlayerStats = (playerData: any): any => {
 
             if (player[item.playerId].batVsTeam.length < 5) {
                 const playerBat = {
+                    match: item.Match.id,
                     run: item.run,
                     four: item.four,
                     six: item.six,
@@ -172,6 +174,7 @@ export const getPlayerStats = (playerData: any): any => {
 
             if (player[item.playerId].batInVenue.length < 5) {
                 const playerBat = {
+                    match: item.Match.id,
                     run: item.run,
                     four: item.four,
                     six: item.six,
@@ -203,6 +206,7 @@ export const getPlayerStats = (playerData: any): any => {
 
             if (player[item.playerId].bowl.length < 5) {
                 const playerBowl = {
+                    match: item.Match.id,
                     wicket: item.wicket,
                     maiden: item.maiden,
                     eco: item.eco,
@@ -231,6 +235,7 @@ export const getPlayerStats = (playerData: any): any => {
 
             if (player[item.playerId].bowlVsTeam.length < 5) {
                 const playerBowl = {
+                    match: item.Match.id,
                     wicket: item.wicket,
                     maiden: item.maiden,
                     eco: item.eco,
@@ -259,6 +264,7 @@ export const getPlayerStats = (playerData: any): any => {
 
             if (player[item.playerId].bowlInVenue.length < 5) {
                 const playerBowl = {
+                    match: item.Match.id,
                     wicket: item.wicket,
                     maiden: item.maiden,
                     eco: item.eco,
