@@ -297,26 +297,42 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                 // For every 6 add 2 points
                 totalFantasyPoints += parseInt(inning.six) * 2
                 // For every 50 add 10 points
-                totalFantasyPoints += (~~(parseInt(inning.run) / 50) * 10)
+                totalFantasyPoints += (~~(parseInt(inning.run) / 50) * 4)
+
+                // // Strike Rate
+                // if (inning.run >= 10) {
+                //     if (inning.strikeRate >= 150) {
+                //         totalFantasyPoints += 15
+                //     } else if (inning.strikeRate <= 149.99 && inning.strikeRate >= 125) {
+                //         totalFantasyPoints += 10
+                //     } else if (inning.strikeRate <= 124.99 && inning.strikeRate >= 100) {
+                //         totalFantasyPoints += 5
+                //     } else if (inning.strikeRate <= 99.99 && inning.strikeRate >= 75) {
+                //         totalFantasyPoints += 0
+                //     } else if (inning.strikeRate <= 74.99 && inning.strikeRate >= 50) {
+                //         totalFantasyPoints += -5
+                //     } else if (inning.strikeRate <= 49.99 && inning.strikeRate >= 25) {
+                //         totalFantasyPoints += -10
+                //     } else if (inning.strikeRate <= 24.99 && inning.strikeRate >= 0) {
+                //         totalFantasyPoints += -15
+                //     }
+                // }
 
                 // Strike Rate
-                if (inning.run >= 10) {
-                    if (inning.strikeRate >= 150) {
-                        totalFantasyPoints += 15
-                    } else if (inning.strikeRate <= 149.99 && inning.strikeRate >= 125) {
-                        totalFantasyPoints += 10
-                    } else if (inning.strikeRate <= 124.99 && inning.strikeRate >= 100) {
-                        totalFantasyPoints += 5
-                    } else if (inning.strikeRate <= 99.99 && inning.strikeRate >= 75) {
-                        totalFantasyPoints += 0
-                    } else if (inning.strikeRate <= 74.99 && inning.strikeRate >= 50) {
-                        totalFantasyPoints += -5
-                    } else if (inning.strikeRate <= 49.99 && inning.strikeRate >= 25) {
-                        totalFantasyPoints += -10
-                    } else if (inning.strikeRate <= 24.99 && inning.strikeRate >= 0) {
-                        totalFantasyPoints += -15
-                    }
+                if (inning.strikeRate > 140) {
+                    totalFantasyPoints += 6
+                } else if (inning.strikeRate >= 120.01 && inning.strikeRate <= 140) {
+                    totalFantasyPoints += 4
+                } else if (inning.strikeRate >= 100 && inning.strikeRate <= 120) {
+                    totalFantasyPoints += 2
+                } else if (inning.strikeRate >= 40 && inning.strikeRate <= 50) {
+                    totalFantasyPoints -= 2
+                } else if (inning.strikeRate >= 30 && inning.strikeRate < 40) {
+                    totalFantasyPoints -= 4
+                } else if (inning.strikeRate < 30) {
+                    totalFantasyPoints -= 6
                 }
+
             } else if (type === 'bowl') {
                 // For every wicket add 20 points
                 totalFantasyPoints += parseInt(inning.wicket) * 20
@@ -383,13 +399,22 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                 // For every 6 add 2 points
                 totalFantasyPoints += parseInt(inning.six) * 2
 
+                // // Points for run
+                // if (inning.run >= 100) {
+                //     totalFantasyPoints += 30
+                // } else if (inning.run >= 50) {
+                //     totalFantasyPoints += 20
+                // } else if (inning.run >= 30) {
+                //     totalFantasyPoints += 10
+                // }
+
                 // Points for run
                 if (inning.run >= 100) {
-                    totalFantasyPoints += 30
+                    totalFantasyPoints += 16
                 } else if (inning.run >= 50) {
-                    totalFantasyPoints += 20
+                    totalFantasyPoints += 8
                 } else if (inning.run >= 30) {
-                    totalFantasyPoints += 10
+                    totalFantasyPoints += 4
                 }
 
                 // Strike Rate

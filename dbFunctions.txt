@@ -214,26 +214,7 @@ BEGIN
     END;
 END;
 $$ LANGUAGE plpgsql;
-==============================================================================================
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
+--==============================================================================================
 -- Bowling FP Count
 CREATE OR REPLACE FUNCTION bowlingFpCount() 
 RETURNS void AS $$
@@ -258,14 +239,19 @@ BEGIN
                 WHEN "eco" <= 4.5 THEN 2
                 WHEN "eco" >= 7 AND "eco" <= 8 THEN -2
 				WHEN "eco" >= 8.01 AND "eco" <= 9 THEN -4
-				WHEN "eco" >= 12.01 THEN -6
+				WHEN "eco" >= 9.01 THEN -6
+				ELSE 0
             END +
             (
                 SELECT COUNT(*) * 8
                 FROM unnest(string_to_array("wicketType", ',')) AS wts
                 WHERE wts = 'bowled' OR wts = 'lbw'
             )
-        WHEN "matchFormat" = 'T20' OR "matchFormat" = 'IPL' THEN
+        WHEN "matchFormat" = 'T20' 
+			OR "matchFormat" = 'SS' 
+			OR "matchFormat" = 'ILT20' 
+			OR "matchFormat" = 'BBL' 
+			OR "matchFormat" = 'SA20' THEN
             "wicket" * 25 +
             CASE
                 WHEN "wicket" = 5 THEN 16
@@ -276,11 +262,12 @@ BEGIN
             "maiden" * 12 +
             CASE
                 WHEN "eco" <= 5 THEN 6
-                WHEN "eco" <= 6 THEN 4
+                WHEN "eco" <= 5.99 THEN 4
                 WHEN "eco" >= 6 AND "eco" <= 7 THEN 2
 				WHEN "eco" >= 10 AND "eco" <= 11 THEN -2
 				WHEN "eco" >= 11.01 AND "eco" <= 12 THEN -4
 				WHEN "eco" >= 12.01 THEN -6
+				ELSE 0
             END +
             (
                 SELECT COUNT(*) * 8
