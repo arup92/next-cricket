@@ -196,7 +196,11 @@ BEGIN
                         END
                     ELSE 0
                 END
-        WHEN "matchFormat" = 'T20' OR "matchFormat" = 'IPL' THEN
+        WHEN "matchFormat" = 'T20' 
+			OR "matchFormat" = 'SS' 
+			OR "matchFormat" = 'ILT20' 
+			OR "matchFormat" = 'BBL' 
+			OR "matchFormat" = 'SA20' THEN
             "run" + "four" + ("six" * 2) +
                 CASE
                     WHEN "run" >= 100 THEN 16
