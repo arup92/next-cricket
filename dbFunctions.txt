@@ -157,6 +157,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
+select calculate_and_insert_rank();
 
 ===============================================================================================
 SELECT setval('public."Venue_id_seq"', (SELECT MAX(id) FROM public."Venue")+1);
@@ -176,7 +177,12 @@ BEGIN
     UPDATE public."Batting"
     SET "f11points" = CASE
         WHEN "matchFormat" = 'ODI' THEN 
-            "run" + "four" + ("six" * 2) + (floor("run" / 50) * 4) +
+            "run" + "four" + ("six" * 2) +
+                CASE
+                    WHEN "run" >= 100 THEN 8
+                    WHEN "run" >= 50 THEN 4
+                    ELSE 0
+                END +
                 CASE
                     WHEN "run" >= 10 THEN
                         CASE
@@ -207,6 +213,7 @@ BEGIN
 							WHEN "strikeRate" >= 60 AND "strikeRate" <= 70 THEN -2
                             WHEN "strikeRate" >= 50 AND "strikeRate" <= 59.99 THEN -4
                             WHEN "strikeRate" <= 50 THEN -6
+                            ELSE 0
                         END
                     ELSE 0
                 END
@@ -214,8 +221,10 @@ BEGIN
     END;
 END;
 $$ LANGUAGE plpgsql;
+select battingFpCount();
+SELECT * FROM public."Batting";
 --==============================================================================================
--- Bowling FP Count
+-- Bowling FP Count -- D!!
 CREATE OR REPLACE FUNCTION bowlingFpCount() 
 RETURNS void AS $$
 DECLARE
@@ -261,12 +270,12 @@ BEGIN
             END +
             "maiden" * 12 +
             CASE
-                WHEN "eco" <= 5 THEN 6
-                WHEN "eco" <= 5.99 THEN 4
+                WHEN "eco" < 5 THEN 6
+                WHEN "eco" < 6 THEN 4
                 WHEN "eco" >= 6 AND "eco" <= 7 THEN 2
 				WHEN "eco" >= 10 AND "eco" <= 11 THEN -2
-				WHEN "eco" >= 11.01 AND "eco" <= 12 THEN -4
-				WHEN "eco" >= 12.01 THEN -6
+				WHEN "eco" > 11 AND "eco" <= 12 THEN -4
+				WHEN "eco" > 12 THEN -6
 				ELSE 0
             END +
             (

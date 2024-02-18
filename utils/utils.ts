@@ -321,7 +321,7 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                 // Strike Rate
                 if (inning.strikeRate > 140) {
                     totalFantasyPoints += 6
-                } else if (inning.strikeRate >= 120.01 && inning.strikeRate <= 140) {
+                } else if (inning.strikeRate > 120 && inning.strikeRate <= 140) {
                     totalFantasyPoints += 4
                 } else if (inning.strikeRate >= 100 && inning.strikeRate <= 120) {
                     totalFantasyPoints += 2
@@ -335,55 +335,71 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
 
             } else if (type === 'bowl') {
                 // For every wicket add 20 points
-                totalFantasyPoints += parseInt(inning.wicket) * 20
+                totalFantasyPoints += parseInt(inning.wicket) * 25
 
-                //  For every 10 wickets add 70 points
-                if (inning.wicket === 10) {
-                    totalFantasyPoints += 70
-                } else if (inning.wicket === 9) {
-                    totalFantasyPoints += 60
-                } else if (inning.wicket === 8) {
-                    totalFantasyPoints += 50
-                } else if (inning.wicket === 7) {
-                    totalFantasyPoints += 40
-                } else if (inning.wicket === 6) {
-                    totalFantasyPoints += 30
-                } else if (inning.wicket === 5) {
-                    totalFantasyPoints += 20
-                } else if (inning.wicket === 4) {
-                    totalFantasyPoints += 15
-                } else if (inning.wicket === 3) {
-                    totalFantasyPoints += 10
-                }
-
-                totalFantasyPoints += inning.maiden * 10
-
-                if (inning.eco <= 3) {
-                    totalFantasyPoints += 15
-                } else if (inning.eco <= 5) {
-                    totalFantasyPoints += 10
-                } else if (inning.eco <= 7) {
-                    totalFantasyPoints += 5
-                } else if (inning.eco <= 9) {
-                    totalFantasyPoints -= 5
-                } else if (inning.eco <= 11) {
-                    totalFantasyPoints -= 10
-                } else {
-                    totalFantasyPoints -= 15
-                }
-
-                // Wicket type
-                // if (inning.wicketType === 'bowled' || inning.wicketType === 'lbw') {
-                //     totalFantasyPoints += 5
+                // //  For every 10 wickets add 70 points
+                // if (inning.wicket === 10) {
+                //     totalFantasyPoints += 70
+                // } else if (inning.wicket === 9) {
+                //     totalFantasyPoints += 60
+                // } else if (inning.wicket === 8) {
+                //     totalFantasyPoints += 50
+                // } else if (inning.wicket === 7) {
+                //     totalFantasyPoints += 40
+                // } else if (inning.wicket === 6) {
+                //     totalFantasyPoints += 30
+                // } else if (inning.wicket === 5) {
+                //     totalFantasyPoints += 20
+                // } else if (inning.wicket === 4) {
+                //     totalFantasyPoints += 15
+                // } else if (inning.wicket === 3) {
+                //     totalFantasyPoints += 10
                 // }
+
+                //  For every 5 wickets add 8 points
+                if (inning.wicket >= 5) {
+                    totalFantasyPoints += 8
+                } else if (inning.wicket === 4) {
+                    totalFantasyPoints += 4
+                }
+
+                totalFantasyPoints += inning.maiden * 4
+
+                // if (inning.eco <= 3) {
+                //     totalFantasyPoints += 15
+                // } else if (inning.eco <= 5) {
+                //     totalFantasyPoints += 10
+                // } else if (inning.eco <= 7) {
+                //     totalFantasyPoints += 5
+                // } else if (inning.eco <= 9) {
+                //     totalFantasyPoints -= 5
+                // } else if (inning.eco <= 11) {
+                //     totalFantasyPoints -= 10
+                // } else {
+                //     totalFantasyPoints -= 15
+                // }
+
+                if (inning.eco <= 2.5) {
+                    totalFantasyPoints += 6
+                } else if (inning.eco <= 3.49) {
+                    totalFantasyPoints += 4
+                } else if (inning.eco <= 4.5) {
+                    totalFantasyPoints += 2
+                } else if (inning.eco >= 7 && inning.eco <= 8) {
+                    totalFantasyPoints -= 2
+                } else if (inning.eco < 8 && inning.eco > 9) {
+                    totalFantasyPoints -= 4
+                } else if (inning.eco > 9) {
+                    totalFantasyPoints -= 6
+                }
 
                 // Wicket type
                 if (!!inning.wicketType && inning.wicketType !== 'na') {
                     inning.wicketType.split(',').forEach((item: string) => {
                         if (item === 'bowled') {
-                            totalFantasyPoints += 5
+                            totalFantasyPoints += 8
                         } else if (item === 'lbw') {
-                            totalFantasyPoints += 5
+                            totalFantasyPoints += 8
                         }
                     })
                 }
@@ -417,68 +433,106 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
                     totalFantasyPoints += 4
                 }
 
+                // // Strike Rate
+                // if (inning.run >= 10) {
+                //     if (inning.strikeRate >= 200) {
+                //         totalFantasyPoints += 15
+                //     } else if (inning.strikeRate >= 150) {
+                //         totalFantasyPoints += 10
+                //     } else if (inning.strikeRate >= 100) {
+                //         totalFantasyPoints += 5
+                //     } else if (inning.strikeRate >= 75) {
+                //         totalFantasyPoints -= 5
+                //     } else if (inning.strikeRate >= 50) {
+                //         totalFantasyPoints += -10
+                //     } else if (inning.strikeRate >= 0) {
+                //         totalFantasyPoints += -15
+                //     }
+                // }
+
                 // Strike Rate
-                if (inning.run >= 10) {
-                    if (inning.strikeRate >= 200) {
-                        totalFantasyPoints += 15
-                    } else if (inning.strikeRate >= 150) {
-                        totalFantasyPoints += 10
-                    } else if (inning.strikeRate >= 100) {
-                        totalFantasyPoints += 5
-                    } else if (inning.strikeRate >= 75) {
-                        totalFantasyPoints -= 5
-                    } else if (inning.strikeRate >= 50) {
-                        totalFantasyPoints += -10
-                    } else if (inning.strikeRate >= 0) {
-                        totalFantasyPoints += -15
-                    }
+                if (inning.strikeRate > 170) {
+                    totalFantasyPoints += 6
+                } else if (inning.strikeRate >= 150.01 && inning.strikeRate <= 170) {
+                    totalFantasyPoints += 4
+                } else if (inning.strikeRate >= 130 && inning.strikeRate <= 150) {
+                    totalFantasyPoints += 2
+                } else if (inning.strikeRate >= 60 && inning.strikeRate <= 70) {
+                    totalFantasyPoints -= 2
+                } else if (inning.strikeRate >= 50 && inning.strikeRate < 60) {
+                    totalFantasyPoints -= 4
+                } else if (inning.strikeRate < 50) {
+                    totalFantasyPoints -= 6
                 }
             } else if (type === 'bowl') {
-                // For every wicket add 20 points
-                totalFantasyPoints += parseInt(inning.wicket) * 20
+                // For every wicket add 25 points
+                totalFantasyPoints += parseInt(inning.wicket) * 25
 
-                //  For every 10 wickets add 80 points
-                if (inning.wicket === 10) {
-                    totalFantasyPoints += 80
-                } else if (inning.wicket === 9) {
-                    totalFantasyPoints += 70
-                } else if (inning.wicket === 8) {
-                    totalFantasyPoints += 60
-                } else if (inning.wicket === 7) {
-                    totalFantasyPoints += 50
-                } else if (inning.wicket === 6) {
-                    totalFantasyPoints += 40
-                } else if (inning.wicket === 5) {
-                    totalFantasyPoints += 30
+                // //  For every 8 wickets add 80 points
+                // if (inning.wicket === 10) {
+                //     totalFantasyPoints += 80
+                // } else if (inning.wicket === 9) {
+                //     totalFantasyPoints += 70
+                // } else if (inning.wicket === 8) {
+                //     totalFantasyPoints += 60
+                // } else if (inning.wicket === 7) {
+                //     totalFantasyPoints += 50
+                // } else if (inning.wicket === 6) {
+                //     totalFantasyPoints += 40
+                // } else if (inning.wicket === 5) {
+                //     totalFantasyPoints += 30
+                // } else if (inning.wicket === 4) {
+                //     totalFantasyPoints += 20
+                // } else if (inning.wicket === 3) {
+                //     totalFantasyPoints += 10
+                // }
+
+                //  For every 5 wickets add 16 points
+                if (inning.wicket >= 5) {
+                    totalFantasyPoints += 16
                 } else if (inning.wicket === 4) {
-                    totalFantasyPoints += 20
+                    totalFantasyPoints += 8
                 } else if (inning.wicket === 3) {
-                    totalFantasyPoints += 10
+                    totalFantasyPoints += 4
                 }
 
-                totalFantasyPoints += inning.maiden * 20
+                totalFantasyPoints += inning.maiden * 12
 
-                if (inning.eco <= 5) {
-                    totalFantasyPoints += 15
-                } else if (inning.eco <= 8) {
-                    totalFantasyPoints += 10
-                } else if (inning.eco <= 10) {
-                    totalFantasyPoints += 5
-                } else if (inning.eco <= 12) {
-                    totalFantasyPoints -= 5
-                } else if (inning.eco <= 15) {
-                    totalFantasyPoints -= 10
-                } else {
-                    totalFantasyPoints -= 15
+                // if (inning.eco <= 5) {
+                //     totalFantasyPoints += 15
+                // } else if (inning.eco <= 8) {
+                //     totalFantasyPoints += 10
+                // } else if (inning.eco <= 10) {
+                //     totalFantasyPoints += 5
+                // } else if (inning.eco <= 12) {
+                //     totalFantasyPoints -= 5
+                // } else if (inning.eco <= 15) {
+                //     totalFantasyPoints -= 10
+                // } else {
+                //     totalFantasyPoints -= 15
+                // }
+
+                if (inning.eco < 5) {
+                    totalFantasyPoints += 6
+                } else if (inning.eco < 6) {
+                    totalFantasyPoints += 4
+                } else if (inning.eco >= 6 && inning.eco <= 7) {
+                    totalFantasyPoints += 2
+                } else if (inning.eco >= 10 && inning.eco <= 11) {
+                    totalFantasyPoints -= 2
+                } else if (inning.eco > 11 && inning.eco <= 12) {
+                    totalFantasyPoints -= 4
+                } else if (inning.eco > 12) {
+                    totalFantasyPoints -= -6
                 }
 
                 // Wicket type
                 if (!!inning.wicketType && inning.wicketType !== 'na') {
                     inning.wicketType.split(',').forEach((item: string) => {
                         if (item === 'bowled') {
-                            totalFantasyPoints += 5
+                            totalFantasyPoints += 8
                         } else if (item === 'lbw') {
-                            totalFantasyPoints += 5
+                            totalFantasyPoints += 8
                         }
                     })
                 }
