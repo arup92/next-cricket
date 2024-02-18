@@ -8,7 +8,7 @@ BEGIN
     UPDATE public."Batting"
     SET "f11points" = CASE
         WHEN "matchFormat" = 'ODI' THEN 
-            "run" + "four" + "six" * 2 + (floor("run" / 50) * 10) +
+            "run" + ("four" * 4) + ("six" + 2) + (floor("run" / 50) * 4) +
                 CASE
                     WHEN "run" >= 10 THEN
                         CASE
@@ -157,6 +157,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
+select calculate_and_insert_rank();
 
 ===============================================================================================
 SELECT setval('public."Venue_id_seq"', (SELECT MAX(id) FROM public."Venue")+1);
@@ -165,3 +166,127 @@ SELECT setval('public."Scores_id_seq"', (SELECT MAX(id) FROM public."Scores")+1)
 SELECT setval('public."Bowling_id_seq"', (SELECT MAX(id) FROM public."Bowling")+1);
 SELECT setval('public."Batting_id_seq"', (SELECT MAX(id) FROM public."Batting")+1);
 SELECT setval('public."Match_id_seq"', (SELECT MAX(id) FROM public."Match")+1);
+
+===============================================================================================
+-- Batting FP Count D11
+CREATE OR REPLACE FUNCTION battingFpCount() 
+RETURNS void AS $$
+DECLARE
+    calculated_fp numeric;
+BEGIN
+    UPDATE public."Batting"
+    SET "f11points" = CASE
+        WHEN "matchFormat" = 'ODI' THEN 
+            "run" + "four" + ("six" * 2) +
+                CASE
+                    WHEN "run" >= 100 THEN 8
+                    WHEN "run" >= 50 THEN 4
+                    ELSE 0
+                END +
+                CASE
+                    WHEN "run" >= 10 THEN
+                        CASE
+                            WHEN "strikeRate" > 140.01 THEN 6
+                            WHEN "strikeRate" > 120.01 AND "strikeRate" <= 140 THEN 4
+                            WHEN "strikeRate" >= 100 AND "strikeRate" <= 120 THEN 2
+                            WHEN "strikeRate" >= 40 AND "strikeRate" <= 50 THEN -2
+                            WHEN "strikeRate" >= 30 AND "strikeRate" <= 39.99 THEN -4
+                            WHEN "strikeRate" <= 30 THEN -6
+							ELSE 0
+                        END
+                    ELSE 0
+                END
+        WHEN "matchFormat" = 'T20' OR "matchFormat" = 'IPL' THEN
+            "run" + "four" + ("six" * 2) +
+                CASE
+                    WHEN "run" >= 100 THEN 16
+                    WHEN "run" >= 50 THEN 8
+                    WHEN "run" >= 30 THEN 4
+                    ELSE 0
+                END +
+                CASE
+                    WHEN "run" >= 10 THEN
+                        CASE
+                            WHEN "strikeRate" >= 170 THEN 6
+                            WHEN "strikeRate" >= 150 THEN 4
+                            WHEN "strikeRate" >= 130 THEN 2
+							WHEN "strikeRate" >= 60 AND "strikeRate" <= 70 THEN -2
+                            WHEN "strikeRate" >= 50 AND "strikeRate" <= 59.99 THEN -4
+                            WHEN "strikeRate" <= 50 THEN -6
+                            ELSE 0
+                        END
+                    ELSE 0
+                END
+        ELSE 0
+    END;
+END;
+$$ LANGUAGE plpgsql;
+select battingFpCount();
+SELECT * FROM public."Batting";
+--==============================================================================================
+-- Bowling FP Count -- D!!
+CREATE OR REPLACE FUNCTION bowlingFpCount() 
+RETURNS void AS $$
+DECLARE
+    totalFantasyPoints numeric;
+BEGIN
+    totalFantasyPoints := 0;
+
+    UPDATE public."Bowling"
+    SET "f11points" = CASE
+        WHEN "matchFormat" = 'ODI' THEN 
+            "wicket" * 25 +
+            CASE
+                WHEN "wicket" = 5 THEN 8
+                WHEN "wicket" = 4 THEN 4
+                ELSE 0
+            END +
+            "maiden" * 4 +
+            CASE
+                WHEN "eco" <= 2.5 THEN 6
+                WHEN "eco" <= 3.49 THEN 4
+                WHEN "eco" <= 4.5 THEN 2
+                WHEN "eco" >= 7 AND "eco" <= 8 THEN -2
+				WHEN "eco" >= 8.01 AND "eco" <= 9 THEN -4
+				WHEN "eco" >= 9.01 THEN -6
+				ELSE 0
+            END +
+            (
+                SELECT COUNT(*) * 8
+                FROM unnest(string_to_array("wicketType", ',')) AS wts
+                WHERE wts = 'bowled' OR wts = 'lbw'
+            )
+        WHEN "matchFormat" = 'T20' 
+			OR "matchFormat" = 'SS' 
+			OR "matchFormat" = 'ILT20' 
+			OR "matchFormat" = 'BBL' 
+			OR "matchFormat" = 'SA20' THEN
+            "wicket" * 25 +
+            CASE
+                WHEN "wicket" = 5 THEN 16
+                WHEN "wicket" = 4 THEN 8
+                WHEN "wicket" = 3 THEN 4
+                ELSE 0
+            END +
+            "maiden" * 12 +
+            CASE
+                WHEN "eco" < 5 THEN 6
+                WHEN "eco" < 6 THEN 4
+                WHEN "eco" >= 6 AND "eco" <= 7 THEN 2
+				WHEN "eco" >= 10 AND "eco" <= 11 THEN -2
+				WHEN "eco" > 11 AND "eco" <= 12 THEN -4
+				WHEN "eco" > 12 THEN -6
+				ELSE 0
+            END +
+            (
+                SELECT COUNT(*) * 8
+                FROM unnest(string_to_array("wicketType", ',')) AS wts
+                WHERE wts = 'bowled' OR wts = 'lbw'
+            )
+        ELSE 0
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+select bowlingFpCount();
+SELECT * FROM public."Bowling";
