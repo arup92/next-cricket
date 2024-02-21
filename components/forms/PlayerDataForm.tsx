@@ -70,7 +70,7 @@ const PlayerDataForm = () => {
     // Reset all Active players
     const handleReset = async (teamId: string) => {
         const postBody = {
-            teamId: teamId
+            teamId
         }
 
         await axios.patch('/api/dashboard/edit-player/resetActives', postBody)
@@ -148,7 +148,7 @@ const PlayerDataForm = () => {
 
             {team && <div className='flex justify-end mb-3'><Button onClick={() => { handleReset(team) }}>Reset Active Players</Button></div>}
 
-            {playerData && (playerData.length > 0 ? <ListPlayersEdit playerData={playerData} /> : <SecNotFound />)}
+            {playerData && (playerData.length > 0 ? <ListPlayersEdit team={team} playerData={playerData} /> : <SecNotFound />)}
         </>
     )
 }

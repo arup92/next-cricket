@@ -19,6 +19,7 @@ import SwitchInactive from './SwitchInactive';
 
 interface ListPlayersEditProps {
     playerData: any[]
+    team: string
 }
 
 const formSchema = z.object({
@@ -26,22 +27,25 @@ const formSchema = z.object({
     description: z.string().trim().optional(),
     playerType: z.enum(PlayerTypeConst).optional(),
     bowlingType: z.enum(BowlingTypeConst).optional(),
-    inactive: z.string().min(2).max(3).trim().optional(),
+    active: z.string().min(2).max(3).trim().optional(),
 })
 
-const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
+const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData, team }) => {
     const [playerId, setPlayerId] = useState<string>('')
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
     const [dialogIndexNumber, setDialogIndexNumber] = useState<number>(-1)
 
+    console.log(playerData);
+
+
     const submitPlayer = async (values: any) => {
         values.playerId = playerId
+        values.teamId = team
 
         await axios.patch('/api/dashboard/edit-player', values)
             .then(response => {
                 if (response.status === 200) {
                     toast.success(response.data)
-                    // console.log(playerData[dialogIndexNumber], values);
 
                     if (values.playerType) {
                         playerData[dialogIndexNumber].playerType = values.playerType
@@ -51,8 +55,8 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                         playerData[dialogIndexNumber].bowlingType = values.bowlingType
                     }
 
-                    if (values.inactive) {
-                        playerData[dialogIndexNumber].inactive = values.inactive
+                    if (values.active) {
+                        playerData[dialogIndexNumber].active = values.active
                     }
                 } else {
                     toast.error(response.data)
@@ -82,7 +86,8 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
     const handleSwitchChange = async (checked: boolean, id: string) => {
         const postBody = {
             playerId: id,
-            inactive: checked ? 'yes' : 'no'
+            active: checked ? 'yes' : 'no',
+            teamId: team
         }
 
         await axios.patch('/api/dashboard/edit-player', postBody)
@@ -118,7 +123,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                 </div>
 
                 <div className='w-[15%] text-muted-foreground capitalize'>
-                    Inactive
+                    Active
                 </div>
 
                 <div className='w-[10%]'>
@@ -160,7 +165,7 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
                     <div className='w-[15%] text-muted-foreground capitalize'>
                         <SwitchInactive
                             id={player.playerId}
-                            checked={player?.inactive === 'yes' ? true : false}
+                            checked={player?.playerTeams[0].active === 'yes' ? true : false}
                             handleChange={handleSwitchChange}
                         />
                     </div>
@@ -229,10 +234,10 @@ const ListPlayersEdit: React.FC<ListPlayersEditProps> = ({ playerData }) => {
 
                                     <div className='mb-4'>
                                         <Select
-                                            onValueChange={(selectedValue: string) => setValue('inactive', selectedValue)}
+                                            onValueChange={(selectedValue: string) => setValue('active', selectedValue)}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Inactive?" />
+                                                <SelectValue placeholder="Active?" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="yes">

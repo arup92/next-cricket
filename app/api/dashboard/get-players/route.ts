@@ -42,7 +42,11 @@ export async function GET(request: Request) {
         const player = await prismaClient.player.findMany({
             where,
             include: {
-                playerTeams: true
+                playerTeams: {
+                    where: {
+                        teamId: team
+                    }
+                }
             },
             orderBy: {
                 playerName: 'asc'

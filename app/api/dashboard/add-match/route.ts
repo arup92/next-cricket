@@ -211,9 +211,7 @@ export async function POST(request: Request) {
                 where: {
                     playerId: item.playerId
                 },
-                update: {
-                    inactive: 'no'
-                },
+                update: {},
                 create: item
             })
         }
@@ -221,22 +219,19 @@ export async function POST(request: Request) {
         /*********************************************************************************************************/
         // Insert PlayerTeam
         for (const item of playerTeam) {
-            const playerTeamData = await prismaClient.playerTeam.findUnique({
+            await prismaClient.playerTeam.upsert({
                 where: {
                     playerId_teamId: {
                         playerId: item.playerId,
                         teamId: item.teamId
                     }
-                }
+                },
+                update: {
+                    active: 'yes'
+                },
+                create: item
             })
-
-            if (!playerTeamData) {
-                await prismaClient.playerTeam.create({
-                    data: item
-                })
-            }
         }
-
 
         /*********************************************************************************************************/
         // Add Batting: Session A

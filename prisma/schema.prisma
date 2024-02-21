@@ -176,6 +176,7 @@ model PlayerTeam {
 
   player   Player @relation(fields: [playerId], references: [playerId])
   playerId String
+  active   Bool   @default(yes)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

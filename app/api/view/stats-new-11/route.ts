@@ -31,10 +31,11 @@ export async function GET(request: Request) {
                 },
                 matchFormat,
                 Player: {
-                    OR: [
-                        { inactive: 'no' },
-                        { inactive: null }
-                    ]
+                    playerTeams: {
+                        some: {
+                            active: 'yes'
+                        }
+                    }
                 },
             },
             orderBy: [
@@ -91,10 +92,11 @@ export async function GET(request: Request) {
                 },
                 matchFormat,
                 Player: {
-                    OR: [
-                        { inactive: 'no' },
-                        { inactive: null }
-                    ]
+                    playerTeams: {
+                        some: {
+                            active: 'yes'
+                        }
+                    }
                 },
             },
             orderBy: [
@@ -140,10 +142,11 @@ export async function GET(request: Request) {
                 },
                 matchFormat,
                 Player: {
-                    OR: [
-                        { inactive: 'no' },
-                        { inactive: null }
-                    ]
+                    playerTeams: {
+                        some: {
+                            active: 'yes'
+                        }
+                    }
                 },
             },
             orderBy: [
@@ -199,10 +202,11 @@ export async function GET(request: Request) {
                 },
                 matchFormat,
                 Player: {
-                    OR: [
-                        { inactive: 'no' },
-                        { inactive: null }
-                    ]
+                    playerTeams: {
+                        some: {
+                            active: 'yes'
+                        }
+                    }
                 },
             },
             orderBy: [
@@ -253,10 +257,11 @@ export async function GET(request: Request) {
                     },
                     matchFormat,
                     Player: {
-                        OR: [
-                            { inactive: 'no' },
-                            { inactive: null }
-                        ]
+                        playerTeams: {
+                            some: {
+                                active: 'yes'
+                            }
+                        }
                     },
                 },
                 orderBy: [
@@ -303,10 +308,11 @@ export async function GET(request: Request) {
                     },
                     matchFormat,
                     Player: {
-                        OR: [
-                            { inactive: 'no' },
-                            { inactive: null }
-                        ]
+                        playerTeams: {
+                            some: {
+                                active: 'yes'
+                            }
+                        }
                     },
                 },
                 orderBy: [
@@ -344,7 +350,11 @@ export async function GET(request: Request) {
         const ranks = await prismaClient.rank.findMany({
             where: {
                 Player: {
-                    inactive: 'no',
+                    playerTeams: {
+                        some: {
+                            active: 'yes'
+                        }
+                    }
                 },
                 OR: [
                     { teamId: teamA },

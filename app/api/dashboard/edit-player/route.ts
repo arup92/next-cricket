@@ -8,10 +8,11 @@ import { NextResponse } from 'next/server';
 
 interface RequestBody {
     playerId: string
+    teamId: string
     description?: string
     bowlingType?: typeof BowlingTypeConst
     playerType?: typeof PlayerTypeConst,
-    inactive?: Bool
+    active?: Bool
 }
 
 export async function PATCH(request: Request) {
@@ -23,7 +24,7 @@ export async function PATCH(request: Request) {
     }
 
     const body: RequestBody = await request.json()
-    if (!body.description && !body.bowlingType && !body.playerType && !body.inactive) {
+    if (!body.description && !body.bowlingType && !body.playerType && !body.active) {
         return NextResponse.json(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
     } else if (!body.playerId) {
         return NextResponse.json(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
@@ -31,26 +32,35 @@ export async function PATCH(request: Request) {
 
     try {
         // Construct the update data
-        const data: any = {}
-        if (body.description) {
-            data.description = body.description
-        }
-        if (body.bowlingType) {
-            data.bowlingType = body.bowlingType
-        }
-        if (body.playerType) {
-            data.playerType = body.playerType
-        }
-        if (body.inactive) {
-            data.inactive = body.inactive as Bool
+        const data: any = {
+            ...(body.description ? { description: body.description } : {}),
+            ...(body.bowlingType ? { bowlingType: body.bowlingType } : {}),
+            ...(body.playerType ? { playerType: body.playerType } : {}),
         }
 
-        await prismaClient.player.update({
-            where: {
-                playerId: body.playerId,
-            },
-            data
-        })
+        if (body.description || body.bowlingType || body.playerType) {
+            await prismaClient.player.update({
+                where: {
+                    playerId: body.playerId,
+                },
+                data
+            })
+        }
+
+        if (body.active) {
+            // data.inactive = body.inactive as Bool
+            await prismaClient.playerTeam.update({
+                where: {
+                    playerId_teamId: {
+                        playerId: body.playerId,
+                        teamId: body.teamId,
+                    }
+                },
+                data: {
+                    active: 'yes'
+                }
+            })
+        }
 
         return new NextResponse(Message.UPDATED, { status: 200 })
     } catch (error) {
