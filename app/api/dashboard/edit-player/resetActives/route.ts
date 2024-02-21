@@ -22,16 +22,12 @@ export async function PATCH(request: Request) {
 
     try {
         // Update the player table
-        await prismaClient.player.updateMany({
+        await prismaClient.playerTeam.updateMany({
             where: {
-                playerTeams: {
-                    some: {
-                        teamId: body.teamId
-                    }
-                }
+                teamId: body.teamId
             },
             data: {
-                inactive: 'no'
+                active: 'no'
             }
         })
 
