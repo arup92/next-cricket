@@ -57,7 +57,7 @@ export async function PATCH(request: Request) {
                     }
                 },
                 data: {
-                    active: 'yes'
+                    active: body.active
                 }
             })
         }
