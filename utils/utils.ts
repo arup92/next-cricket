@@ -27,6 +27,7 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
             // && !item.toLowerCase().startsWith("st ")
             && !item.toLowerCase().startsWith("(")
             && !item.toLowerCase().startsWith("*")
+            && !item.toLowerCase().startsWith("impact icon")
             // && !item.toLowerCase().startsWith("timed out")
             // && !item.toLowerCase().startsWith("retired")
             // && !item.toLowerCase().startsWith("hit wicket")
