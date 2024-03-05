@@ -4,17 +4,15 @@ import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
-    const matchFormat = url.searchParams.get('matchFormat')?.toString().toUpperCase()
+    const matchFormat: string = url.searchParams.get('matchFormat')?.toString().toUpperCase() || 'ODI'
     const numMatches: any = url.searchParams.get('numMatches')?.toString() || 10
-
-    if (!matchFormat) {
-        return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
-    }
+    const limit: any = url.searchParams.get('view')?.toString() || 10
+    const team: any = url.searchParams.get('team')?.toString() || null
 
     try {
         // DB Call
-        const battingRankings: any = await getLastMatchesBattingSum(matchFormat, parseInt(numMatches))
-        const bowlingRankings: any = await getLastMatchesBowlingSum(matchFormat, parseInt(numMatches))
+        const battingRankings: any = await getLastMatchesBattingSum(matchFormat, parseInt(numMatches), parseInt(limit), team)
+        const bowlingRankings: any = await getLastMatchesBowlingSum(matchFormat, parseInt(numMatches), parseInt(limit), team)
 
         return NextResponse.json({ batting: battingRankings, bowling: bowlingRankings }, { status: 200 })
     } catch (error) {
