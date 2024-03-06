@@ -7,7 +7,9 @@ export async function GET(request: Request) {
     const matchFormat: string = url.searchParams.get('matchFormat')?.toString().toUpperCase() || 'ODI'
     const numMatches: any = url.searchParams.get('numMatches')?.toString() || 10
     const limit: any = url.searchParams.get('view')?.toString() || 10
-    const team: any = url.searchParams.get('team')?.toString() || null
+    let team: any = url.searchParams.get('team')?.toString() || null
+
+    team = (team === 'all' ? null : team.toUpperCase())
 
     try {
         // DB Call

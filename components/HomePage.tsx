@@ -1,22 +1,18 @@
 'use client'
-import { getLastMatchesBattingSum, getLastMatchesBowlingSum } from "@/utils/dbRaw"
-import TeamRanking from "./ranking/TeamRanking"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import CenteredArea from "./customUi/CenteredArea"
 import RankFilterForm from "./forms/RankFilterForm"
-import { useEffect, useState } from "react"
+import TeamRanking from "./ranking/TeamRanking"
 
-const HomePage = () => {
-    const [playerList, setPlayerList] = useState<any[]>([])
+interface HomePageProps {
+    slugs: any
+}
 
-    // React Query: ODI
+const HomePage: React.FC<HomePageProps> = ({ slugs }) => {
+    // React Query: Get Player List
     const getPlayerRankings = async (): Promise<any> => {
-        if (playerList.length !== 0) {
-            return playerList
-        }
-
-        return await axios.get(`/api/view/ranking?matchFormat=ODI`)
+        return await axios.get(`/api/view/ranking?matchFormat=${slugs?.[0] || 'odi'}&team=${slugs?.[1] || 'all'}&view=${slugs?.[2] || '10'}`)
             .then(response => {
                 return response.data
             })
@@ -27,32 +23,23 @@ const HomePage = () => {
     }
 
     // React Query
-    const { data: odiRankings, refetch } = useQuery({
-        queryKey: ['playerRankings'],
+    const { data: plRankings } = useQuery({
+        queryKey: ['playerRankings', slugs?.[0] || 'odi', slugs?.[1] || 'all', slugs?.[2] || '10'],
         queryFn: getPlayerRankings
     })
 
-    // Update the playerList
-    const updateList = (playerList: any[]) => {
-        setPlayerList(playerList)
-    }
-
-    // Refetch after playerList updates
-    useEffect(() => {
-        refetch()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [playerList])
-
     return (
         <CenteredArea maxWidthClass="max-w-7xl">
-            <div className="flex items-center justify-between px-5 py-3 mb-5 border rounded-md shadow-sm text-card-foreground bg-card">
-                <h2 className="inline mr-2 text-lg font-bold lg:text-2xl">Fantasy Players Rating</h2>
-                <RankFilterForm updatePlayers={updateList} />
+            <div className="px-5 py-3 mb-5 border rounded-md shadow-sm lg:items-center lg:justify-between lg:flex text-card-foreground bg-card">
+                <div className="text-center">
+                    <h2 className="inline-block mb-4 mr-auto text-lg font-bold lg:inline lg:text-2xl">Fantasy Players Rating</h2>
+                </div>
+                <RankFilterForm fields={slugs} />
             </div>
 
-            {odiRankings && odiRankings.batting.length > 0 && <TeamRanking
-                battingRanking={odiRankings.batting}
-                bowlingRanking={odiRankings.bowling}
+            {plRankings && plRankings.batting.length > 0 && <TeamRanking
+                battingRanking={plRankings.batting}
+                bowlingRanking={plRankings.bowling}
                 handle='odi'
             />}
         </CenteredArea>

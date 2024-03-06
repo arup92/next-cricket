@@ -1,31 +1,37 @@
+import { MatchFormat } from '@/types/MatchFormat'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { GoCheck, GoCode } from "react-icons/go"
+import { RiSearch2Line } from 'react-icons/ri'
 import { z } from 'zod'
+import { Button } from "../ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
-import { GoCheck, GoCode } from "react-icons/go"
-import { Button } from "../ui/button"
-import { RiSearch2Line } from 'react-icons/ri'
-import { MatchFormat } from '@/types/MatchFormat'
-import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 
 const formSchema = z.object({
-    matchFormat: z.string().min(2).optional(),
+    matchFormat: z.string().optional(),
     team: z.string().optional(),
-    view: z.number().min(1).optional()
+    view: z.string().optional()
 })
 
 interface RankFilterFormProps {
-    updatePlayers: (playerList: any[]) => void
+    fields: any[]
 }
 
-const RankFilterForm: React.FC<RankFilterFormProps> = ({ updatePlayers }) => {
+const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
     const [loading, setLoading] = useState(false)
     const [tOpen, setTOpen] = useState(false)
     const [prvValue, setPrvValue] = useState<string>('{}')
+    const router = useRouter()
+
+    const matchFormat = fields?.[0].toUpperCase() || 'ODI'
+    const team = fields?.[1] || 'all'
+    const view = fields?.[2] || '10'
 
     // Hook Form
     const {
@@ -38,9 +44,9 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ updatePlayers }) => {
         mode: 'onChange',
         resolver: zodResolver(formSchema),
         defaultValues: {
-            matchFormat: 'ODI',
-            team: '',
-            view: 10,
+            matchFormat,
+            team,
+            view,
         }
     })
 
@@ -63,22 +69,21 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ updatePlayers }) => {
 
     const onSubmit = async (values: any) => {
         if (JSON.stringify(values) !== prvValue) {
+            let path = ''
             setLoading(true) // Loading
 
             // Update the previous value
             setPrvValue(JSON.stringify(values))
-            const queryString = new URLSearchParams(values).toString()
 
-            await axios.get(`/api/view/ranking?${queryString}`)
-                .then(response => {
-                    updatePlayers(response.data)
-                    setLoading(false) // Loading off
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+            path = `/${values.matchFormat || 'odi'}/${values.team || 'all'}/${values.view || '10'}`
+            router.push(`${path.toLowerCase()}`)
+
+            setLoading(false) // Loading false
         }
     }
+
+    console.log(errors);
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
@@ -88,7 +93,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ updatePlayers }) => {
                         onValueChange={(selectedValue: string) => setValue('matchFormat', selectedValue)}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder={!watch().matchFormat ? 'ODI' : watch().matchFormat} />
+                            <SelectValue placeholder={!watch().matchFormat ? matchFormat : watch().matchFormat} />
                         </SelectTrigger>
                         <SelectContent>
                             {MatchFormat.map((format) => (
@@ -111,7 +116,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ updatePlayers }) => {
                             >
                                 {Teams && watch().team ?
                                     Teams.find((team: any) => team?.teamId === watch()?.team?.toUpperCase())?.teamId :
-                                    'All Teams'
+                                    team.toUpperCase()
                                 }
                                 <span className="rotate-90"><GoCode /></span>
                             </Button>
@@ -157,10 +162,10 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ updatePlayers }) => {
 
                 <div>
                     <Select
-                        onValueChange={(selectedValue: string) => setValue('view', parseInt(selectedValue))}
+                        onValueChange={(selectedValue: string) => setValue('view', selectedValue)}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder={!watch().view ? '10' : watch().view} />
+                            <SelectValue placeholder={!watch().view ? view : watch().view} />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem key={`1`} value={'10'}>
