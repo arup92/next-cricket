@@ -1,7 +1,7 @@
 import HomePage from '@/components/HomePage';
 import Script from 'next/script';
 
-export default function Home() {
+export default async function Home({ params }: { params: { slugs: string } }) {
 
   return (
     <>
@@ -16,7 +16,7 @@ export default function Home() {
         `}
       </Script>
 
-      <HomePage />
+      <HomePage slugs={params.slugs} />
     </>
   )
 }

@@ -41,7 +41,7 @@ export const getLastMatchesBowlingSum = async (matchFormat: string, numMatches: 
           "f11points",
           ROW_NUMBER() OVER (PARTITION BY "playerId" ORDER BY "matchDate" DESC) AS rnk
       FROM "Bowling"
-      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat" AND "teamId" NOT iLike '%-u19' AND "teamId" NOT iLike '%-w'
+      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat"
       ${teamId ? where : defaultWhere}
     )
     SELECT pl."playerId", pl."playerName", "teamId", "matchFormat", SUM("f11points")::int AS total_points
