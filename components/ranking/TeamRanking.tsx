@@ -3,12 +3,26 @@ import { BiSolidCricketBall } from 'react-icons/bi'
 import { MdSportsCricket } from 'react-icons/md'
 
 interface TeamRankingProps {
-    battingRanking: any
-    bowlingRanking: any
+    battingRanking: any[]
+    bowlingRanking: any[]
     handle: string
 }
 
 const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRanking, handle }) => {
+
+    // Mark common players
+    const batters: any = {}
+    const commonPlayers: any = {}
+    battingRanking.forEach((player) => {
+        batters[player.playerId] = 1
+    })
+
+    bowlingRanking.forEach((player) => {
+        if (batters.hasOwnProperty(player.playerId)) {
+            commonPlayers[player.playerId] = 1
+        }
+    })
+
     return (
         <div className='lg:flex lg:justify-between lg:gap-5'>
             <div className="relative p-5 mb-3 border border-b rounded-md shadow-sm lg:w-1/2 text-card-foreground bg-card">
@@ -34,7 +48,7 @@ const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRankin
                 </div>
 
                 {battingRanking.map((item: any, index: number) => {
-                    return <div key={item.playerId} className="flex items-center justify-between px-3 py-2 border-b border-b-grey-300 lg-py-0">
+                    return <div key={item.playerId} className={`flex items-center justify-between px-3 py-2 border-b border-b-grey-300 lg-py-0`}>
                         <span className="w-[10%]">
                             {index + 1}
                         </span>
@@ -42,17 +56,17 @@ const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRankin
                         <span className="w-[50%]">
                             <Link
                                 href={`/view/player/${item.playerId}/${handle}`}
-                                className="text-blue-700 hover:underline"
+                                className={`text-blue-700 hover:underline ${commonPlayers[item.playerId] && 'text-emerald-600 font-bold'}`}
                             >
                                 {item.playerName}
                             </Link>
                         </span>
 
-                        <span className="w-[20%] text-center">
+                        <span className={`w-[20%] text-center ${commonPlayers[item.playerId] && 'text-emerald-600 font-bold'}`}>
                             {item.teamId}
                         </span>
 
-                        <span className="w-[20%] text-center">
+                        <span className={`w-[20%] text-center ${commonPlayers[item.playerId] && 'text-emerald-600 font-bold'}`}>
                             {parseInt(item.total_points)}
                         </span>
                     </div>
@@ -82,7 +96,7 @@ const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRankin
                 </div>
 
                 {bowlingRanking.map((item: any, index: number) => {
-                    return <div key={item.playerId} className="flex items-center justify-between px-3 py-2 border-b border-b-grey-300 lg-py-0">
+                    return <div key={item.playerId} className={`flex items-center justify-between px-3 py-2 border-b border-b-grey-300 lg-py-0`}>
                         <span className="w-[10%]">
                             {index + 1}
                         </span>
@@ -90,17 +104,17 @@ const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRankin
                         <span className="w-[50%]">
                             <Link
                                 href={`/view/player/${item.playerId}/${handle}`}
-                                className="text-blue-700 hover:underline"
+                                className={`text-blue-700 hover:underline ${commonPlayers[item.playerId] && 'text-emerald-600 font-bold'}`}
                             >
                                 {item.playerName}
                             </Link>
                         </span>
 
-                        <span className="w-[20%] text-center">
+                        <span className={`w-[20%] text-center ${commonPlayers[item.playerId] && 'text-emerald-600 font-bold'}`}>
                             {item.teamId}
                         </span>
 
-                        <span className="w-[20%] text-center">
+                        <span className={`w-[20%] text-center ${commonPlayers[item.playerId] && 'text-emerald-600 font-bold'}`}>
                             {parseInt(item.total_points)}
                         </span>
                     </div>

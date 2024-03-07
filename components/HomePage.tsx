@@ -40,7 +40,7 @@ const HomePage: React.FC<HomePageProps> = ({ slugs }) => {
             {plRankings && plRankings.batting.length > 0 && <TeamRanking
                 battingRanking={plRankings.batting}
                 bowlingRanking={plRankings.bowling}
-                handle='odi'
+                handle={slugs?.[0] || 'odi'}
             />}
         </CenteredArea>
     )

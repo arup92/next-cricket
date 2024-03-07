@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { GoCheck, GoCode } from "react-icons/go"
 import { RiSearch2Line } from 'react-icons/ri'
@@ -62,10 +62,15 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
             })
     }
 
-    const { data: Teams } = useQuery({
+    let { data: Teams } = useQuery({
         queryKey: ['teams', getValues().matchFormat],
         queryFn: getTeams,
     })
+
+    // Apeend to the teams list
+    if (Teams) {
+        Teams = [{ teamId: 'ALL' }, ...Teams]
+    }
 
     const onSubmit = async (values: any) => {
         if (JSON.stringify(values) !== prvValue) {
@@ -82,15 +87,15 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
         }
     }
 
-    console.log(errors);
-
-
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
             <div className="flex justify-between gap-3">
                 <div>
                     <Select
-                        onValueChange={(selectedValue: string) => setValue('matchFormat', selectedValue)}
+                        onValueChange={(selectedValue: string) => {
+                            setValue('matchFormat', selectedValue)
+                            setValue('team', 'all')
+                        }}
                     >
                         <SelectTrigger>
                             <SelectValue placeholder={!watch().matchFormat ? matchFormat : watch().matchFormat} />
@@ -115,7 +120,9 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
                                 className="justify-between w-full bg-white"
                             >
                                 {Teams && watch().team ?
-                                    Teams.find((team: any) => team?.teamId === watch()?.team?.toUpperCase())?.teamId :
+                                    Teams.find(
+                                        (team: any) => team?.teamId.toUpperCase() === watch()?.team?.toUpperCase()
+                                    )?.teamId :
                                     team.toUpperCase()
                                 }
                                 <span className="rotate-90"><GoCode /></span>
@@ -126,19 +133,6 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
                                 <CommandInput placeholder="Search Team..." />
                                 <CommandEmpty>No Team Found</CommandEmpty>
                                 <CommandGroup>
-                                    <CommandItem
-                                        key="unset"
-                                        value=''
-                                        onSelect={(currentValue) => {
-                                            setValue('team', currentValue.toUpperCase())
-                                            setTOpen(false)
-                                        }}
-                                    >
-                                        All Teams
-                                        <span className={watch().team === '' ? 'ml-auto opacity-100' : 'opacity-0'}>
-                                            <GoCheck />
-                                        </span>
-                                    </CommandItem>
                                     {Teams && Teams.map((team: any) => (
                                         <CommandItem
                                             key={team.teamId}
