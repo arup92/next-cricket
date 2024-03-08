@@ -57,6 +57,7 @@ export async function GET(request: Request) {
                 teamId: true,
                 f11points: true,
                 matchFormat: true,
+                battingOrder: true,
                 Match: {
                     select: {
                         id: true
@@ -175,6 +176,7 @@ export async function GET(request: Request) {
                 f11points: true,
                 oppCountryId: true,
                 teamId: true,
+                bowlingOrder: true,
                 Match: {
                     select: {
                         id: true

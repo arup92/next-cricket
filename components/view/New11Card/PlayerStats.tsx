@@ -4,17 +4,16 @@ import useReviewCardStore from "@/store/reviewCard"
 import useSelectCardStore from "@/store/selectCard"
 import useZStore from "@/store/store"
 import { fantasyPointColor } from "@/utils/style"
+import { makeRankArrayObject } from "@/utils/utils"
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
 import { useEffect } from "react"
 import { BiSolidCricketBall, BiSolidHide, BiSolidShow } from "react-icons/bi"
 import { FaPlusCircle } from "react-icons/fa"
-import { GiCricketBat } from "react-icons/gi"
 import { IoIosStar } from "react-icons/io"
 import { MdSportsCricket } from "react-icons/md"
 import PlayerPopUpBat from "./Card/PlayerPopUpBat"
 import PlayerPopUpBowl from "./Card/PlayerPopUpBowl"
-import { makeRankArrayObject } from "@/utils/utils"
 
 interface PlayerStatsProps {
     playerData: any
@@ -33,6 +32,9 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
     const playerRank = makeRankArrayObject(ranks)
 
     const pathname = usePathname()
+
+    let battingOrder: any = {}
+    let bowlingOrder: any = {}
 
     useEffect(() => {
         if (pathname.split('create-new-11/')[1] !== deSelected.currentPage) {
@@ -109,7 +111,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
                             onClick={() => handlePicked(player, teamId)}
                             className={`absolute top-0 right-0 rounded-tr-sm cursor-pointer px-1 py-0.5 z-20 text-white text-xs ${themeColor}`}
                         >
-                            {pickPlayer.playerIds[player] ? <FaPlusCircle className="rotate-45 transition-all duration-100" /> : <FaPlusCircle className="transition-all duration-100" />}
+                            {pickPlayer.playerIds[player] ? <FaPlusCircle className="transition-all duration-100 rotate-45" /> : <FaPlusCircle className="transition-all duration-100" />}
                         </div>
 
                         <div
@@ -123,6 +125,20 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
                         <CardHeader>
                             <CardTitle className="capitalize">
                                 <div className="flex justify-between">
+                                    {/* Calculation: Batting order */}
+                                    {playerData[player].bat && playerData[player].bat.forEach((inning: any, index: number) => {
+                                        if (!!inning.battingOrder) {
+                                            battingOrder[player] = inning.battingOrder
+                                        }
+                                    })}
+
+                                    {/* Calculation: Bowling order */}
+                                    {playerData[player].bowl && playerData[player].bowl.forEach((inning: any, index: number) => {
+                                        if (!!inning.bowlingOrder) {
+                                            bowlingOrder[player] = inning.bowlingOrder
+                                        }
+                                    })}
+
                                     <p className="flex items-center">
                                         <Link
                                             className="text-blue-700 hover:underline"
@@ -130,19 +146,25 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
                                         >
                                             {player.replaceAll('_', ' ')}
                                         </Link>
-                                        <span className="ml-1 rounded-full border p-1 shadow-sm">
-                                            {playerData[player].playerType === 'AllRounder' && <MdSportsCricket />}
-                                            {playerData[player].playerType === 'Batsman' && <GiCricketBat />}
-                                            {playerData[player].playerType === 'Bowler' && <BiSolidCricketBall />}
-                                        </span>
+
+                                        {battingOrder[player] && battingOrder[player] < 8 && <span className="relative p-1 ml-1 mr-1 border rounded-full shadow-sm">
+                                            <MdSportsCricket />
+                                            <span className="absolute w-[18px] h-[18px] text-center text-xs bg-black text-white border rounded-full -top-[6px] -right-[6px]">{battingOrder[player]}</span>
+                                        </span>}
+
+                                        {bowlingOrder[player] && <span className="relative p-1 ml-1 border rounded-full shadow-sm">
+                                            <BiSolidCricketBall />
+                                            <span className="absolute w-[18px] h-[18px] text-center text-xs bg-black text-white border rounded-full -top-[6px] -right-[6px]">{bowlingOrder[player]}</span>
+                                        </span>}
                                     </p>
+
                                     <p>{teamId}</p>
                                 </div>
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            {playerData[player].bat && <div className="border border-gray-400 px-2 py-1 rounded-sm mb-3">
-                                <div className="flex justify-between items-center">
+                            {playerData[player].bat && <div className="px-2 py-1 mb-3 border border-gray-400 rounded-sm">
+                                <div className="flex items-center justify-between">
                                     <p>Runs</p>
                                     <div>
                                         {playerData[player].bat && playerData[player].bat.map((inning: any, index: number) => {
@@ -158,7 +180,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
 
                                 {playerData[player].batVsTeam && <>
                                     <Separator className="mt-2" />
-                                    <div className="flex justify-between items-center pt-1">
+                                    <div className="flex items-center justify-between pt-1">
                                         <p>Vs {oppCountryId}</p>
                                         <div>
                                             {playerData[player].batVsTeam.map((inning: any, index: number) => {
@@ -175,7 +197,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
 
                                 {playerData[player].batInVenue && <>
                                     <Separator className="mt-1" />
-                                    <div className="flex justify-between items-center pt-1">
+                                    <div className="flex items-center justify-between pt-1">
                                         <p>In Venue</p>
                                         <div>
                                             {playerData[player].batInVenue.map((inning: any, index: number) => {
@@ -191,7 +213,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
                                 </>}
                             </div>}
 
-                            {playerData[player].teamId === teamId && playerData[player].bowl && <div className="border border-gray-300 px-2 py-1 rounded-sm mb-3">
+                            {playerData[player].teamId === teamId && playerData[player].bowl && <div className="px-2 py-1 mb-3 border border-gray-300 rounded-sm">
                                 <div className="flex justify-between">
                                     <p>Wickets</p>
                                     <div>
@@ -241,8 +263,8 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
                                 </>}
                             </div>}
 
-                            {playerRank[player] && <div className="border border-gray-400 px-2 py-1 rounded-sm mb-3">
-                                <div className="flex justify-between items-center">
+                            {playerRank[player] && <div className="px-2 py-1 mb-3 border border-gray-400 rounded-sm">
+                                <div className="flex items-center justify-between">
                                     <p>Ranks</p>
                                     <div>
                                         {playerRank[player]?.map((item: any, index: number) => {
@@ -259,8 +281,8 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
                                 </div>
                             </div>}
 
-                            {totalFantasyPoints && <div className="border border-gray-400 px-2 py-1 rounded-sm">
-                                <div className="flex justify-between items-center">
+                            {totalFantasyPoints && <div className="px-2 py-1 border border-gray-400 rounded-sm">
+                                <div className="flex items-center justify-between">
                                     <p>Fantasy Points</p>
                                     <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPoints, matchFormat)}`}>
                                         {totalFantasyPoints}
@@ -269,7 +291,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
 
                                 {totalFantasyPointsVsTeam > 0 && <>
                                     <Separator className="mt-1" />
-                                    <div className="flex justify-between items-center pt-1">
+                                    <div className="flex items-center justify-between pt-1">
                                         <p>Vs {oppCountryId}</p>
                                         <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsVsTeam, matchFormat)}`}>
                                             {totalFantasyPointsVsTeam}
@@ -279,7 +301,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({ ranks, playerData, className,
 
                                 {totalFantasyPointsInVenue > 0 && <>
                                     <Separator className="mt-1" />
-                                    <div className="flex justify-between items-center pt-1">
+                                    <div className="flex items-center justify-between pt-1">
                                         <p>In Venue</p>
                                         <div className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm uppercase ${fantasyPointColor(totalFantasyPointsInVenue, matchFormat)}`}>
                                             {totalFantasyPointsInVenue}
@@ -299,49 +321,49 @@ function highlightColor(inning: any, matchFormat: string, type: 'batting' | 'bow
     if (matchFormat === 'ODI') {
         if (type === 'batting') {
             if (inning.run >= 100) {
-                className = 'bg-emerald-700 text-white shadow'
+                className = 'text-white shadow bg-emerald-700'
             } else if (inning.run >= 75) {
-                className = 'bg-emerald-600 text-white shadow'
+                className = 'text-white shadow bg-emerald-600'
             } else if (inning.run >= 50) {
-                className = 'bg-emerald-500 text-white shadow'
+                className = 'text-white shadow bg-emerald-500'
             } else if (inning.run >= 40) {
-                className = 'bg-emerald-50 text-emerald-700 shadow'
+                className = 'shadow bg-emerald-50 text-emerald-700'
             } else if (inning.run <= 9) {
-                className = 'bg-gray-200 text-emerald-700 shadow'
+                className = 'bg-gray-200 shadow text-emerald-700'
             }
         } else if (type === 'bowling') {
             if (inning.wicket >= 5) {
-                className = 'bg-emerald-700 text-white shadow'
+                className = 'text-white shadow bg-emerald-700'
             } else if (inning.wicket >= 3) {
-                className = 'bg-emerald-600 text-white shadow'
+                className = 'text-white shadow bg-emerald-600'
             } else if (inning.wicket >= 2) {
-                className = 'bg-emerald-50 text-emerald-700 shadow'
+                className = 'shadow bg-emerald-50 text-emerald-700'
             } else if (inning.wicket === 0) {
-                className = 'bg-gray-200 text-emerald-700 shadow'
+                className = 'bg-gray-200 shadow text-emerald-700'
             }
         }
     } else {
         if (type === 'batting') {
             if (inning.run >= 100) {
-                className = 'bg-emerald-700 text-white shadow'
+                className = 'text-white shadow bg-emerald-700'
             } else if (inning.run >= 75) {
-                className = 'bg-emerald-600 text-white shadow'
+                className = 'text-white shadow bg-emerald-600'
             } else if (inning.run >= 50) {
-                className = 'bg-emerald-500 text-white shadow'
+                className = 'text-white shadow bg-emerald-500'
             } else if (inning.run >= 30) {
-                className = 'bg-emerald-50 text-emerald-700 shadow'
+                className = 'shadow bg-emerald-50 text-emerald-700'
             } else if (inning.run <= 9) {
-                className = 'bg-gray-200 text-emerald-700 shadow'
+                className = 'bg-gray-200 shadow text-emerald-700'
             }
         } else if (type === 'bowling') {
             if (inning.wicket >= 5) {
-                className = 'bg-emerald-700 text-white shadow'
+                className = 'text-white shadow bg-emerald-700'
             } else if (inning.wicket >= 3) {
-                className = 'bg-emerald-600 text-white shadow'
+                className = 'text-white shadow bg-emerald-600'
             } else if (inning.wicket >= 2) {
-                className = 'bg-emerald-50 text-emerald-700 shadow'
+                className = 'shadow bg-emerald-50 text-emerald-700'
             } else if (inning.wicket === 0) {
-                className = 'bg-gray-200 text-emerald-700 shadow'
+                className = 'bg-gray-200 shadow text-emerald-700'
             }
         }
     }

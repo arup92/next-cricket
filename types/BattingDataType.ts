@@ -6,4 +6,5 @@ export type BattingDataType = {
     strikeRate: number
     matchFormat?: string
     f11points?: number
+    battingOrder: number
 }

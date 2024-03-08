@@ -45,14 +45,15 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
 export const battingData = (summaryData: string[][], matchFormat?: MatchFormat): BattingDataType[] => {
     let result: BattingDataType[] = []
 
-    for (const summery of summaryData) {
+    for (const [index, summery] of summaryData.entries()) {
 
         let summeryItem: BattingDataType = {
             playerId: summery[0].replaceAll(' ', '_').replaceAll('-', '_').toLowerCase(),
             run: parseInt(summery[1]),
             four: parseInt(summery[3]),
             six: parseInt(summery[4]),
-            strikeRate: parseFloat(summery[5])
+            strikeRate: parseFloat(summery[5]),
+            battingOrder: index + 1
         }
 
         if (matchFormat) {
@@ -69,13 +70,14 @@ export const battingData = (summaryData: string[][], matchFormat?: MatchFormat):
 export const bowlingData = (summaryData: string[][], matchFormat?: MatchFormat): BowlingDataType[] => {
     let result: BowlingDataType[] = []
 
-    for (const summery of summaryData) {
+    for (const [index, summery] of summaryData.entries()) {
         let summeryItem: BowlingDataType = {
             playerId: summery[0].replaceAll(' ', '_').replaceAll('-', '_').toLowerCase(),
             maiden: parseInt(summery[2]),
             wicket: parseInt(summery[4]),
             eco: parseFloat(summery[5]),
-            wicketType: summery[7]
+            wicketType: summery[7],
+            bowlingOrder: index + 1
         }
 
         if (matchFormat) {
@@ -126,7 +128,8 @@ export const getPlayerStats = (playerData: any): any => {
                     venueId: item.venue.venueId,
                     venueName: item.venue.venueName,
                     venueCountry: item.venue.venueCountryId,
-                    matchFormat: item.matchFormat
+                    matchFormat: item.matchFormat,
+                    battingOrder: item.battingOrder
                 }
                 player[item.playerId].bat.push(playerBat)
             }
@@ -217,7 +220,8 @@ export const getPlayerStats = (playerData: any): any => {
                     venueId: item.venue.venueId,
                     venueName: item.venue.venueName,
                     venueCountry: item.venue.venueCountryId,
-                    matchFormat: item.matchFormat
+                    matchFormat: item.matchFormat,
+                    bowlingOrder: item.bowlingOrder
                 }
                 player[item.playerId].bowl.push(playerBowl)
             }
