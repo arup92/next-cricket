@@ -6,6 +6,7 @@ export type BowlingDataType = {
     matchFormat?: string
     f11points?: number
     wicketType?: string
+    bowlingOrder: number
 }
 
 export const BowlingTypeConst = [

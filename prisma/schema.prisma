@@ -196,6 +196,7 @@ model Batting {
   matchDate    DateTime    @db.Date
   matchFormat  MatchFormat
   f11points    Int?
+  battingOrder Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -226,6 +227,7 @@ model Bowling {
   matchDate    DateTime    @db.Date
   matchFormat  MatchFormat
   f11points    Int?
+  bowlingOrder Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

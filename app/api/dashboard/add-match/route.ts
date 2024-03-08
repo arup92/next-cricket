@@ -64,7 +64,7 @@ export async function POST(request: Request) {
 
     try {
         /*********************************************************************************************************/
-        // Create venue
+        // Create Venue
         let venue = await prismaClient.venue.findUnique({
             where: {
                 venueId: body.venue.replaceAll(' ', '-').toLowerCase()

@@ -105,7 +105,7 @@ const AddMatchForm = () => {
                     //     </span>
                     // ))
                     toast.success(response.data.message)
-                    router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
+                    // router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
                 } else {
                     toast.error(ErrorMessage.SOMETHING_WRONG)
                 }
@@ -219,7 +219,7 @@ const AddMatchForm = () => {
                                                     variant="outline"
                                                     role="combobox"
                                                     aria-expanded={tAOpen}
-                                                    className="w-full justify-between bg-white"
+                                                    className="justify-between w-full bg-white"
                                                 >
                                                     {Teams && watch().teamA ?
                                                         Teams.find((team: any) => team.teamId === watch().teamA.toUpperCase()).teamId :
@@ -262,7 +262,7 @@ const AddMatchForm = () => {
                                                     variant="outline"
                                                     role="combobox"
                                                     aria-expanded={tBOpen}
-                                                    className="w-full justify-between bg-white"
+                                                    className="justify-between w-full bg-white"
                                                 >
                                                     {Teams && watch().teamB ?
                                                         Teams.find((team: any) => team.teamId === watch().teamB.toUpperCase()).teamId :
@@ -357,7 +357,7 @@ const AddMatchForm = () => {
                                                     variant="outline"
                                                     role="combobox"
                                                     aria-expanded={venueCOpen}
-                                                    className="w-full justify-between bg-white"
+                                                    className="justify-between w-full bg-white"
                                                 >
                                                     {Countries && watch().venueCountry ?
                                                         Countries.find((country: any) => country.teamId === watch().venueCountry.toUpperCase()).teamId :
