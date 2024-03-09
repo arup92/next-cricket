@@ -105,7 +105,7 @@ const AddMatchForm = () => {
                     //     </span>
                     // ))
                     toast.success(response.data.message)
-                    // router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
+                    router.push(`${process.env.NEXT_PUBLIC_APP_URL}/view/match?matchId=${response.data.matchId}`)
                 } else {
                     toast.error(ErrorMessage.SOMETHING_WRONG)
                 }
