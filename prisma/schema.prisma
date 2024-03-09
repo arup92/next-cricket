@@ -23,11 +23,12 @@ model User {
   updatedAt      DateTime @default(now()) @updatedAt
   loginId        String?
 
-  teams   Team[]
-  venues  Venue[]
-  matches Match[]
-  batting Batting[]
-  bowling Bowling[]
+  teams    Team[]
+  venues   Venue[]
+  matches  Match[]
+  batting  Batting[]
+  bowling  Bowling[]
+  saveTeam SavedTeam[]
 }
 
 model Scores {
@@ -262,4 +263,12 @@ model Rank {
   matchId  Int
   Team     Team   @relation(fields: [teamId], references: [teamId])
   teamId   String
+}
+
+model SavedTeam {
+  id       String  @id @default(uuid())
+  teamName String?
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
 }
