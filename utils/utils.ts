@@ -284,6 +284,16 @@ export const getPlayerStats = (playerData: any): any => {
                 player[item.playerId].bowlInVenue.push(playerBowl)
             }
         }
+
+        for (const item of playerData.ranks) {
+            // Rank Data
+            player[item.playerId] ??= {}
+            player[item.playerId].ranks ??= []
+
+            if (player[item.playerId].ranks.length < 5) {
+                player[item.playerId].ranks.push(item.rank)
+            }
+        }
     }
 
     return player

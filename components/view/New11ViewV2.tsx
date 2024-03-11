@@ -1,6 +1,7 @@
 'use client'
 
 import Loading from "@/app/loading"
+import useSelectCardStore from "@/store/selectCard"
 import { MatchFormat } from "@/types/MatchFormat"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -8,14 +9,14 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import NotFound from "../NotFound"
 import StatsTeamFormV2 from "../forms/StatsTeamFormV2"
-import { Badge } from "../ui/badge"
 import Head2HeadCard from "./New11Card/Head2HeadCard"
 import MatchResultsCard from "./New11Card/MatchResultsCard"
 import PlayerStats from "./New11Card/PlayerStats"
 import TeamScoresCard from "./New11Card/TeamScoresCard"
 import TeamWicketsCard from "./New11Card/TeamWicketsCard"
 import VenueStatsCard from "./New11Card/VenueStatsCard"
-import useSelectCardStore from "@/store/selectCard"
+import SaveTeam from "./save/SaveTeam"
+import useReviewCardStore from "@/store/reviewCard"
 
 interface New11ViewV2Props {
     slugs: any
@@ -25,6 +26,7 @@ interface New11ViewV2Props {
 const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
     const [pickedPlayers, setPickedPlayers] = useState<any>({})
     const pickPlayer = useSelectCardStore()
+    const reviewPlayer = useReviewCardStore()
     const pickedPlayersArray = Object.entries(pickedPlayers)
 
     // Clear State on different calls
@@ -32,7 +34,33 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
         if (teams) {
             pickPlayer.setTeam(teams.map((team: any) => team.teamId))
         }
-    }, [])
+
+        // Set Saved players
+        if (!!slugs?.[4]) {
+            const getSavedPlayers = async () => {
+                await axios.get(`/api/user/get-saved-team?shortUrl=${slugs[4]}`)
+                    .then((response) => {
+                        if (response.data.length >= 11) {
+                            let selectedPlayers: any = {}
+                            let staredPlayers: any = {}
+
+                            response.data.forEach((item: any) => {
+                                if (item.status === 'selected') {
+                                    selectedPlayers[item.playerId] = item.teamId
+                                } else if (item.status === 'stared') {
+                                    staredPlayers[item.playerId] = item.teamId
+                                }
+                            })
+
+                            pickPlayer.addPlayersArray(selectedPlayers)
+                            reviewPlayer.addPlayersArray(staredPlayers)
+                        }
+                    })
+                    .catch((error) => console.log(error))
+            }
+            getSavedPlayers()
+        }
+    }, []);
 
     const getCustomMatches = async (): Promise<any> => {
         return await axios.all([
@@ -107,7 +135,6 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
     return (
         <>
             {data && <>
-
                 <Head2HeadCard className="mb-4" h2h={data.h2h} />
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <MatchResultsCard className="col-span-2" teamA={data.sTeamA} teamB={data.sTeamB} />
@@ -130,7 +157,6 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                 <div className="grid grid-cols-1 gap-3 mb-4 lg:grid-cols-8">
                     <PlayerStats
                         className="col-span-2"
-                        ranks={data.new11.ranks}
                         playerData={data.new11.stats}
                         teamId={data.sTeamA.team}
                         oppCountryId={data.sTeamB.team}
@@ -153,7 +179,6 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                 <div className="grid grid-cols-1 gap-3 lg:grid-cols-8">
                     <PlayerStats
                         className="col-span-2"
-                        ranks={data.new11.ranks}
                         playerData={data.new11.stats}
                         teamId={data.sTeamB.team}
                         matchFormat={slugs[2]}
@@ -162,21 +187,12 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
                     />
                 </div>
 
-
-                {pickedPlayersArray.length > 0 && <div className="bg-secondary flex gap-4 shadow-sm px-2 rounded py-1 text-center fixed bottom-3 left-1/2 -translate-x-[50%] z-50">{pickedPlayersArray.map(item => {
-                    return <Badge key={item[0]} className="relative rounded-sm px-3 py-1 bg-white text-slate-900 hover:bg-white">
-                        {item[0]}
-                        <span
-                            className={`absolute -top-3 -right-3 text-center text-xs border-2 rounded-full text-white border-white ${parseInt(item[1] as string) <= 7 ? 'bg-emerald-600' : 'bg-red-500'} shadow-md w-5 h-5 grid items-center`}
-                        >
-                            {item[1] as string}
-                        </span>
-                    </Badge>
-                })}
-                    {/* <Badge className="relative rounded-sm px-3 py-1 cursor-pointer">
-                        Save
-                    </Badge> */}
-                </div>}
+                <SaveTeam
+                    slugs={slugs}
+                    pickedPlayersArray={pickedPlayersArray}
+                    reviewPlayerIds={reviewPlayer?.playerIds}
+                    playerIds={pickPlayer?.playerIds}
+                />
             </>}
         </>
     )

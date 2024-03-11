@@ -1,4 +1,5 @@
 'use client'
+import NotFound404 from "@/app/not-found"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import CenteredArea from "./customUi/CenteredArea"
@@ -18,15 +19,18 @@ const HomePage: React.FC<HomePageProps> = ({ slugs }) => {
             })
             .catch(err => {
                 console.log(err)
-                return []
+                throw new Error('Oh no!')
             })
     }
 
     // React Query
-    const { data: plRankings } = useQuery({
+    const { data: plRankings, isError } = useQuery({
         queryKey: ['playerRankings', slugs?.[0] || 'odi', slugs?.[1] || 'all', slugs?.[2] || '10'],
         queryFn: getPlayerRankings
     })
+
+    if (!plRankings || isError)
+        return <NotFound404 />
 
     return (
         <CenteredArea maxWidthClass="max-w-7xl">

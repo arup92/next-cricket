@@ -23,12 +23,12 @@ model User {
   updatedAt      DateTime @default(now()) @updatedAt
   loginId        String?
 
-  teams    Team[]
-  venues   Venue[]
-  matches  Match[]
-  batting  Batting[]
-  bowling  Bowling[]
-  saveTeam SavedTeam[]
+  teams     Team[]
+  venues    Venue[]
+  matches   Match[]
+  batting   Batting[]
+  bowling   Bowling[]
+  SavedTeam SavedTeam[]
 }
 
 model Scores {
@@ -66,14 +66,17 @@ model Team {
   matchesA Match[] @relation("teamA")
   matchesB Match[] @relation("teamB")
 
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
 
-  batting     Batting[]
-  bowling     Bowling[]
-  Scores      Scores[]
-  playerTeams PlayerTeam[]
-  rank        Rank[]
+  batting          Batting[]
+  bowling          Bowling[]
+  Scores           Scores[]
+  playerTeams      PlayerTeam[]
+  rank             Rank[]
+  savedTeamA       SavedTeam[]        @relation("teamA")
+  savedTeamB       SavedTeam[]        @relation("teamB")
+  savedTeamPlayers SavedTeamPlayers[]
 }
 
 model Venue {
@@ -85,9 +88,10 @@ model Venue {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  matches Match[]
-  batting Batting[]
-  bowling Bowling[]
+  matches   Match[]
+  batting   Batting[]
+  bowling   Bowling[]
+  SavedTeam SavedTeam[]
 
   User   User   @relation(fields: [userId], references: [id])
   userId String
@@ -165,9 +169,10 @@ model Player {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  batting Batting[]
-  bowling Bowling[]
-  rank    Rank[]
+  batting          Batting[]
+  bowling          Bowling[]
+  rank             Rank[]
+  savedTeamPlayers SavedTeamPlayers[]
 }
 
 // Many-to-Many
@@ -266,9 +271,40 @@ model Rank {
 }
 
 model SavedTeam {
-  id       String  @id @default(uuid())
-  teamName String?
+  id          String      @id @default(uuid())
+  teamName    String?
+  matchFormat MatchFormat
+  shortUrl    String?     @unique
 
-  User   User   @relation(fields: [userId], references: [id])
-  userId String
+  venue   Venue?  @relation(fields: [venueId], references: [venueId])
+  venueId String?
+
+  teamA   Team   @relation("teamA", fields: [teamAId], references: [teamId])
+  teamAId String
+
+  teamB   Team   @relation("teamB", fields: [teamBId], references: [teamId])
+  teamBId String
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  savedTeamPlayers SavedTeamPlayers[]
+}
+
+enum SavedTeamStatus {
+  selected
+  stared
+}
+
+model SavedTeamPlayers {
+  id Int @id @default(autoincrement())
+
+  Player   Player          @relation(fields: [playerId], references: [playerId])
+  playerId String
+  status   SavedTeamStatus
+
+  SavedTeam   SavedTeam @relation(fields: [savedTeamId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  savedTeamId String
+  Team        Team      @relation(fields: [teamId], references: [teamId])
+  teamId      String
 }
