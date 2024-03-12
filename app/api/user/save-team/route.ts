@@ -8,10 +8,11 @@ interface RequestBody {
     team: any
     savedTeamPlayers: any[]
     reviewTeamPlayers: any[]
+    shortUrl?: string
 }
 
 export async function POST(request: Request) {
-    const { team, savedTeamPlayers, reviewTeamPlayers }: RequestBody = await request.json()
+    const { team, savedTeamPlayers, reviewTeamPlayers, shortUrl }: RequestBody = await request.json()
     const userSession = await getCurrentUser()
 
     try {
@@ -24,8 +25,20 @@ export async function POST(request: Request) {
             return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
         }
 
+        // if (!!shortUrl) {
+        //     const checkShortUrl = await prismaClient.savedTeam.findUnique({
+        //         where: {
+        //             shortUrl
+        //         }
+        //     })
+
+        //     if (!!checkShortUrl) {
+        //         return NextResponse.json(checkShortUrl, { status: 200 })
+        //     }
+        // }
+
         // Short url
-        const shortUrl = nanoid()
+        const genShortUrl = nanoid()
 
         const savedTeam = await prismaClient.savedTeam.create({
             data: {
@@ -34,7 +47,7 @@ export async function POST(request: Request) {
                 ...(team.venueId !== 'undefined' ? { venueId: team.venueId } : {}),
                 teamAId: team.teamAId,
                 teamBId: team.teamBId,
-                shortUrl,
+                shortUrl: genShortUrl,
                 ...(!!userSession?.id ? { userId: userSession.id } : {})
             }
         })

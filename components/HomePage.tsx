@@ -29,7 +29,7 @@ const HomePage: React.FC<HomePageProps> = ({ slugs }) => {
         queryFn: getPlayerRankings
     })
 
-    if (!plRankings || isError)
+    if (isError)
         return <NotFound404 />
 
     return (
