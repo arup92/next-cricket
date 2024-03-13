@@ -90,11 +90,7 @@ const New11ViewV2: React.FC<New11ViewV2Props> = ({ slugs, teams }) => {
         enabled: slugs ? true : false
     })
 
-    if (!slugs) {
-        return <div className="sm:max-w-[425px] mx-auto my-0">
-            <StatsTeamFormV2 slugs={slugs} />
-        </div>
-    } else if (!!slugs) {
+    if (!!slugs) {
         // 404
         if (
             !slugs[0] || !slugs[1]
