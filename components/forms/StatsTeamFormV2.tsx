@@ -41,6 +41,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
 
     useEffect(() => {
         isFetched && isFetched(false)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const onSubmit = (values: any) => {
@@ -75,6 +76,7 @@ const StatsTeamFormV2: React.FC<StatsTeamFormV2> = ({ slugs, isFetched }) => {
             setValue('matchFormat', slugs[2] ? slugs[2].toUpperCase() : '')
             setValue('venueId', slugs[3] ? slugs[3] : '')
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // React Query: Get Venues

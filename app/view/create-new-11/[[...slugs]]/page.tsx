@@ -1,3 +1,6 @@
+import NotFound404 from "@/app/not-found"
+import NotFound from "@/components/NotFound"
+import StatsTeamFormV2 from "@/components/forms/StatsTeamFormV2"
 import New11ViewV2 from "@/components/view/New11ViewV2"
 import prismaClient from "@/libs/prismadb"
 import { Metadata } from "next"
@@ -8,7 +11,7 @@ type Props = {
 }
 
 const getTeam = cache(async (params: any) => {
-    if (params.slugs?.length > 0) {
+    if (params.slugs?.length > 0 && params.slugs[0].toUpperCase() !== params.slugs[1].toUpperCase()) {
         const teams = await prismaClient.team.findMany({
             where: {
                 teamId: {
@@ -46,9 +49,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const New11 = async ({ params }: { params: { slugs: string } }) => {
     const teams = await getTeam(params)
 
-    return (
-        <New11ViewV2 slugs={params.slugs} teams={teams} />
-    )
+    if (!params.slugs?.[0]) {
+        return <div className="sm:max-w-[425px] mx-auto my-0">
+            <StatsTeamFormV2 slugs={params.slugs as any} />
+        </div>
+    } else if (!!teams) {
+        return <New11ViewV2 slugs={params.slugs} teams={teams} />
+    }
+
+    return <NotFound404 />
 }
 
 export default New11

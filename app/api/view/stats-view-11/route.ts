@@ -1,46 +1,45 @@
 import prismaClient from "@/libs/prismadb"
 import { ErrorMessage } from "@/responses/messages"
 import { getPlayerStats } from "@/utils/utils"
-import { MatchFormat } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
-    const teamA = url.searchParams.get('teamA')?.toString().toUpperCase()
-    const teamB = url.searchParams.get('teamB')?.toString().toUpperCase()
-    const matchFormat: MatchFormat = url.searchParams.get('matchFormat')?.toString().toUpperCase() as MatchFormat
-    const venueId = url.searchParams.get('venueId')?.toString().toLowerCase()
-
-    if (!teamA || !teamB || !matchFormat) {
-        return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 401 })
-    }
+    const savedTeamId = url.searchParams.get('savedTeamId')?.toString()
 
     try {
         const oneYearAgo = new Date();
         oneYearAgo.setDate(oneYearAgo.getDate() - 365)
 
+        const savedTeam = await prismaClient.savedTeam.findUnique({
+            where: {
+                id: savedTeamId
+            },
+            include: {
+                savedTeamPlayers: true,
+                teamA: true,
+                teamB: true
+            }
+        })
+
+        if (!savedTeam) {
+            return new NextResponse(ErrorMessage.BAD_REQUEST, { status: 400 })
+        }
+        // Player Ids
+        const playerIds: string[] = savedTeam.savedTeamPlayers.map(player => player.playerId)
+
         const teamBat = await prismaClient.batting.findMany({
             where: {
                 OR: [
-                    { teamId: teamA },
-                    { teamId: teamB }
+                    { teamId: savedTeam.teamAId },
+                    { teamId: savedTeam.teamBId }
                 ],
                 matchDate: {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat,
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes',
-                            OR: [
-                                { teamId: teamA },
-                                { teamId: teamB }
-                            ]
-                        }
-                    }
-                },
+                matchFormat: savedTeam.matchFormat,
+                playerId: { in: playerIds }
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -83,30 +82,20 @@ export async function GET(request: Request) {
         const teamBatVsTeam = await prismaClient.batting.findMany({
             where: {
                 OR: [
-                    { teamId: teamA },
-                    { teamId: teamB }
+                    { teamId: savedTeam.teamAId },
+                    { teamId: savedTeam.teamBId }
                 ],
                 oppCountryId: {
                     in: [
-                        teamA, teamB
+                        savedTeam.teamAId, savedTeam.teamBId
                     ]
                 },
                 matchDate: {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat,
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes',
-                            OR: [
-                                { teamId: teamA },
-                                { teamId: teamB }
-                            ]
-                        }
-                    }
-                },
+                matchFormat: savedTeam.matchFormat,
+                playerId: { in: playerIds }
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -142,25 +131,15 @@ export async function GET(request: Request) {
         const teamBowl = await prismaClient.bowling.findMany({
             where: {
                 OR: [
-                    { teamId: teamA },
-                    { teamId: teamB }
+                    { teamId: savedTeam.teamAId },
+                    { teamId: savedTeam.teamBId }
                 ],
                 matchDate: {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat,
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes',
-                            OR: [
-                                { teamId: teamA },
-                                { teamId: teamB }
-                            ]
-                        }
-                    }
-                },
+                matchFormat: savedTeam.matchFormat,
+                playerId: { in: playerIds }
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -202,30 +181,20 @@ export async function GET(request: Request) {
         const teamBowlVsTeam = await prismaClient.bowling.findMany({
             where: {
                 OR: [
-                    { teamId: teamA },
-                    { teamId: teamB }
+                    { teamId: savedTeam.teamAId },
+                    { teamId: savedTeam.teamBId }
                 ],
                 oppCountryId: {
                     in: [
-                        teamA, teamB
+                        savedTeam.teamAId, savedTeam.teamBId
                     ]
                 },
                 matchDate: {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat,
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes',
-                            OR: [
-                                { teamId: teamA },
-                                { teamId: teamB }
-                            ]
-                        }
-                    }
-                },
+                matchFormat: savedTeam.matchFormat,
+                playerId: { in: playerIds }
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -261,30 +230,20 @@ export async function GET(request: Request) {
         let teamBatInVenue: any[] = []
         let teamBowlInVenue: any[] = []
 
-        if (venueId) {
+        if (savedTeam.venueId && savedTeam.venueId !== 'undefined') {
             teamBatInVenue = await prismaClient.batting.findMany({
                 where: {
                     OR: [
-                        { teamId: teamA },
-                        { teamId: teamB }
+                        { teamId: savedTeam.teamAId },
+                        { teamId: savedTeam.teamBId }
                     ],
-                    venueId,
+                    venueId: savedTeam.venueId,
                     matchDate: {
                         lte: new Date(),
                         gte: oneYearAgo
                     },
-                    matchFormat,
-                    Player: {
-                        playerTeams: {
-                            some: {
-                                active: 'yes',
-                                OR: [
-                                    { teamId: teamA },
-                                    { teamId: teamB }
-                                ]
-                            }
-                        }
-                    },
+                    matchFormat: savedTeam.matchFormat,
+                    playerId: { in: playerIds }
                 },
                 orderBy: [
                     { playerId: 'asc' },
@@ -320,26 +279,16 @@ export async function GET(request: Request) {
             teamBowlInVenue = await prismaClient.bowling.findMany({
                 where: {
                     OR: [
-                        { teamId: teamA },
-                        { teamId: teamB }
+                        { teamId: savedTeam.teamAId },
+                        { teamId: savedTeam.teamBId }
                     ],
-                    venueId,
+                    venueId: savedTeam.venueId,
                     matchDate: {
                         lte: new Date(),
                         gte: oneYearAgo
                     },
-                    matchFormat,
-                    Player: {
-                        playerTeams: {
-                            some: {
-                                active: 'yes',
-                                OR: [
-                                    { teamId: teamA },
-                                    { teamId: teamB }
-                                ]
-                            }
-                        }
-                    },
+                    matchFormat: savedTeam.matchFormat,
+                    playerId: { in: playerIds }
                 },
                 orderBy: [
                     { playerId: 'asc' },
@@ -375,20 +324,14 @@ export async function GET(request: Request) {
         // Get ranks
         const ranks = await prismaClient.rank.findMany({
             where: {
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes'
-                        }
-                    }
-                },
                 OR: [
-                    { teamId: teamA },
-                    { teamId: teamB }
+                    { teamId: savedTeam.teamAId },
+                    { teamId: savedTeam.teamBId }
                 ],
                 Match: {
-                    matchFormat
-                }
+                    matchFormat: savedTeam.matchFormat,
+                },
+                playerId: { in: playerIds }
             },
             select: {
                 rank: true,
@@ -406,7 +349,7 @@ export async function GET(request: Request) {
 
         const stats = getPlayerStats({ teamBat, teamBowl, teamBatVsTeam, teamBowlVsTeam, teamBatInVenue, teamBowlInVenue, ranks })
 
-        return NextResponse.json({ stats }, { status: 200 })
+        return NextResponse.json({ savedTeam, stats, ranks }, { status: 200 })
     } catch (error) {
         console.log(error)
         return new NextResponse(ErrorMessage.INT_SERVER_ERROR, { status: 500 })
