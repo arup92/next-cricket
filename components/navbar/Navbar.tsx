@@ -93,8 +93,8 @@ const Navbar = () => {
                                        </>
                                     ) : (
                                        <>
-                                          <NavlinkUi linkto="/login">Login</NavlinkUi>
-                                          <NavlinkUi type='navBtn' linkto="/register">Register</NavlinkUi>
+                                          {/* <NavlinkUi linkto="/login">Login</NavlinkUi>
+                                          <NavlinkUi type='navBtn' linkto="/register">Register</NavlinkUi> */}
                                        </>
                                     )
                                  }
