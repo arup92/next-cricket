@@ -63,7 +63,7 @@ const TeamDetailedStats: React.FC<TeamDetailedStatsProps> = ({ team, opponent, m
                             <h2 className="text-base lg:text-2xl mr-1"><span className="capitalize font-semibold">{team.teamName}</span> Most Recent Matches</h2>
                         }
 
-                        <p className="inline text-muted-foreground text-sm">(Recent 10 Records)</p>
+                        <p className="inline text-muted-foreground text-sm">(Recent Performances)</p>
                     </div>
 
                     <TeamMatchFilterForm team={team} />
