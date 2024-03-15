@@ -1,7 +1,7 @@
 import ProvidersTanstack from '@/components/ProviderTanstack'
 import Providers from '@/components/Providers'
 import SticketyPlus from '@/components/SticketyPlus'
-import Footer from '@/components/footer/Footer'
+import Footer from '@/components/Footer'
 import Navbar from '@/components/navbar/Navbar'
 import type { Metadata } from 'next'
 import { Nunito } from 'next/font/google'

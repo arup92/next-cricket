@@ -5,6 +5,7 @@ import axios from "axios"
 import CenteredArea from "./customUi/CenteredArea"
 import RankFilterForm from "./forms/RankFilterForm"
 import TeamRanking from "./ranking/TeamRanking"
+import Loading from "@/app/loading"
 
 interface HomePageProps {
     slugs: any
@@ -24,13 +25,15 @@ const HomePage: React.FC<HomePageProps> = ({ slugs }) => {
     }
 
     // React Query
-    const { data: plRankings, isError } = useQuery({
+    const { data: plRankings, isError, isLoading } = useQuery({
         queryKey: ['playerRankings', slugs?.[0] || 'odi', slugs?.[1] || 'all', slugs?.[2] || '10'],
         queryFn: getPlayerRankings
     })
 
     if (isError)
         return <NotFound404 />
+
+    if (isLoading) return <Loading />
 
     return (
         <CenteredArea maxWidthClass="max-w-7xl">

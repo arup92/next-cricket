@@ -1,4 +1,10 @@
 import CenteredArea from "@/components/customUi/CenteredArea"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: `About us | ${process.env.APP_NAME}`,
+    description: `About us | ${process.env.NEXT_PUBLIC_APP_URL}`,
+}
 
 const page = () => {
     return (
