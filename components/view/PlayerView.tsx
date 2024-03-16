@@ -107,7 +107,10 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                             <Card className="mb-3">
                                 <CardContent className="py-3">
                                     <AccordionTrigger className="p-0 hover:text-blue-700">
-                                        <span className="inline text-lg font-bold capitalize">{getLeagueName(item)} Career</span>
+                                        <div className="flex items-center">
+                                            <span className="inline text-lg font-bold capitalize mr-1">{getLeagueName(item)}</span>
+                                            <span className="inline text-sm text-muted-foreground">(Recent Performances)</span>
+                                        </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="mt-4">
                                         {groupedData.bat && groupedData.bat.hasOwnProperty(item) && <BattingTable

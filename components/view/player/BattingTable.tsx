@@ -29,7 +29,6 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                     <CardContent className="py-3">
                         <div className="mb-3 text-center">
                             <h2 className="inline mr-1 text-xl font-bold text-center">Batting</h2>
-                            <p className="inline text-sm text-muted-foreground">(Recent 10 Records)</p>
                         </div>
                         <div className="flex items-center justify-between mb-3 text-muted-foreground">
                             <p>

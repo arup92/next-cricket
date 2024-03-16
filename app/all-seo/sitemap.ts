@@ -1,3 +1,4 @@
+import { MatchFormat } from './../../types/MatchFormat';
 import prismaClient from '@/libs/prismadb'
 import { MetadataRoute } from 'next'
 
@@ -12,6 +13,7 @@ interface SiteMapType {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const appUrl = process.env.APP_URL
+    /** ------------------------------------------------------------- **/
     const matches = await prismaClient.match.findMany({
         orderBy: {
             matchDate: 'desc'
@@ -26,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.7,
         }
     })
+    /** ------------------------------------------------------------- **/
 
     return [
         {
@@ -36,6 +39,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
         {
             url: `${appUrl}/view/create-new-11`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 1,
+        },
+        {
+            url: `${appUrl}/page/about`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 1,
+        },
+        {
+            url: `${appUrl}/page/contact`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 1,
+        },
+        {
+            url: `${appUrl}/page/privacy-policy`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 1,
+        },
+        {
+            url: `${appUrl}/page/terms-and-conditions`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 1,
