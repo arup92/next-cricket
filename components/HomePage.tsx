@@ -42,7 +42,7 @@ const HomePage: React.FC<HomePageProps> = ({ slugs }) => {
                 <StatsTeamFormV2Compact />
             </div>
 
-            <div className="px-5 py-3 mb-5 border rounded-md shadow-sm lg:items-center lg:justify-between lg:flex text-card-foreground bg-card">
+            <div className="px-5 py-3 mb-3 border rounded-md shadow-sm lg:items-center lg:justify-between lg:flex text-card-foreground bg-card">
                 <div className="text-center">
                     <h2 className="inline-block mb-4 mr-auto text-lg font-bold lg:inline lg:text-2xl">Fantasy Players Rating</h2>
                 </div>

@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     const limit: any = url.searchParams.get('view')?.toString() || 10
     let team: any = url.searchParams.get('team')?.toString() || null
 
-    if (matchFormat === 'index') {
+    if (matchFormat === 'INDEX') {
         matchFormat = 'ODI'
     }
 
