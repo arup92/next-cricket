@@ -29,6 +29,9 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
     const [prvValue, setPrvValue] = useState<string>('{}')
     const router = useRouter()
 
+    if (fields?.[0] === 'index') {
+        fields[0] = 'ODI'
+    }
     let matchFormat = fields?.[0] || 'ODI'
     matchFormat = matchFormat.toUpperCase()
 
