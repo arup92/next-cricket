@@ -105,13 +105,13 @@ const StatsTeamFormV2Compact: React.FC<StatsTeamFormV2StatsTeamFormV2CompactProp
 
     return (
         <>
-            <div className="px-5 py-3 mb-5 border rounded-md shadow-sm lg:items-center lg:justify-between lg:flex text-card-foreground bg-card">
+            <div className="px-5 py-3 mb-3 border rounded-md shadow-sm lg:items-center lg:justify-between lg:flex text-card-foreground bg-card">
                 <div className="text-center">
                     <h2 className="inline-block mr-auto text-lg font-bold lg:inline lg:text-2xl">Make A New 11</h2>
                 </div>
             </div>
 
-            <Card className="mt-3">
+            <Card>
                 <CardContent className="pt-6">
                     <form onSubmit={handleSubmit(onSubmit)} className="lg:flex lg:justify-between">
                         <div className="mb-3 lg:mb-0 lg:w-[23%]">
