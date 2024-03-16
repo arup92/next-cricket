@@ -74,17 +74,19 @@ const SaveTeam: React.FC<SaveTeamProps> = ({ pickedPlayersArray, slugs, playerId
 
             {pickedPlayersArray.length > 0 && <Dialog>
                 {playerIdLength === 11 ? <DialogTrigger asChild>
-                    <Badge
-                        onClick={saveTeam}
-                        className={`relative rounded-sm px-3 py-1 cursor-pointer`}
-                    >
-                        <span
-                            className={`absolute -top-3 -right-3 text-center text-xs border-2 rounded-full text-white border-white bg-black shadow-md w-[22px] h-[22px] grid items-center`}
+                    <div>
+                        <Badge
+                            onClick={saveTeam}
+                            className={`relative rounded-sm px-3 py-1 cursor-pointer`}
                         >
-                            <FaShare className="w-full" />
-                        </span>
-                        Share
-                    </Badge>
+                            <span
+                                className={`absolute -top-3 -right-3 text-center text-xs border-2 rounded-full text-white border-white bg-black shadow-md w-[22px] h-[22px] grid items-center`}
+                            >
+                                <FaShare className="w-full" />
+                            </span>
+                            Share
+                        </Badge>
+                    </div>
                 </DialogTrigger> : <Badge
                     onClick={saveTeam}
                     className={`relative rounded-sm px-3 py-1 bg-gray-500 cursor-not-allowed`}
