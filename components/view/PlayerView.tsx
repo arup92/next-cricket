@@ -102,6 +102,26 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                 {data.batting.length === 0 && data.bowling.length === 0 && <SecNotFound />}
 
                 <Accordion type="multiple" defaultValue={[matchFormat]}>
+                    <AccordionItem value="recent" className="border-b-0">
+                        <Card className="mb-3">
+                            <CardContent className="py-3">
+                                <AccordionTrigger className="p-0 hover:text-blue-700">
+                                    <div className="flex items-center">
+                                        <span className="inline text-lg font-bold capitalize mr-1">Recent Matches</span>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent className="mt-4">
+                                    {data.batting && <BattingTable
+                                        batData={data.batting.slice(0, 10)}
+                                    />}
+                                    {data.bowling && <BowlingTable
+                                        bowlData={data.bowling.slice(0, 10)}
+                                    />}
+                                </AccordionContent>
+                            </CardContent>
+                        </Card>
+                    </AccordionItem>
+
                     {matchFormats.map((item: string) => (
                         <AccordionItem key={item} value={item.toLowerCase()} className="border-b-0">
                             <Card className="mb-3">

@@ -106,7 +106,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
                             <SelectValue placeholder={!watch().matchFormat ? matchFormat : watch().matchFormat} />
                         </SelectTrigger>
                         <SelectContent>
-                            {MatchFormat.map((format) => (
+                            {MatchFormat.filter(format => format !== 'WPL').map((format) => (
                                 <SelectItem key={format} value={format}>
                                     {format}
                                 </SelectItem>

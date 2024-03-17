@@ -29,7 +29,7 @@ const Player = ({ params }: Props) => {
     }
 
     if (!params?.slugs[1]) {
-        params.slugs[1] = 'odi'
+        params.slugs[1] = 'recent'
     }
 
     return (

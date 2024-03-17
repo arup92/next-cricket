@@ -19,19 +19,9 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
     let rawArray = stringWNwLine.split('\n').map(item => item.replaceAll('*', '').trim())
         .filter(item => (
             item !== ''
-            // && !item.toLowerCase().startsWith("c ")
-            // && !item.toLowerCase().startsWith("b ")
-            // && !item.toLowerCase().startsWith("run")
-            // && !item.toLowerCase().startsWith("lbw")
-            // && !item.toLowerCase().startsWith("not")
-            // && !item.toLowerCase().startsWith("st ")
             && !item.toLowerCase().startsWith("(")
             && !item.toLowerCase().startsWith("*")
             && !item.toLowerCase().startsWith("impact icon")
-            // && !item.toLowerCase().startsWith("timed out")
-            // && !item.toLowerCase().startsWith("retired")
-            // && !item.toLowerCase().startsWith("hit wicket")
-            // && !item.toLowerCase().startsWith("absent hurt")
         ))
     const finalArray: string[][] = []
     for (let i = 0; i < rawArray.length; i += chunkSize) {
@@ -39,7 +29,23 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
         finalArray.push(chunk)
     }
 
-    return finalArray
+    const result = filterDuplicates(finalArray)
+
+    return result
+}
+
+const filterDuplicates = (array: string[][]) => {
+    const duplicates: any = {
+        'aamir_jamal_i': 'Aamir Jamal'
+    }
+
+    array.forEach((item: any) => {
+        if (duplicates.hasOwnProperty(item[0].toLowerCase().replaceAll(' ', '_').replaceAll('-', '_'))) {
+            item[0] = duplicates[item[0].toLowerCase().replaceAll(' ', '_').replaceAll('-', '_')]
+        }
+    })
+
+    return array
 }
 
 export const battingData = (summaryData: string[][], matchFormat?: MatchFormat): BattingDataType[] => {
