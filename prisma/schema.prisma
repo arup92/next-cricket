@@ -105,6 +105,8 @@ enum MatchFormat {
   BBL
   SA20
   ILT20
+  WPL
+  PSL
 }
 
 enum MatchType {
