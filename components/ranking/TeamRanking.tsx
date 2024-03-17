@@ -10,6 +10,8 @@ interface TeamRankingProps {
 
 const TeamRanking: React.FC<TeamRankingProps> = ({ battingRanking, bowlingRanking, handle }) => {
 
+    if (handle === 'index') handle = 'odi'
+
     // Mark common players
     const batters: any = {}
     const commonPlayers: any = {}
