@@ -13,7 +13,17 @@ export async function GET(request: Request) {
                 shortUrl
             },
             include: {
-                savedTeamPlayers: true,
+                savedTeamPlayers: {
+                    where: {
+                        Player: {
+                            playerTeams: {
+                                some: {
+                                    active: 'yes'
+                                }
+                            }
+                        }
+                    }
+                },
                 teamA: true,
                 teamB: true
             }
