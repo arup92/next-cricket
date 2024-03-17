@@ -29,6 +29,7 @@ model User {
   batting   Batting[]
   bowling   Bowling[]
   SavedTeam SavedTeam[]
+  Fixers    Fixers[]
 }
 
 model Scores {
@@ -77,6 +78,8 @@ model Team {
   savedTeamA       SavedTeam[]        @relation("teamA")
   savedTeamB       SavedTeam[]        @relation("teamB")
   savedTeamPlayers SavedTeamPlayers[]
+  FixersTeamA      Fixers[]           @relation("teamA")
+  FixersTeamB      Fixers[]           @relation("teamB")
 }
 
 model Venue {
@@ -93,8 +96,9 @@ model Venue {
   bowling   Bowling[]
   SavedTeam SavedTeam[]
 
-  User   User   @relation(fields: [userId], references: [id])
+  User   User     @relation(fields: [userId], references: [id])
   userId String
+  Fixers Fixers[]
 }
 
 enum MatchFormat {
@@ -309,4 +313,21 @@ model SavedTeamPlayers {
   savedTeamId String
   Team        Team      @relation(fields: [teamId], references: [teamId])
   teamId      String
+}
+
+model Fixers {
+  id          Int         @id @default(autoincrement())
+  matchFormat MatchFormat
+
+  teamA   Team   @relation("teamA", fields: [teamAId], references: [teamId])
+  teamAId String
+
+  teamB   Team   @relation("teamB", fields: [teamBId], references: [teamId])
+  teamBId String
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  venue   Venue?  @relation(fields: [venueId], references: [venueId])
+  venueId String?
 }
