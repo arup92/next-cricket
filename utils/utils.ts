@@ -36,7 +36,8 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
 
 const filterDuplicates = (array: string[][]) => {
     const duplicates: any = {
-        'aamir_jamal_i': 'Aamir Jamal'
+        'aamir_jamal_i': 'Aamir Jamal',
+        'rajvardhan_s_hangargekar': 'Rajvardhan Hangargekar'
     }
 
     array.forEach((item: any) => {
@@ -563,14 +564,6 @@ export const fantasyPointsCount = (inning: any, type: 'bat' | 'bowl'): number =>
     }
     return totalFantasyPoints
 }
-
-// export const getFullNameByCode = (teamCode: any): string | undefined => {
-//     const index = Teams.indexOf(teamCode)
-//     if (index !== -1) {
-//         return TeamFullNames[index]
-//     }
-//     return undefined
-// }
 
 export const formatDateString = (inputDateString: string): string => {
     const date = new Date(inputDateString);
