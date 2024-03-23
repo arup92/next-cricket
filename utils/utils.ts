@@ -107,6 +107,17 @@ export const sortStringsAlphabetically = (str1: string, str2: string): string[] 
 export const getPlayerStats = (playerData: any): any => {
     let player: any = {}
 
+    for (const item of playerData.ranks) {
+        // Rank Data
+        player[item.playerId] ??= {}
+        player[item.playerId].ranks ??= []
+        player[item.playerId].teamId ??= item.teamId
+
+        if (player[item.playerId].ranks.length < 5) {
+            player[item.playerId].ranks.push(item.rank)
+        }
+    }
+
     if (Object.keys(playerData).length > 0) {
         for (const item of playerData.teamBat) {
             const date = new Date(item.matchDate)
@@ -288,16 +299,6 @@ export const getPlayerStats = (playerData: any): any => {
                     matchFormat: item.matchFormat
                 }
                 player[item.playerId].bowlInVenue.push(playerBowl)
-            }
-        }
-
-        for (const item of playerData.ranks) {
-            // Rank Data
-            player[item.playerId] ??= {}
-            player[item.playerId].ranks ??= []
-
-            if (player[item.playerId].ranks.length < 5) {
-                player[item.playerId].ranks.push(item.rank)
             }
         }
     }
