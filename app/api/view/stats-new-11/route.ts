@@ -378,7 +378,11 @@ export async function GET(request: Request) {
                 Player: {
                     playerTeams: {
                         some: {
-                            active: 'yes'
+                            active: 'yes',
+                            OR: [
+                                { teamId: teamA },
+                                { teamId: teamB }
+                            ],
                         }
                     }
                 },
