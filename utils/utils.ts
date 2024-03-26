@@ -37,7 +37,8 @@ export const summaryData = (stringWNwLine: string, chunkSize: number): string[][
 const filterDuplicates = (array: string[][]) => {
     const duplicates: any = {
         'aamir_jamal_i': 'Aamir Jamal',
-        'rajvardhan_s_hangargekar': 'Rajvardhan Hangargekar'
+        'rajvardhan_s_hangargekar': 'Rajvardhan Hangargekar',
+        'namboori_thakur_tilak_varma': 'Tilak Varma'
     }
 
     array.forEach((item: any) => {
