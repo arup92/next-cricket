@@ -12,7 +12,7 @@ const nunito = Nunito({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
 	title: process.env.APP_NAME,
-	description: 'Recent Cricket Statistics',
+	description: 'Cricket Statistics',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
