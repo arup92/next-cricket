@@ -1,9 +1,9 @@
-import { MatchFormat } from '@/types/MatchFormat'
+import { MatchFormat, MatchType } from '@/types/MatchFormat'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { GoCheck, GoCode } from "react-icons/go"
 import { RiSearch2Line } from 'react-icons/ri'
@@ -16,7 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 const formSchema = z.object({
     matchFormat: z.string().optional(),
     team: z.string().optional(),
-    view: z.string().optional()
+    view: z.string().optional(),
+    matchType: z.enum(MatchType),
 })
 
 interface RankFilterFormProps {
@@ -49,6 +50,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
         mode: 'onChange',
         resolver: zodResolver(formSchema),
         defaultValues: {
+            matchType: 'MEN',
             matchFormat,
             team,
             view,
@@ -85,7 +87,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
             // Update the previous value
             setPrvValue(JSON.stringify(values))
 
-            path = `/${values.matchFormat || 'odi'}/${values.team || 'all'}/${values.view || '10'}`
+            path = `/${values.matchFormat || 'odi'}/${values.team || 'all'}/${values.view || '10'}/${values.matchType || 'MEN'}`
             router.push(`${path.toLowerCase()}`)
 
             setLoading(false) // Loading false
@@ -176,6 +178,26 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
                             <SelectItem key={`3`} value='50'>
                                 50
                             </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div>
+                    <Select
+                        onValueChange={(selectedValue: string) => {
+                            setValue('matchType', selectedValue)
+                        }}
+                        value={getValues('matchType')}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Match Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {MatchType.map((type) => (
+                                <SelectItem key={type} value={type}>
+                                    {type}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>

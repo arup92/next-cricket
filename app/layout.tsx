@@ -11,7 +11,7 @@ import './globals.css'
 const nunito = Nunito({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-	title: process.env.APP_NAME,
+	title: `${process.env.APP_NAME} - Fantasy11.club`,
 	description: 'Cricket Statistics',
 }
 

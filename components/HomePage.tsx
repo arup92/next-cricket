@@ -15,7 +15,7 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ slugs }) => {
     // React Query: Get Player List
     const getPlayerRankings = async (): Promise<any> => {
-        return await axios.get(`/api/view/ranking?matchFormat=${slugs?.[0] || 'odi'}&team=${slugs?.[1] || 'all'}&view=${slugs?.[2] || '10'}`)
+        return await axios.get(`/api/view/ranking?matchFormat=${slugs?.[0] || 'odi'}&team=${slugs?.[1] || 'all'}&view=${slugs?.[2] || '10'}&matchType=${slugs?.[3] || 'MEN'}`)
             .then(response => {
                 return response.data
             })
