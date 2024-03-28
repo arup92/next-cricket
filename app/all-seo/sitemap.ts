@@ -1,6 +1,5 @@
-import { MatchFormat } from './../../types/MatchFormat';
-import prismaClient from '@/libs/prismadb'
-import { MetadataRoute } from 'next'
+import prismaClient from '@/libs/prismadb';
+import { MetadataRoute } from 'next';
 
 export const revalidate = 0
 
@@ -13,6 +12,22 @@ interface SiteMapType {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const appUrl = process.env.APP_URL
+    /** ------------------------------------------------------------- **/
+    const players = await prismaClient.player.findMany({
+        orderBy: {
+            createdAt: 'asc'
+        }
+    })
+
+    const playersArray: SiteMapType[] = players.map(player => {
+        return {
+            url: `${appUrl}/view/player/${player.playerId}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        }
+    })
+
     /** ------------------------------------------------------------- **/
     const matches = await prismaClient.match.findMany({
         orderBy: {
@@ -67,6 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'monthly',
             priority: 1,
         },
-        ...matchesArray,
+        ...playersArray,
+        ...matchesArray
     ]
 }

@@ -64,7 +64,7 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                     <TableHead>Pts</TableHead>
                                     <TableHead>6s</TableHead>
                                     <TableHead>4s</TableHead>
-                                    <TableHead className="hidden lg:table-cell">SR</TableHead>
+                                    <TableHead>SR</TableHead>
                                     <TableHead>Rank</TableHead>
                                     <TableHead className="hidden lg:table-cell">Inn</TableHead>
                                     <TableHead>Vs</TableHead>
@@ -119,7 +119,7 @@ const BattingTable: React.FC<BattingTableProps> = ({ batData }) => {
                                         <TableCell>{item.f11points}</TableCell>
                                         <TableCell>{item.six}</TableCell>
                                         <TableCell>{item.four}</TableCell>
-                                        <TableCell className={`hidden lg:table-cell`}>{Math.round(item.strikeRate)}</TableCell>
+                                        <TableCell>{Math.round(item.strikeRate)}</TableCell>
                                         <TableCell>
                                             <span className={`rounded-sm w-[34px] inline-block text-center shadow px-1 mr-1 text-muted-foreground text-sm ${rankColor}`}>{item.rank}</span>
                                         </TableCell>
