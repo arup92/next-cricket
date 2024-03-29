@@ -35,7 +35,9 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
     }
     let matchFormat = fields?.[0] || 'ODI'
     matchFormat = matchFormat.toUpperCase()
-    let matchType = fields[3].toUpperCase()
+
+    let matchType = fields?.[3] || 'MEN'
+    matchType = matchType.toUpperCase()
 
     const team = fields?.[1] || 'all'
     const view = fields?.[2] || '10'
