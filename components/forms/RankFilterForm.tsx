@@ -1,9 +1,9 @@
-import { MatchFormat } from '@/types/MatchFormat'
+import { MatchFormat, MatchFormatU19, MatchFormatWomen, MatchType } from '@/types/MatchFormat'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { GoCheck, GoCode } from "react-icons/go"
 import { RiSearch2Line } from 'react-icons/ri'
@@ -16,7 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 const formSchema = z.object({
     matchFormat: z.string().optional(),
     team: z.string().optional(),
-    view: z.string().optional()
+    view: z.string().optional(),
+    matchType: z.enum(MatchType),
 })
 
 interface RankFilterFormProps {
@@ -34,6 +35,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
     }
     let matchFormat = fields?.[0] || 'ODI'
     matchFormat = matchFormat.toUpperCase()
+    let matchType = fields[3].toUpperCase()
 
     const team = fields?.[1] || 'all'
     const view = fields?.[2] || '10'
@@ -49,6 +51,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
         mode: 'onChange',
         resolver: zodResolver(formSchema),
         defaultValues: {
+            matchType,
             matchFormat,
             team,
             view,
@@ -72,6 +75,20 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
         queryFn: getTeams,
     })
 
+    // Filter teams based on men and women
+    let matchFormats: any = MatchFormat
+    if (Teams) {
+        if (getValues().matchType === 'WOMEN') {
+            matchFormats = MatchFormatWomen
+            Teams = Teams.filter((team: any) => team.teamId.includes('-W'))
+        } else if (getValues().matchType === 'U19') {
+            matchFormats = MatchFormatU19
+            Teams = Teams.filter((team: any) => team.teamId.includes('-U19'))
+        } else {
+            Teams = Teams.filter((team: any) => (!team.teamId.includes('-W') && !team.teamId.includes('-U19')))
+        }
+    }
+
     // Apeend to the teams list
     if (Teams) {
         Teams = [{ teamId: 'ALL' }, ...Teams]
@@ -85,7 +102,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
             // Update the previous value
             setPrvValue(JSON.stringify(values))
 
-            path = `/${values.matchFormat || 'odi'}/${values.team || 'all'}/${values.view || '10'}`
+            path = `/${values.matchFormat || 'odi'}/${values.team || 'all'}/${values.view || '10'}/${values.matchType || 'MEN'}`
             router.push(`${path.toLowerCase()}`)
 
             setLoading(false) // Loading false
@@ -106,7 +123,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
                             <SelectValue placeholder={!watch().matchFormat ? matchFormat : watch().matchFormat} />
                         </SelectTrigger>
                         <SelectContent>
-                            {MatchFormat.filter(format => format !== 'WPL').map((format) => (
+                            {matchFormats.map((format: any) => (
                                 <SelectItem key={format} value={format}>
                                     {format}
                                 </SelectItem>
@@ -176,6 +193,26 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
                             <SelectItem key={`3`} value='50'>
                                 50
                             </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div>
+                    <Select
+                        onValueChange={(selectedValue: string) => {
+                            setValue('matchType', selectedValue)
+                        }}
+                        value={getValues('matchType')}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Match Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {MatchType.map((type) => (
+                                <SelectItem key={type} value={type}>
+                                    {type}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>

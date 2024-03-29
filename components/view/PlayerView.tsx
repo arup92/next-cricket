@@ -11,6 +11,7 @@ import { Card, CardContent } from "../ui/card"
 import BattingTable from "./player/BattingTable"
 import BowlingTable from "./player/BowlingTable"
 import PlayerData from "./player/PlayerData"
+import NotFound404 from "@/app/not-found"
 
 interface PlayerViewProps {
     playerId: string
@@ -26,12 +27,11 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                 return response.data
             })
             .catch((error) => {
-                console.log(error)
-                return []
+                throw new Error("Error Occured")
             })
     }
 
-    let { data: playerStats, isLoading } = useQuery({
+    let { data: playerStats, isLoading, isError } = useQuery({
         queryKey: ['playerStats', playerId, matchFormat],
         queryFn: getPlayerStats
     })
@@ -47,10 +47,9 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
         setData(filteredData)
     }
 
-    if (isLoading)
-        return (
-            <Loading />
-        )
+    // Error and Loading
+    if (isError) return <NotFound404 />
+    if (isLoading) return <Loading />
 
     // Bat and bowl data on different matchformat
     let groupedData: any = {}
@@ -107,7 +106,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                             <CardContent className="py-3">
                                 <AccordionTrigger className="p-0 hover:text-blue-700">
                                     <div className="flex items-center">
-                                        <span className="inline text-lg font-bold capitalize mr-1">Recent Matches</span>
+                                        <span className="inline mr-1 text-lg font-bold capitalize">Recent Matches</span>
                                     </div>
                                 </AccordionTrigger>
                                 <AccordionContent className="mt-4">
@@ -128,7 +127,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ playerId, matchFormat }) => {
                                 <CardContent className="py-3">
                                     <AccordionTrigger className="p-0 hover:text-blue-700">
                                         <div className="flex items-center">
-                                            <span className="inline text-lg font-bold capitalize mr-1">{getLeagueName(item)}</span>
+                                            <span className="inline mr-1 text-lg font-bold capitalize">{getLeagueName(item)}</span>
                                             <span className="inline text-sm text-muted-foreground">(Recent Performances)</span>
                                         </div>
                                     </AccordionTrigger>

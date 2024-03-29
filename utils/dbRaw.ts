@@ -1,9 +1,21 @@
 import prismaClient from "@/libs/prismadb";
-import { Prisma } from "@prisma/client";
+import { MatchType, Prisma } from "@prisma/client";
 
-export const getLastMatchesBattingSum = async (matchFormat: string, numMatches: number, limit: number, teamId?: string) => {
+export const getLastMatchesBattingSum = async (
+  matchFormat: string,
+  numMatches: number,
+  limit: number,
+  teamId?: string,
+  matchType?: MatchType
+) => {
   const where = Prisma.sql`AND "teamId" = ${teamId}`
-  const defaultWhere = Prisma.sql`AND "teamId" NOT iLike '%-u19' AND "teamId" NOT iLike '%-w'`
+  let defaultWhere = Prisma.sql`AND "teamId" NOT iLike '%-u19' AND "teamId" NOT iLike '%-w'`
+  if (matchType === "WOMEN") {
+    defaultWhere = Prisma.sql`AND "teamId" iLike '%-w'`
+  } else if (matchType === "U19") {
+    defaultWhere = Prisma.sql`AND "teamId" iLike '%-u19'`
+  }
+
 
   const result = await prismaClient.$queryRaw`
     WITH RankedBatting AS (
@@ -24,12 +36,25 @@ export const getLastMatchesBattingSum = async (matchFormat: string, numMatches: 
     GROUP BY pl."playerId", "teamId", "matchFormat"
     ORDER BY total_points DESC limit ${limit};`
 
+
+  console.log(result);
   return result;
 }
 
-export const getLastMatchesBowlingSum = async (matchFormat: string, numMatches: number, limit: number, teamId?: string) => {
+export const getLastMatchesBowlingSum = async (
+  matchFormat: string,
+  numMatches: number,
+  limit: number,
+  teamId?: string,
+  matchType?: MatchType
+) => {
   const where = Prisma.sql`AND "teamId" = ${teamId}`
-  const defaultWhere = Prisma.sql`AND "teamId" NOT iLike '%-u19' AND "teamId" NOT iLike '%-w'`
+  let defaultWhere = Prisma.sql`AND "teamId" NOT iLike '%-u19' AND "teamId" NOT iLike '%-w'`
+  if (matchType === "WOMEN") {
+    defaultWhere = Prisma.sql`AND "teamId" iLike '%-w'`
+  } else if (matchType === "U19") {
+    defaultWhere = Prisma.sql`AND "teamId" iLike '%-u19'`
+  }
 
   const result = await prismaClient.$queryRaw`
     WITH RankedBowling AS (

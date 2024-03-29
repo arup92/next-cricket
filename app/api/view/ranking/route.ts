@@ -8,6 +8,7 @@ export async function GET(request: Request) {
     const numMatches: any = url.searchParams.get('numMatches')?.toString() || 10
     const limit: any = url.searchParams.get('view')?.toString() || 10
     let team: any = url.searchParams.get('team')?.toString() || null
+    let matchType: any = url.searchParams.get('matchType')?.toString().toUpperCase() || "MEN"
 
     if (matchFormat === 'INDEX') {
         matchFormat = 'ODI'
@@ -17,8 +18,8 @@ export async function GET(request: Request) {
 
     try {
         // DB Call
-        const battingRankings: any = await getLastMatchesBattingSum(matchFormat, parseInt(numMatches), parseInt(limit), team)
-        const bowlingRankings: any = await getLastMatchesBowlingSum(matchFormat, parseInt(numMatches), parseInt(limit), team)
+        const battingRankings: any = await getLastMatchesBattingSum(matchFormat, parseInt(numMatches), parseInt(limit), team, matchType)
+        const bowlingRankings: any = await getLastMatchesBowlingSum(matchFormat, parseInt(numMatches), parseInt(limit), team, matchType)
 
         return NextResponse.json({ batting: battingRankings, bowling: bowlingRankings }, { status: 200 })
     } catch (error) {
