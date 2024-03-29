@@ -1,4 +1,4 @@
-import { MatchFormat, MatchType } from '@/types/MatchFormat'
+import { MatchFormat, MatchFormatU19, MatchFormatWomen, MatchType } from '@/types/MatchFormat'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
@@ -35,6 +35,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
     }
     let matchFormat = fields?.[0] || 'ODI'
     matchFormat = matchFormat.toUpperCase()
+    let matchType = fields[3].toUpperCase()
 
     const team = fields?.[1] || 'all'
     const view = fields?.[2] || '10'
@@ -50,7 +51,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
         mode: 'onChange',
         resolver: zodResolver(formSchema),
         defaultValues: {
-            matchType: 'MEN',
+            matchType,
             matchFormat,
             team,
             view,
@@ -73,6 +74,20 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
         queryKey: ['teams', getValues().matchFormat],
         queryFn: getTeams,
     })
+
+    // Filter teams based on men and women
+    let matchFormats: any = MatchFormat
+    if (Teams) {
+        if (getValues().matchType === 'WOMEN') {
+            matchFormats = MatchFormatWomen
+            Teams = Teams.filter((team: any) => team.teamId.includes('-W'))
+        } else if (getValues().matchType === 'U19') {
+            matchFormats = MatchFormatU19
+            Teams = Teams.filter((team: any) => team.teamId.includes('-U19'))
+        } else {
+            Teams = Teams.filter((team: any) => (!team.teamId.includes('-W') && !team.teamId.includes('-U19')))
+        }
+    }
 
     // Apeend to the teams list
     if (Teams) {
@@ -108,7 +123,7 @@ const RankFilterForm: React.FC<RankFilterFormProps> = ({ fields }) => {
                             <SelectValue placeholder={!watch().matchFormat ? matchFormat : watch().matchFormat} />
                         </SelectTrigger>
                         <SelectContent>
-                            {MatchFormat.filter(format => format !== 'WPL').map((format) => (
+                            {matchFormats.map((format: any) => (
                                 <SelectItem key={format} value={format}>
                                     {format}
                                 </SelectItem>

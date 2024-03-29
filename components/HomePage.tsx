@@ -27,7 +27,7 @@ const HomePage: React.FC<HomePageProps> = ({ slugs }) => {
 
     // React Query
     const { data: plRankings, isError, isLoading } = useQuery({
-        queryKey: ['playerRankings', slugs?.[0] || 'odi', slugs?.[1] || 'all', slugs?.[2] || '10'],
+        queryKey: ['playerRankings', slugs?.[0] || 'odi', slugs?.[1] || 'all', slugs?.[2] || '10', slugs?.[3] || 'MEN'],
         queryFn: getPlayerRankings
     })
 

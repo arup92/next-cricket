@@ -9,6 +9,17 @@ export const MatchFormat = [
     'WPL',
     'PSL'
 ] as const
+
+export const MatchFormatWomen = [
+    'ODI',
+    'T20',
+    'WPL'
+] as const
+
+export const MatchFormatU19 = [
+    'ODI',
+    'T20',
+] as const
 // Also udpate MatchFormat in prisma
 
 export const MatchType = [
@@ -20,7 +31,7 @@ export const MatchType = [
 export const Leagues: any = {
     'BBL': 'Big Bash League',
     'SS': 'Super Smash',
-    'ILT20': 'International League T20',
+    'ILT20': 'ILT20',
     'SA20': 'SA20 League',
     'WPL': 'Women\'s Premier League',
     'PSL': 'Pakistan Super League'
