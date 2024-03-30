@@ -36,8 +36,6 @@ export const getLastMatchesBattingSum = async (
     GROUP BY pl."playerId", "teamId", "matchFormat"
     ORDER BY total_points DESC limit ${limit};`
 
-
-  console.log(result);
   return result;
 }
 
