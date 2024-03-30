@@ -6,7 +6,6 @@ export const MatchFormat = [
     'BBL',
     'ILT20',
     'SA20',
-    'WPL',
     'PSL'
 ] as const
 

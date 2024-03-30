@@ -103,7 +103,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({
                     themeColor = 'bg-purple-600'
                 }
 
-                if (playerData[player].teamId === teamId)
+                if (playerData[player].teamId === teamId && (playerData[player].hasOwnProperty('bat') || playerData[player].hasOwnProperty('bowl')))
                     return <Card className={`relative ${className} ${reviewPlayer.playerIds[player] ? 'shadow-lg border-2 border-b-4 border-purple-600 box-border' : ''} ${pickPlayer.playerIds[player] ? 'shadow-lg border-2 border-b-4 border-emerald-500 box-border' : ''}`} key={index}>
                         <div
                             onClick={() => handleReview(player, teamId)}
@@ -128,6 +128,7 @@ const PlayerStats: React.FC<PlayerStatsProps> = ({
                         <div className={`${deSelected.cardDeSelected[index] ? 'absolute top-0 left-0 w-full h-full bg-white backdrop-blur bg-opacity-70 rounded-sm z-10' : ''}`}>
                         </div>
                         <CardHeader>
+                            {/* {inning.f11points} */}
                             <CardTitle className="capitalize">
                                 <div className="flex justify-between">
                                     {/* Calculation: Batting order */}
