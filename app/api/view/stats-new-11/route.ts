@@ -19,28 +19,34 @@ export async function GET(request: Request) {
         const oneYearAgo = new Date();
         oneYearAgo.setDate(oneYearAgo.getDate() - 365)
 
-        const teamBat = await prismaClient.batting.findMany({
+        const players = await prismaClient.playerTeam.findMany({
             where: {
                 OR: [
                     { teamId: teamA },
                     { teamId: teamB }
                 ],
+                active: 'yes',
+            },
+            select: {
+                playerId: true
+            }
+        })
+
+        const playersArray: string[] = []
+        for (const player of players) {
+            playersArray.push(player.playerId)
+        }
+
+        const teamBat = await prismaClient.batting.findMany({
+            where: {
+                playerId: {
+                    in: playersArray
+                },
                 matchDate: {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
                 matchFormat,
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes',
-                            OR: [
-                                { teamId: teamA },
-                                { teamId: teamB }
-                            ]
-                        }
-                    }
-                },
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -82,10 +88,9 @@ export async function GET(request: Request) {
 
         const teamBatVsTeam = await prismaClient.batting.findMany({
             where: {
-                OR: [
-                    { teamId: teamA },
-                    { teamId: teamB }
-                ],
+                playerId: {
+                    in: playersArray
+                },
                 oppCountryId: {
                     in: [
                         teamA, teamB
@@ -95,18 +100,7 @@ export async function GET(request: Request) {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat,
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes',
-                            OR: [
-                                { teamId: teamA },
-                                { teamId: teamB }
-                            ]
-                        }
-                    }
-                },
+                matchFormat
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -141,26 +135,14 @@ export async function GET(request: Request) {
 
         const teamBowl = await prismaClient.bowling.findMany({
             where: {
-                OR: [
-                    { teamId: teamA },
-                    { teamId: teamB }
-                ],
+                playerId: {
+                    in: playersArray
+                },
                 matchDate: {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat,
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes',
-                            OR: [
-                                { teamId: teamA },
-                                { teamId: teamB }
-                            ]
-                        }
-                    }
-                },
+                matchFormat
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -201,10 +183,9 @@ export async function GET(request: Request) {
 
         const teamBowlVsTeam = await prismaClient.bowling.findMany({
             where: {
-                OR: [
-                    { teamId: teamA },
-                    { teamId: teamB }
-                ],
+                playerId: {
+                    in: playersArray
+                },
                 oppCountryId: {
                     in: [
                         teamA, teamB
@@ -214,18 +195,7 @@ export async function GET(request: Request) {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat,
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes',
-                            OR: [
-                                { teamId: teamA },
-                                { teamId: teamB }
-                            ]
-                        }
-                    }
-                },
+                matchFormat
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -264,27 +234,15 @@ export async function GET(request: Request) {
         if (venueId) {
             teamBatInVenue = await prismaClient.batting.findMany({
                 where: {
-                    OR: [
-                        { teamId: teamA },
-                        { teamId: teamB }
-                    ],
+                    playerId: {
+                        in: playersArray
+                    },
                     venueId,
                     matchDate: {
                         lte: new Date(),
                         gte: oneYearAgo
                     },
-                    matchFormat,
-                    Player: {
-                        playerTeams: {
-                            some: {
-                                active: 'yes',
-                                OR: [
-                                    { teamId: teamA },
-                                    { teamId: teamB }
-                                ]
-                            }
-                        }
-                    },
+                    matchFormat
                 },
                 orderBy: [
                     { playerId: 'asc' },
@@ -319,27 +277,15 @@ export async function GET(request: Request) {
 
             teamBowlInVenue = await prismaClient.bowling.findMany({
                 where: {
-                    OR: [
-                        { teamId: teamA },
-                        { teamId: teamB }
-                    ],
+                    playerId: {
+                        in: playersArray
+                    },
                     venueId,
                     matchDate: {
                         lte: new Date(),
                         gte: oneYearAgo
                     },
-                    matchFormat,
-                    Player: {
-                        playerTeams: {
-                            some: {
-                                active: 'yes',
-                                OR: [
-                                    { teamId: teamA },
-                                    { teamId: teamB }
-                                ]
-                            }
-                        }
-                    },
+                    matchFormat
                 },
                 orderBy: [
                     { playerId: 'asc' },
@@ -375,24 +321,16 @@ export async function GET(request: Request) {
         // Get ranks
         const ranks = await prismaClient.rank.findMany({
             where: {
-                Player: {
-                    playerTeams: {
-                        some: {
-                            active: 'yes',
-                            OR: [
-                                { teamId: teamA },
-                                { teamId: teamB }
-                            ],
-                        }
-                    }
+                playerId: {
+                    in: playersArray
                 },
-                OR: [
-                    { teamId: teamA },
-                    { teamId: teamB }
-                ],
                 Match: {
-                    matchFormat
-                }
+                    matchFormat,
+                    matchDate: {
+                        lte: new Date(),
+                        gte: oneYearAgo
+                    },
+                },
             },
             select: {
                 rank: true,
