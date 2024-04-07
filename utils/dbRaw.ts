@@ -27,7 +27,7 @@ export const getLastMatchesBattingSum = async (
           "f11points",
           ROW_NUMBER() OVER (PARTITION BY "playerId" ORDER BY "matchDate" DESC) AS rnk
       FROM "Batting"
-      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat"
+      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat" AND "matchDate" >= CURRENT_DATE - INTERVAL '2 years'
       ${teamId ? where : defaultWhere}
     )
     SELECT pl."playerId", pl."playerName", "teamId", "matchFormat", SUM("f11points")::int AS total_points
@@ -64,7 +64,7 @@ export const getLastMatchesBowlingSum = async (
           "f11points",
           ROW_NUMBER() OVER (PARTITION BY "playerId" ORDER BY "matchDate" DESC) AS rnk
       FROM "Bowling"
-      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat"
+      WHERE "matchFormat" = ${matchFormat} ::"MatchFormat" AND "matchDate" >= CURRENT_DATE - INTERVAL '2 years'
       ${teamId ? where : defaultWhere}
     )
     SELECT pl."playerId", pl."playerName", "teamId", "matchFormat", SUM("f11points")::int AS total_points
