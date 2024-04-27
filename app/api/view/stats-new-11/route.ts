@@ -46,7 +46,7 @@ export async function GET(request: Request) {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat,
+                // matchFormat,
             },
             orderBy: [
                 { playerId: 'asc' },
@@ -142,7 +142,7 @@ export async function GET(request: Request) {
                     lte: new Date(),
                     gte: oneYearAgo
                 },
-                matchFormat
+                // matchFormat
             },
             orderBy: [
                 { playerId: 'asc' },
